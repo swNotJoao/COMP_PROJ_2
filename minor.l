@@ -1,83 +1,90 @@
 %{
-#include <stdio.h>
-#include <stdlib.h>
+#include <limits.h>
 #include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
 #include "node.h"
 #include "y.tab.h"
-
-char *dupstr(const char *s);
-extern void yyerror(const char *msg);
-int has_program = 0;
-int trash = 1;
-
+extern int yyerror(const char *);
+static int strsz, intstr(char *s);
+static char *str;
 %}
-
-%x ACTUAL_PROGRAM TRASH
-
+%option yylineno
+H [A-Fa-f0-9]
+%x STRNG CODE FIM
 %%
-  if(trash){
-    BEGIN TRASH;
-  }
-  else{
-    BEGIN ACTUAL_PROGRAM;
-  }
+.|\n			;
+^"program"		BEGIN CODE; return PROGRAM;
+^"module"		BEGIN CODE; return MODULE;
+[a-zA-Z]+		;
+<CODE>"<="		return LE;
+<CODE>">="		return GE;
+<CODE>"~="		return NE;
+<CODE>":="		return EQ;
+<CODE>"$$".*		;
+<CODE>\$[^\$]+\$	;
+<CODE>"public"		return PUBLIC;
+<CODE>"forward"		return FORWARD;
+<CODE>"start"		return START;
+<CODE>^"end"		BEGIN FIM; return END;
+<CODE>"const"		return CONST;
+<CODE>"string"		return STRING;
+<CODE>"number"		return NUMBER;
+<CODE>"array"		return ARRAY;
+<CODE>"function"	return FUNCTION;
+<CODE>"void"		return VOID;
+<CODE>"if"		return IF;
+<CODE>"then"		return THEN;
+<CODE>"fi"		return FI;
+<CODE>"elif"		return ELIF;
+<CODE>"else"		return ELSE;
+<CODE>"for"		return FOR;
+<CODE>"until"		return UNTIL;
+<CODE>"step"		return STEP;
+<CODE>"do"		return DO;
+<CODE>"done"		return DONE;
+<CODE>"repeat"		return REPEAT;
+<CODE>"stop"		return STOP;
+<CODE>"return"		return RETURN;
+<CODE>[ \t\n\r]+	;
+<CODE>"0x"{H}+		{ yylval.i = intstr(yytext); return INT; }
+<CODE>"0b"[01]+		{ yylval.i = intstr(yytext); return INT; }
+<CODE>[0-9]+		{ yylval.i = intstr(yytext); return INT; }
+<CODE>\"([^"\\]|\\.)*\"	{ strsz = yyleng; REJECT; }
+<CODE>\"		if (strsz > 0) { BEGIN STRNG; str = malloc(strsz); }
+<STRNG>\"			BEGIN CODE; yylval.s = str; return STR;
+<STRNG>\\n		strcat(str, "\n");
+<STRNG>\\t		strcat(str, "\t");
+<STRNG>\\r		strcat(str, "\r");
+<STRNG>\\\"		strcat(str, "\"");
+<STRNG>\\\\		strcat(str, "\\");
+<STRNG>\\{H}{H}?	{ char s[2]; s[1] = 0; s[0] = strtol(yytext+1,0,16);
+				strcat(str, s); }
+<STRNG>.|\n		strcat(str, yytext);
+<CODE>\'\\n\'		yylval.i = '\n'; return CHAR;
+<CODE>\'\\t\'		yylval.i = '\t'; return CHAR;
+<CODE>\'\\r\'		yylval.i = '\r'; return CHAR;
+<CODE>\'\\\'\'		yylval.i = '\''; return CHAR;
+<CODE>\'\\\\\'		yylval.i = '\\'; return CHAR;
+<CODE>\'\\{H}{H}?\'	yylval.i = strtol(yytext+2,0,16); return CHAR;
+<CODE>\'[^\\]\'		yylval.i = yytext[1]; return CHAR;
+<CODE>[a-zA-Z][a-zA-Z_0-9]*	{ yylval.s = strdup(yytext); return ID; }
+<CODE>.			return yytext[0];
+<FIM>.|\n		return 0;
+%%
+int intstr(char *s)
+{
+	char *end;
+	unsigned long ret;
 
-<ACTUAL_PROGRAM>{
-\$\$.*			;
-\$([^\$]|\$\$)*\$	;
-
-"program" {if(has_program == 0){has_program = 1; return PROGRAM;} return IDENTIFICADOR;};
-"module" return MODULE;
-"start" return START;
-"end" {trash = 1; return END;}
-"void" return VOID;
-"const" return CONST;
-"number" return NUMBER;
-"array" return ARRAY;
-"string" return STRING;
-"function" return FUNCTION;
-"public" return PUBLIC;
-"forward" return FORWARD;
-"if" return IF;
-"then" return THEN;
-"else" return ELSE;
-"elif" return ELIF;
-"fi" return FI;
-"for" return FOR;
-"until" return UNTIL;
-"step" return STEP;
-"do" return DO;
-"done" return DONE;
-"repeat" return REPEAT;
-"stop" return STOP;
-"return" return RETURN;
-":=" return ATTR;
-">=" return GE;
-"<=" return LE;
-"~=" return NE;
-
-[A-Za-z][A-Za-z0-9_]*	{yytext[yyleng-1] = 0; yylval.s = dupstr(yytext+1); return IDENTIFICADOR;}
-\"(\\[A-Za-z0-9\\\"][A-Za-z0-9]?|[^"\\])*\"		{yytext[yyleng-1] = 0; yylval.s = dupstr(yytext+1); return LITERAL_S;}
-\'(\\[A-Za-z0-9\\\'][A-Za-z0-9]?|[^'\\])\'		{yytext[yyleng-1] = 0; yylval.s = dupstr(yytext+1); return LITERAL_C;}
-[1-9][0-9]*			{yylval.i = strtol(yytext, 0, 10); return LITERAL_I;}
-0b[01]+ {yylval.i =  strtol(yytext, NULL, 2); return LITERAL_I;}
-0x[0-9a-fA-F]+ {yylval.i =  strtol(yytext, NULL, 16); return LITERAL_I;}
-0[0-7]+ {yylval.i =  strtol(yytext, NULL, 8); return LITERAL_I;}
-0 {yylval.i = 0; return LITERAL_I;}
-[-()<>=+*/%^;{}.,!?|&~\[\]#]	return *yytext;
-
-[ \t\n\r]+		;
-
-.			yyerror("Unknown Character");
+	if (strlen(s) > 1 && s[1] == 'b')
+		ret = strtoul(s+2, &end, 2);
+	else
+		ret = strtoul(s, &end, 0);
+	if (*end != 0) return yyerror("conversion error in literal integer"), -1;
+	if (ret > INT_MAX) return yyerror("overflow in literal integer"), -1;
+	return ret;
 }
 
-<TRASH>{
-"program"[ \n\r\t] {trash = 0; has_program = 1; if(has_program == 1){} return PROGRAM;};
-"module"[ \n\r\t] {trash = 0; if(has_program == 1){} return MODULE;};
-
-.|\n ;
-}
-
-%%
-int yywrap(void) { return 1; }
+int yywrap() { return 1; }
 char *getyytext() { return yytext; }
