@@ -33,9 +33,11 @@ static char *mkfunc(char *s) {
 %}
 %term STMT=';'
 %include "y.tab.h"
+
 %%
-file: PROGRAM
+file: PROGRAM(main) 1 {}
 %%
+
 extern char **yynames;
 extern int trace, errors, debugNode;
 void evaluate(Node *p) {
