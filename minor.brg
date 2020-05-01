@@ -35,7 +35,8 @@ static char *mkfunc(char *s) {
 %include "y.tab.h"
 
 %%
-file: PROGRAM(main) 1 {}
+file: PROGRAM(decls) {}
+decls: FUNCTION(END, ID, INT) {}
 %%
 
 extern char **yynames;
