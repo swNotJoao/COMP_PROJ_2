@@ -49,8 +49,10 @@ instr: START(NIL, STMT(NIL, print)) {}
 
 print: PSTMT(expr) {}
 
-expr: CHARS(NIL, STR) {}
-
+expr: CHARS(NIL, STR) { char *l = mklbl(++lbl);
+			    fprintf(yyout, pfRODATA pfALIGN pfLABEL pfSTR
+				pfTEXT pfADDR pfCALL pfCALL pfTRASH,
+				l, p->SUB(1)->value.s, l, "_prints", "_println", 4); }
 %%
 
 extern char **yynames;
