@@ -18,6 +18,8 @@
 #define TRACE
 static void yytrace(NODEPTR_TYPE p, int eruleno, int cost, int bestcost);
 
+int lbl;
+
 extern FILE *yyout;
 static char *mklbl(int n) {
 	static char buf[20];
@@ -31,16 +33,29 @@ static char *mkfunc(char *s) {
 	return buf;
 }
 %}
-%term STMT=';'
+%term STMT=';' PSTMT='!'
 %include "y.tab.h"
 
 %%
-file: PROGRAM(decls) {}
-decls: FUNCTION(END, ID, INT) {}
+file: PROGRAM(decls, main) 1 {}
+
+decls: NIL {}
+
+main: FUNCTION(END, instrs) {}
+
+instrs: FARGS(NIL, instr) {}
+
+instr: START(NIL, STMT(NIL, print)) {}
+
+print: PSTMT(expr) {}
+
+expr: CHARS(NIL, STR) {}
+
 %%
 
 extern char **yynames;
 extern int trace, errors, debugNode;
+
 void evaluate(Node *p) {
 	if (errors) return;
 	/* if (trace) */ printNode(p, stdout, yynames);
