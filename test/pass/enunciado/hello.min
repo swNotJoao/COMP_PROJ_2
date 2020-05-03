@@ -1,6 +1,9 @@
 program
 start
-  "olá pessoal!"!
+  "1 olá pessoal!"!
+  "2 olá pessoal!"!
+  "3 olá pessoal!"!
+  $$?!
 end
 
 A partir daqui pode haver texto ( de qualquer tipo ), incluindo operadores,

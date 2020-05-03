@@ -13,11 +13,47 @@ align	4
 ; LABEL
 $_L1:
 ; STR
-	db	'olá pessoal!', 0
+	db	'1 olá pessoal!', 0
 ; TEXT
 segment	.text
 ; ADDR
 	push	dword $_L1
+; CALL
+	call	$_prints
+; CALL
+	call	$_println
+; TRASH
+	add	esp, 4
+; RODATA
+segment	.rodata
+; ALIGN
+align	4
+; LABEL
+$_L2:
+; STR
+	db	'2 olá pessoal!', 0
+; TEXT
+segment	.text
+; ADDR
+	push	dword $_L2
+; CALL
+	call	$_prints
+; CALL
+	call	$_println
+; TRASH
+	add	esp, 4
+; RODATA
+segment	.rodata
+; ALIGN
+align	4
+; LABEL
+$_L3:
+; STR
+	db	'3 olá pessoal!', 0
+; TEXT
+segment	.text
+; ADDR
+	push	dword $_L3
 ; CALL
 	call	$_prints
 ; CALL

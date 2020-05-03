@@ -33,7 +33,7 @@ static char *mkfunc(char *s) {
 	return buf;
 }
 %}
-%term STMT=';' PSTMT='!'
+%term STMT=';' PSTMT='!' READOP='?'
 %include "y.tab.h"
 
 %%
@@ -45,7 +45,11 @@ main: FUNCTION(END, instrs) {}
 
 instrs: FARGS(NIL, instr) {}
 
-instr: START(NIL, STMT(NIL, print)) {}
+instr: START(NIL, stat) {}
+
+stat: STMT(stat, stat)
+stat: STMT(NIL, stat)
+stat: print
 
 print: PSTMT(expr) {}
 
@@ -53,6 +57,9 @@ expr: CHARS(NIL, STR) { char *l = mklbl(++lbl);
 			    fprintf(yyout, pfRODATA pfALIGN pfLABEL pfSTR
 				pfTEXT pfADDR pfCALL pfCALL pfTRASH,
 				l, p->SUB(1)->value.s, l, "_prints", "_println", 4); }
+
+expr: READOP { fprintf(yyout, pfCALL pfPUSH pfADDRA, "_readi", /*p->value.s*/ "readPlace"); }
+
 %%
 
 extern char **yynames;
