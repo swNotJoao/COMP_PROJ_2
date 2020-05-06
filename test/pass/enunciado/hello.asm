@@ -12,16 +12,18 @@ segment	.rodata
 align	4
 ; LABEL
 $_L1:
-; STR
-	db	'1 olá pessoal!', 0
+; CHAR
+	db	0x29
+; CHAR
+	db	0x2A
+; CHAR
+	db	0x00
 ; TEXT
 segment	.text
 ; ADDR
 	push	dword $_L1
 ; CALL
 	call	$_prints
-; CALL
-	call	$_println
 ; TRASH
 	add	esp, 4
 ; RODATA
@@ -30,16 +32,46 @@ segment	.rodata
 align	4
 ; LABEL
 $_L2:
-; STR
-	db	'2 olá pessoal!', 0
+; CHAR
+	db	0x31
+; CHAR
+	db	0x20
+; CHAR
+	db	0x6F
+; CHAR
+	db	0x6C
+; CHAR
+	db	0xC3
+; CHAR
+	db	0xA1
+; CHAR
+	db	0x20
+; CHAR
+	db	0x70
+; CHAR
+	db	0x65
+; CHAR
+	db	0x73
+; CHAR
+	db	0x73
+; CHAR
+	db	0x6F
+; CHAR
+	db	0x61
+; CHAR
+	db	0x6C
+; CHAR
+	db	0x21
+; CHAR
+	db	0x0A
+; CHAR
+	db	0x00
 ; TEXT
 segment	.text
 ; ADDR
 	push	dword $_L2
 ; CALL
 	call	$_prints
-; CALL
-	call	$_println
 ; TRASH
 	add	esp, 4
 ; RODATA
@@ -48,16 +80,94 @@ segment	.rodata
 align	4
 ; LABEL
 $_L3:
-; STR
-	db	'3 olá pessoal!', 0
+; CHAR
+	db	0x32
+; CHAR
+	db	0x20
+; CHAR
+	db	0x6F
+; CHAR
+	db	0x6C
+; CHAR
+	db	0xC3
+; CHAR
+	db	0xA1
+; CHAR
+	db	0x20
+; CHAR
+	db	0x70
+; CHAR
+	db	0x65
+; CHAR
+	db	0x73
+; CHAR
+	db	0x73
+; CHAR
+	db	0x6F
+; CHAR
+	db	0x61
+; CHAR
+	db	0x6C
+; CHAR
+	db	0x21
+; CHAR
+	db	0x0A
+; CHAR
+	db	0x00
 ; TEXT
 segment	.text
 ; ADDR
 	push	dword $_L3
 ; CALL
 	call	$_prints
+; TRASH
+	add	esp, 4
+; RODATA
+segment	.rodata
+; ALIGN
+align	4
+; LABEL
+$_L4:
+; CHAR
+	db	0x33
+; CHAR
+	db	0x20
+; CHAR
+	db	0x6F
+; CHAR
+	db	0x6C
+; CHAR
+	db	0xC3
+; CHAR
+	db	0xA1
+; CHAR
+	db	0x20
+; CHAR
+	db	0x70
+; CHAR
+	db	0x65
+; CHAR
+	db	0x73
+; CHAR
+	db	0x73
+; CHAR
+	db	0x6F
+; CHAR
+	db	0x61
+; CHAR
+	db	0x6C
+; CHAR
+	db	0x21
+; CHAR
+	db	0x0A
+; CHAR
+	db	0x00
+; TEXT
+segment	.text
+; ADDR
+	push	dword $_L4
 ; CALL
-	call	$_println
+	call	$_prints
 ; TRASH
 	add	esp, 4
 ; IMM

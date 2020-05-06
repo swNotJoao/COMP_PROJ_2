@@ -1,8 +1,14 @@
 program
+  $$number var_1 := 1999
 start
-  "1 olá pessoal!"!
-  "2 olá pessoal!"!
-  "3 olá pessoal!"!
+  'H' 'E' 'L' 'L' 'O' ':' 41!
+  41 42!
+  "1 olá pessoal!\n"!
+  "2 olá pessoal!\n"!
+  "3 olá pessoal!\n"!
+
+  $$var_1!
+
   $$?!
 end
 

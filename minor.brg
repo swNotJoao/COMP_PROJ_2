@@ -19,6 +19,8 @@
 static void yytrace(NODEPTR_TYPE p, int eruleno, int cost, int bestcost);
 
 int lbl;
+int tmpStrInd = 0;
+char tmpStr[1024];
 
 extern FILE *yyout;
 static char *mklbl(int n) {
@@ -26,6 +28,12 @@ static char *mklbl(int n) {
 	sprintf(buf, "%cL%d", n < 0 ? '.' : '_', n);
 	return strcpy(malloc(strlen(buf)+1),buf);
 }
+
+static void outstr(char *s) {
+  while (*s) fprintf(yyout, pfCHAR, (unsigned char)*s++);
+  fprintf(yyout, pfCHAR, 0);
+}
+
 static char *mkfunc(char *s) {
 	static char buf[80];
 	strcpy(buf, "_");
@@ -45,20 +53,26 @@ main: FUNCTION(END, instrs) {}
 
 instrs: FARGS(NIL, instr) {}
 
-instr: START(NIL, stat) {}
+instr: START(NIL, instr) {}
 
-stat: STMT(stat, stat)
-stat: STMT(NIL, stat)
-stat: print
+instr: STMT(NIL, instr)
+instr: STMT(instr, instr)
+instr: print
 
-print: PSTMT(expr) {}
+print: PSTMT(CHARS(NIL, STR)) { char *l = mklbl(++lbl);
+              			    fprintf(yyout, pfRODATA pfALIGN pfLABEL, l);
+                        outstr(p->SUB(0)->SUB(1)->value.s);
+              				  fprintf(yyout, pfTEXT pfADDR pfCALL pfTRASH,
+              				  l, "_prints", 4); }
 
-expr: CHARS(NIL, STR) { char *l = mklbl(++lbl);
-			    fprintf(yyout, pfRODATA pfALIGN pfLABEL pfSTR
-				pfTEXT pfADDR pfCALL pfCALL pfTRASH,
-				l, p->SUB(1)->value.s, l, "_prints", "_println", 4); }
-
-expr: READOP { fprintf(yyout, pfCALL pfPUSH pfADDRA, "_readi", /*p->value.s*/ "readPlace"); }
+print: PSTMT(chars) { char *l = mklbl(++lbl);
+                      fprintf(yyout, pfRODATA pfALIGN pfLABEL, l);
+                      outstr(tmpStr);
+                      fprintf(yyout, pfTEXT pfADDR pfCALL pfTRASH,
+                      l, "_prints", 4);}
+chars : CHARS(chars, chars) {}
+chars : CHARS(NIL, chars) {}
+chars : INT { tmpStr[tmpStrInd++] = p->value.i; }
 
 %%
 
