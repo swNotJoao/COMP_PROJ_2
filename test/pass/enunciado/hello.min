@@ -1,11 +1,11 @@
 program
   $$number var_1 := 1999
 start
-  'H' 'E' 'L' 'L' 'O' ':' 41!
-  41 42!
-  "1 olá pessoal!\n"!
-  "2 olá pessoal!\n"!
-  "3 olá pessoal!\n"!
+  'H' 'E' 'L' 'L' 'O' ':' 105 '!' '\n'!
+  105 106 '\n'!
+
+  "Str 1 com nl!\n"!
+  "Str 2 com nl!\n"!
 
   $$var_1!
 

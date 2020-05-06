@@ -1,5 +1,5 @@
 /*
-generated at Wed May  6 19:02:38 2020
+generated at Wed May  6 19:34:57 2020
 by $Id: pburg.c,v 2.7 2020/04/06 09:41:42 prs Exp $
 */
 #include <stdio.h>
@@ -38,6 +38,7 @@ static void yytrace(NODEPTR_TYPE p, int eruleno, int cost, int bestcost);
 int lbl;
 int tmpStrInd = 0;
 char tmpStr[1024];
+char *toPrint = NULL;
 
 extern FILE *yyout;
 static char *mklbl(int n) {
@@ -157,8 +158,8 @@ struct yystate {
 		unsigned int yymain:1;
 		unsigned int yyinstrs:1;
 		unsigned int yyinstr:3;
-		unsigned int yyprint:2;
-		unsigned int yychars:2;
+		unsigned int yyprint:1;
+		unsigned int yychars:3;
 	} rule;
 };
 
@@ -181,11 +182,12 @@ static short *yynts[] = {
 	yynts_3,	/* 6 */
 	yynts_4,	/* 7 */
 	yynts_5,	/* 8 */
-	yynts_1,	/* 9 */
+	yynts_6,	/* 9 */
 	yynts_6,	/* 10 */
-	yynts_7,	/* 11 */
-	yynts_6,	/* 12 */
+	yynts_1,	/* 11 */
+	yynts_1,	/* 12 */
 	yynts_1,	/* 13 */
+	yynts_7,	/* 14 */
 };
 
 
@@ -199,11 +201,12 @@ static YYCONST char *yystring[] = {
 /* 6 */	"instr: STMT(NIL,instr)",
 /* 7 */	"instr: STMT(instr,instr)",
 /* 8 */	"instr: print",
-/* 9 */	"print: PSTMT(CHARS(NIL,STR))",
-/* 10 */	"print: PSTMT(chars)",
-/* 11 */	"chars: CHARS(chars,chars)",
-/* 12 */	"chars: CHARS(NIL,chars)",
-/* 13 */	"chars: INT",
+/* 9 */	"print: PSTMT(chars)",
+/* 10 */	"chars: CHARS(NIL,chars)",
+/* 11 */	"chars: INT",
+/* 12 */	"chars: CHAR",
+/* 13 */	"chars: STR",
+/* 14 */	"chars: CHARS(chars,chars)",
 };
 
 #ifndef TRACE
@@ -246,14 +249,15 @@ static short yydecode_instr[] = {
 static short yydecode_print[] = {
 	0,
 	9,
-	10,
 };
 
 static short yydecode_chars[] = {
 	0,
+	10,
 	11,
 	12,
 	13,
+	14,
 };
 
 static int yyrule(void *state, int goalnt) {
@@ -305,25 +309,12 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 	switch (OP_LABEL(a)) {
 	case 33: /* PSTMT */
 		yylabel(LEFT_CHILD(a),a);
-		if (	/* print: PSTMT(CHARS(NIL,STR)) */
-			OP_LABEL(LEFT_CHILD(a)) == 287 && /* CHARS */
-			OP_LABEL(LEFT_CHILD(LEFT_CHILD(a))) == 293 && /* NIL */
-			OP_LABEL(RIGHT_CHILD(LEFT_CHILD(a))) == 260 /* STR */
-		) {
-			c = 0;
-			yytrace(a, 9, c + 0, p->cost[yyprint_NT]);
-			if (c + 0 < p->cost[yyprint_NT]) {
-				p->cost[yyprint_NT] = c + 0;
-				p->rule.yyprint = 1;
-				yyclosure_print(a, c + 0);
-			}
-		}
 		/* print: PSTMT(chars) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yychars_NT] + 0;
-		yytrace(a, 10, c + 0, p->cost[yyprint_NT]);
+		yytrace(a, 9, c + 0, p->cost[yyprint_NT]);
 		if (c + 0 < p->cost[yyprint_NT]) {
 			p->cost[yyprint_NT] = c + 0;
-			p->rule.yyprint = 2;
+			p->rule.yyprint = 1;
 			yyclosure_print(a, c + 0);
 		}
 		break;
@@ -352,18 +343,30 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		return;
 	case 257: /* INT */
 		/* chars: INT */
-		yytrace(a, 13, 0 + 0, p->cost[yychars_NT]);
+		yytrace(a, 11, 0 + 0, p->cost[yychars_NT]);
+		if (0 + 0 < p->cost[yychars_NT]) {
+			p->cost[yychars_NT] = 0 + 0;
+			p->rule.yychars = 2;
+		}
+		break;
+	case 258: /* CHAR */
+		/* chars: CHAR */
+		yytrace(a, 12, 0 + 0, p->cost[yychars_NT]);
 		if (0 + 0 < p->cost[yychars_NT]) {
 			p->cost[yychars_NT] = 0 + 0;
 			p->rule.yychars = 3;
 		}
 		break;
-	case 258: /* CHAR */
-		return;
 	case 259: /* ID */
 		return;
 	case 260: /* STR */
-		return;
+		/* chars: STR */
+		yytrace(a, 13, 0 + 0, p->cost[yychars_NT]);
+		if (0 + 0 < p->cost[yychars_NT]) {
+			p->cost[yychars_NT] = 0 + 0;
+			p->rule.yychars = 4;
+		}
+		break;
 	case 261: /* PROGRAM */
 		yylabel(LEFT_CHILD(a),a);
 		yylabel(RIGHT_CHILD(a),a);
@@ -464,22 +467,22 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 	case 287: /* CHARS */
 		yylabel(LEFT_CHILD(a),a);
 		yylabel(RIGHT_CHILD(a),a);
-		/* chars: CHARS(chars,chars) */
-		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yychars_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yychars_NT] + 0;
-		yytrace(a, 11, c + 0, p->cost[yychars_NT]);
-		if (c + 0 < p->cost[yychars_NT]) {
-			p->cost[yychars_NT] = c + 0;
-			p->rule.yychars = 1;
-		}
 		if (	/* chars: CHARS(NIL,chars) */
 			OP_LABEL(LEFT_CHILD(a)) == 293 /* NIL */
 		) {
 			c = ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yychars_NT] + 0;
-			yytrace(a, 12, c + 0, p->cost[yychars_NT]);
+			yytrace(a, 10, c + 0, p->cost[yychars_NT]);
 			if (c + 0 < p->cost[yychars_NT]) {
 				p->cost[yychars_NT] = c + 0;
-				p->rule.yychars = 2;
+				p->rule.yychars = 1;
 			}
+		}
+		/* chars: CHARS(chars,chars) */
+		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yychars_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yychars_NT] + 0;
+		yytrace(a, 14, c + 0, p->cost[yychars_NT]);
+		if (c + 0 < p->cost[yychars_NT]) {
+			p->cost[yychars_NT] = c + 0;
+			p->rule.yychars = 5;
 		}
 		break;
 	case 288: /* INTS */
@@ -521,17 +524,18 @@ static void yykids(NODEPTR_TYPE p, int eruleno, NODEPTR_TYPE kids[]) {
 	if (!kids)
 		PANIC("yykids", "Null kids in", OP_LABEL(p));
 	switch (eruleno) {
-	case 11: /* chars: CHARS(chars,chars) */
+	case 14: /* chars: CHARS(chars,chars) */
 	case 7: /* instr: STMT(instr,instr) */
 	case 1: /* file: PROGRAM(decls,main) */
 		kids[0] = LEFT_CHILD(p);
 		kids[1] = RIGHT_CHILD(p);
 		break;
-	case 13: /* chars: INT */
-	case 9: /* print: PSTMT(CHARS(NIL,STR)) */
+	case 13: /* chars: STR */
+	case 12: /* chars: CHAR */
+	case 11: /* chars: INT */
 	case 2: /* decls: NIL */
 		break;
-	case 12: /* chars: CHARS(NIL,chars) */
+	case 10: /* chars: CHARS(NIL,chars) */
 	case 6: /* instr: STMT(NIL,instr) */
 	case 5: /* instr: START(NIL,instr) */
 	case 4: /* instrs: FARGS(NIL,instr) */
@@ -541,7 +545,7 @@ static void yykids(NODEPTR_TYPE p, int eruleno, NODEPTR_TYPE kids[]) {
 	case 8: /* instr: print */
 		kids[0] = p;
 		break;
-	case 10: /* print: PSTMT(chars) */
+	case 9: /* print: PSTMT(chars) */
 		kids[0] = LEFT_CHILD(p);
 		break;
 	default:
@@ -561,77 +565,81 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
 
   switch(eruleno) {
 	case 1: /* file: PROGRAM(decls,main) */
-		fprintf(stderr, "0x%p: line 48: file: PROGRAM(decls,main)\n",(void*)p);
-#line 48 "minor.brg"
+		fprintf(stderr, "0x%p: line 49: file: PROGRAM(decls,main)\n",(void*)p);
+#line 49 "minor.brg"
 {}
 		break;
 	case 2: /* decls: NIL */
-		fprintf(stderr, "0x%p: line 50: decls: NIL\n",(void*)p);
-#line 50 "minor.brg"
+		fprintf(stderr, "0x%p: line 51: decls: NIL\n",(void*)p);
+#line 51 "minor.brg"
 {}
 		break;
 	case 3: /* main: FUNCTION(END,instrs) */
-		fprintf(stderr, "0x%p: line 52: main: FUNCTION(END,instrs)\n",(void*)p);
-#line 52 "minor.brg"
+		fprintf(stderr, "0x%p: line 53: main: FUNCTION(END,instrs)\n",(void*)p);
+#line 53 "minor.brg"
 {}
 		break;
 	case 4: /* instrs: FARGS(NIL,instr) */
-		fprintf(stderr, "0x%p: line 54: instrs: FARGS(NIL,instr)\n",(void*)p);
-#line 54 "minor.brg"
+		fprintf(stderr, "0x%p: line 55: instrs: FARGS(NIL,instr)\n",(void*)p);
+#line 55 "minor.brg"
 {}
 		break;
 	case 5: /* instr: START(NIL,instr) */
-		fprintf(stderr, "0x%p: line 56: instr: START(NIL,instr)\n",(void*)p);
-#line 56 "minor.brg"
+		fprintf(stderr, "0x%p: line 57: instr: START(NIL,instr)\n",(void*)p);
+#line 57 "minor.brg"
 {}
 		break;
 	case 6: /* instr: STMT(NIL,instr) */
-		fprintf(stderr, "0x%p: line 58: instr: STMT(NIL,instr)\n",(void*)p);
-#line 58 "minor.brg"
-
-		break;
-	case 7: /* instr: STMT(instr,instr) */
-		fprintf(stderr, "0x%p: line 59: instr: STMT(instr,instr)\n",(void*)p);
+		fprintf(stderr, "0x%p: line 59: instr: STMT(NIL,instr)\n",(void*)p);
 #line 59 "minor.brg"
 
 		break;
-	case 8: /* instr: print */
-		fprintf(stderr, "0x%p: line 60: instr: print\n",(void*)p);
+	case 7: /* instr: STMT(instr,instr) */
+		fprintf(stderr, "0x%p: line 60: instr: STMT(instr,instr)\n",(void*)p);
 #line 60 "minor.brg"
 
 		break;
-	case 9: /* print: PSTMT(CHARS(NIL,STR)) */
-		fprintf(stderr, "0x%p: line 62: print: PSTMT(CHARS(NIL,STR))\n",(void*)p);
-#line 62 "minor.brg"
-{ char *l = mklbl(++lbl);
-              			    fprintf(yyout, pfRODATA pfALIGN pfLABEL, l);
-                        outstr(p->SUB(0)->SUB(1)->value.s);
-              				  fprintf(yyout, pfTEXT pfADDR pfCALL pfTRASH,
-              				  l, "_prints", 4); }
+	case 8: /* instr: print */
+		fprintf(stderr, "0x%p: line 61: instr: print\n",(void*)p);
+#line 61 "minor.brg"
+
 		break;
-	case 10: /* print: PSTMT(chars) */
-		fprintf(stderr, "0x%p: line 68: print: PSTMT(chars)\n",(void*)p);
-#line 68 "minor.brg"
-{ char *l = mklbl(++lbl);
-                      fprintf(yyout, pfRODATA pfALIGN pfLABEL, l);
-                      outstr(tmpStr);
-                      fprintf(yyout, pfTEXT pfADDR pfCALL pfTRASH,
-                      l, "_prints", 4);}
+	case 9: /* print: PSTMT(chars) */
+		fprintf(stderr, "0x%p: line 63: print: PSTMT(chars)\n",(void*)p);
+#line 63 "minor.brg"
+{
+                          char *l = mklbl(++lbl); tmpStr[tmpStrInd++] = '\0';
+                          fprintf(yyout, pfRODATA pfALIGN pfLABEL, l);
+                          outstr(toPrint);
+                          fprintf(yyout, pfTEXT pfADDR pfCALL pfTRASH,
+                          l, "_prints", 4);
+                          tmpStrInd = 0;
+                          }
 		break;
-	case 11: /* chars: CHARS(chars,chars) */
-		fprintf(stderr, "0x%p: line 73: chars: CHARS(chars,chars)\n",(void*)p);
+	case 10: /* chars: CHARS(NIL,chars) */
+		fprintf(stderr, "0x%p: line 71: chars: CHARS(NIL,chars)\n",(void*)p);
+#line 71 "minor.brg"
+{}
+		break;
+	case 11: /* chars: INT */
+		fprintf(stderr, "0x%p: line 72: chars: INT\n",(void*)p);
+#line 72 "minor.brg"
+{ tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
+		break;
+	case 12: /* chars: CHAR */
+		fprintf(stderr, "0x%p: line 73: chars: CHAR\n",(void*)p);
 #line 73 "minor.brg"
-{}
+{ tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
 		break;
-	case 12: /* chars: CHARS(NIL,chars) */
-		fprintf(stderr, "0x%p: line 74: chars: CHARS(NIL,chars)\n",(void*)p);
+	case 13: /* chars: STR */
+		fprintf(stderr, "0x%p: line 74: chars: STR\n",(void*)p);
 #line 74 "minor.brg"
-{}
+{ toPrint = p->value.s; }
 		break;
-	case 13: /* chars: INT */
-		fprintf(stderr, "0x%p: line 75: chars: INT\n",(void*)p);
+	case 14: /* chars: CHARS(chars,chars) */
+		fprintf(stderr, "0x%p: line 75: chars: CHARS(chars,chars)\n",(void*)p);
 #line 75 "minor.brg"
-{ tmpStr[tmpStrInd++] = p->value.i; }
+{}
 		break;
 	default: break;
   }

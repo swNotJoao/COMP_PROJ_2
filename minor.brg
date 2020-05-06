@@ -21,6 +21,7 @@ static void yytrace(NODEPTR_TYPE p, int eruleno, int cost, int bestcost);
 int lbl;
 int tmpStrInd = 0;
 char tmpStr[1024];
+char *toPrint = NULL;
 
 extern FILE *yyout;
 static char *mklbl(int n) {
@@ -59,20 +60,19 @@ instr: STMT(NIL, instr)
 instr: STMT(instr, instr)
 instr: print
 
-print: PSTMT(CHARS(NIL, STR)) { char *l = mklbl(++lbl);
-              			    fprintf(yyout, pfRODATA pfALIGN pfLABEL, l);
-                        outstr(p->SUB(0)->SUB(1)->value.s);
-              				  fprintf(yyout, pfTEXT pfADDR pfCALL pfTRASH,
-              				  l, "_prints", 4); }
-
-print: PSTMT(chars) { char *l = mklbl(++lbl);
-                      fprintf(yyout, pfRODATA pfALIGN pfLABEL, l);
-                      outstr(tmpStr);
-                      fprintf(yyout, pfTEXT pfADDR pfCALL pfTRASH,
-                      l, "_prints", 4);}
-chars : CHARS(chars, chars) {}
+print: PSTMT(chars) {
+                          char *l = mklbl(++lbl); tmpStr[tmpStrInd++] = '\0';
+                          fprintf(yyout, pfRODATA pfALIGN pfLABEL, l);
+                          outstr(toPrint);
+                          fprintf(yyout, pfTEXT pfADDR pfCALL pfTRASH,
+                          l, "_prints", 4);
+                          tmpStrInd = 0;
+                          }
 chars : CHARS(NIL, chars) {}
-chars : INT { tmpStr[tmpStrInd++] = p->value.i; }
+chars : INT { tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
+chars : CHAR { tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
+chars : STR { toPrint = p->value.s; }
+chars : CHARS(chars, chars) {}
 
 %%
 
