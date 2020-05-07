@@ -51,7 +51,10 @@ file : PROGRAM(decls, main) 1 {}
 
 decls : NIL {}
 decls : DECL(NIL, decls) {}
-decls : VAR(NUMBER(ID, INT)) { fprintf(yyout, pfIMM pfADDRA, p->SUB(0)->SUB(1)->value.i ,p->SUB(0)->SUB(0)->value.s); }
+decls : VAR(NUMBER(ID, INT)) { fprintf(yyout, pfIMM pfADDRA
+                              , p->SUB(0)->SUB(1)->value.i
+                              , p->SUB(0)->SUB(0)->value.s);
+                              }
 decls : DECL(decls, decls) {}
 
 main : FUNCTION(END, instrs) {}
@@ -64,6 +67,18 @@ instr : STMT(NIL, instr)
 instr : STMT(instr, instr)
 instr : print
 
+print : PSTMT(ID) {
+                  switch(p->SUB(0)->info){
+                    case tINT:
+                      fprintf(yyout, pfADDRV pfCALL pfTRASH,
+                      p->SUB(0)->value.s, "_printi", 4);
+                    break;
+                    case tSTR:
+                      fprintf(yyout, pfADDR pfCALL pfTRASH,
+                      p->SUB(0)->value.s, "_prints", 4);
+                    break;
+                  }
+                  }
 print : PSTMT(chars) {
                       char *l = mklbl(++lbl); tmpStr[tmpStrInd++] = '\0';
                       fprintf(yyout, pfRODATA pfALIGN pfLABEL, l);

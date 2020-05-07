@@ -8,7 +8,7 @@ start
   "Str 2 com newline\n"!
 
   "Var_1 ="!
-  var_1!
+  var_1! '\n'!
 
   $$?!
 end
