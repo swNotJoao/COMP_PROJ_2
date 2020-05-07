@@ -1,7 +1,7 @@
 program
   number var_1 := 1;
   number var_2 := 2;
-  string var_3 := "String declarada"
+  string var_3 := "String declarada" ' ' '1' ' ' 105
 start
   'C' 'o' 'n' 'c' 'a' 't' ':' 105 '\n'!
 

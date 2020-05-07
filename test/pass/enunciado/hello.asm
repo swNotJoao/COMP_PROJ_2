@@ -57,6 +57,14 @@ $var_3:
 ; CHAR
 	db	0x61
 ; CHAR
+	db	0x20
+; CHAR
+	db	0x31
+; CHAR
+	db	0x20
+; CHAR
+	db	0x69
+; CHAR
 	db	0x00
 ; RODATA
 segment	.rodata
@@ -64,6 +72,46 @@ segment	.rodata
 align	4
 ; LABEL
 $_L1:
+; CHAR
+	db	0x53
+; CHAR
+	db	0x74
+; CHAR
+	db	0x72
+; CHAR
+	db	0x69
+; CHAR
+	db	0x6E
+; CHAR
+	db	0x67
+; CHAR
+	db	0x20
+; CHAR
+	db	0x64
+; CHAR
+	db	0x65
+; CHAR
+	db	0x63
+; CHAR
+	db	0x6C
+; CHAR
+	db	0x61
+; CHAR
+	db	0x72
+; CHAR
+	db	0x61
+; CHAR
+	db	0x64
+; CHAR
+	db	0x61
+; CHAR
+	db	0x20
+; CHAR
+	db	0x31
+; CHAR
+	db	0x20
+; CHAR
+	db	0x69
 ; CHAR
 	db	0x43
 ; CHAR
