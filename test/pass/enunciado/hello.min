@@ -1,11 +1,10 @@
 program
   $$number var_1 := 1999
 start
-  'H' 'E' 'L' 'L' 'O' ':' 105 '!' '\n'!
-  105 106 '\n'!
+  'C' 'o' 'n' 'c' 'a' 't' ':' 105 '\n'!
 
-  "Str 1 com nl!\n"!
-  "Str 2 com nl!\n"!
+  "Str 1 com newline\n"!
+  "Str 2 com newline\n"!
 
   $$var_1!
 
