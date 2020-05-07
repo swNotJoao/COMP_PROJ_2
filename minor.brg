@@ -9,6 +9,7 @@
 #include "node.h"
 #include "postfix.h"
 #include "y.tab.h"
+#include "tabid.h"
 #include "minor.h"
 
 #ifndef U_
@@ -46,28 +47,31 @@ static char *mkfunc(char *s) {
 %include "y.tab.h"
 
 %%
-file: PROGRAM(decls, main) 1 {}
+file : PROGRAM(decls, main) 1 {}
 
-decls: NIL {}
+decls : NIL {}
+decls : DECL(NIL, decls) {}
+decls : VAR(NUMBER(ID, INT)) { fprintf(yyout, pfIMM pfADDRA, p->SUB(0)->SUB(1)->value.i ,p->SUB(0)->SUB(0)->value.s); }
+decls : DECL(decls, decls) {}
 
-main: FUNCTION(END, instrs) {}
+main : FUNCTION(END, instrs) {}
 
-instrs: FARGS(NIL, instr) {}
+instrs : FARGS(NIL, instr) {}
 
-instr: START(NIL, instr) {}
+instr : START(NIL, instr) {}
 
-instr: STMT(NIL, instr)
-instr: STMT(instr, instr)
-instr: print
+instr : STMT(NIL, instr)
+instr : STMT(instr, instr)
+instr : print
 
-print: PSTMT(chars) {
-                          char *l = mklbl(++lbl); tmpStr[tmpStrInd++] = '\0';
-                          fprintf(yyout, pfRODATA pfALIGN pfLABEL, l);
-                          outstr(toPrint);
-                          fprintf(yyout, pfTEXT pfADDR pfCALL pfTRASH,
-                          l, "_prints", 4);
-                          tmpStrInd = 0;
-                          }
+print : PSTMT(chars) {
+                      char *l = mklbl(++lbl); tmpStr[tmpStrInd++] = '\0';
+                      fprintf(yyout, pfRODATA pfALIGN pfLABEL, l);
+                      outstr(toPrint);
+                      fprintf(yyout, pfTEXT pfADDR pfCALL pfTRASH,
+                      l, "_prints", 4);
+                      tmpStrInd = 0;
+                      }
 chars : CHARS(NIL, chars) {}
 chars : INT { tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
 chars : CHAR { tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
@@ -75,9 +79,13 @@ chars : STR { toPrint = p->value.s; }
 chars : CHARS(chars, chars) {}
 
 %%
-
 extern char **yynames;
 extern int trace, errors, debugNode;
+
+static int data(int t, char *s, void *a, void *user) {
+  if (s) fprintf(yyout, pfLABEL pfINTEGER, s, 0);
+  return 1;
+}
 
 void evaluate(Node *p) {
 	if (errors) return;
@@ -85,7 +93,7 @@ void evaluate(Node *p) {
   fprintf(yyout, pfTEXT pfALIGN pfGLOBL pfLABEL, "_main", pfFUNC, "_main");
 	if (!yyselect(p) && trace) printf("selection successful\n");
   fprintf(yyout, pfIMM pfPOP pfRET pfDATA, 0);
-  /*IDevery(data,0);*/
+  IDevery(data,0);
   fprintf(yyout, pfEXTRN pfEXTRN pfEXTRN pfEXTRN,
   		"_prints", "_printi", "_println", "_readi");
 }

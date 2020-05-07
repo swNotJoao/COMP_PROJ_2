@@ -1,12 +1,14 @@
 program
-  $$number var_1 := 1999
+  number var_1 := 1;
+  number var_2 := 2
 start
   'C' 'o' 'n' 'c' 'a' 't' ':' 105 '\n'!
 
   "Str 1 com newline\n"!
   "Str 2 com newline\n"!
 
-  $$var_1!
+  "Var_1 ="!
+  var_1!
 
   $$?!
 end
