@@ -51,10 +51,19 @@ file : PROGRAM(decls, main) 1 {}
 
 decls : NIL {}
 decls : DECL(NIL, decls) {}
-decls : VAR(NUMBER(ID, INT)) { fprintf(yyout, pfIMM pfADDRA
+decls : VAR(NUMBER(ID, INT)) {
+                              fprintf(yyout, pfDATA pfLABEL pfINTEGER,
+                              p->SUB(0)->SUB(0)->value.s,
+                              p->SUB(0)->SUB(1)->value.i);
+                              /*fprintf(yyout, pfIMM pfADDRA
                               , p->SUB(0)->SUB(1)->value.i
-                              , p->SUB(0)->SUB(0)->value.s);
-                              }
+                              , p->SUB(0)->SUB(0)->value.s);*/
+                             }
+decls : VAR(STRING(ID, chars)) {
+                                fprintf(yyout, pfRODATA pfALIGN pfLABEL
+                                , p->SUB(0)->SUB(0)->value.s);
+                                outstr(toPrint);
+                               }
 decls : DECL(decls, decls) {}
 
 main : FUNCTION(END, instrs) {}
@@ -67,6 +76,7 @@ instr : STMT(NIL, instr)
 instr : STMT(instr, instr)
 instr : print
 
+print : PSTMT(READOP) {}
 print : PSTMT(ID) {
                   switch(p->SUB(0)->info){
                     case tINT:
@@ -108,7 +118,7 @@ void evaluate(Node *p) {
   fprintf(yyout, pfTEXT pfALIGN pfGLOBL pfLABEL, "_main", pfFUNC, "_main");
 	if (!yyselect(p) && trace) printf("selection successful\n");
   fprintf(yyout, pfIMM pfPOP pfRET pfDATA, 0);
-  IDevery(data,0);
+  /*IDevery(data,0);*/
   fprintf(yyout, pfEXTRN pfEXTRN pfEXTRN pfEXTRN,
   		"_prints", "_printi", "_println", "_readi");
 }

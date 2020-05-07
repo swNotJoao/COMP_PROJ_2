@@ -6,16 +6,58 @@ align	4
 global	$_main:function
 ; LABEL
 $_main:
-; IMM
-	push	dword 1
-; ADDRA
-	pop	eax
-	mov	[$var_1], eax
-; IMM
-	push	dword 2
-; ADDRA
-	pop	eax
-	mov	[$var_2], eax
+; DATA
+segment	.data
+; LABEL
+$var_1:
+; INTEGER
+	dd	1
+; DATA
+segment	.data
+; LABEL
+$var_2:
+; INTEGER
+	dd	2
+; RODATA
+segment	.rodata
+; ALIGN
+align	4
+; LABEL
+$var_3:
+; CHAR
+	db	0x53
+; CHAR
+	db	0x74
+; CHAR
+	db	0x72
+; CHAR
+	db	0x69
+; CHAR
+	db	0x6E
+; CHAR
+	db	0x67
+; CHAR
+	db	0x20
+; CHAR
+	db	0x64
+; CHAR
+	db	0x65
+; CHAR
+	db	0x63
+; CHAR
+	db	0x6C
+; CHAR
+	db	0x61
+; CHAR
+	db	0x72
+; CHAR
+	db	0x61
+; CHAR
+	db	0x64
+; CHAR
+	db	0x61
+; CHAR
+	db	0x00
 ; RODATA
 segment	.rodata
 ; ALIGN
@@ -175,6 +217,8 @@ $_L4:
 ; CHAR
 	db	0x3D
 ; CHAR
+	db	0x20
+; CHAR
 	db	0x00
 ; TEXT
 segment	.text
@@ -208,6 +252,62 @@ segment	.text
 	call	$_prints
 ; TRASH
 	add	esp, 4
+; RODATA
+segment	.rodata
+; ALIGN
+align	4
+; LABEL
+$_L6:
+; CHAR
+	db	0x56
+; CHAR
+	db	0x61
+; CHAR
+	db	0x72
+; CHAR
+	db	0x5F
+; CHAR
+	db	0x33
+; CHAR
+	db	0x20
+; CHAR
+	db	0x3D
+; CHAR
+	db	0x20
+; CHAR
+	db	0x00
+; TEXT
+segment	.text
+; ADDR
+	push	dword $_L6
+; CALL
+	call	$_prints
+; TRASH
+	add	esp, 4
+; ADDR
+	push	dword $var_3
+; CALL
+	call	$_prints
+; TRASH
+	add	esp, 4
+; RODATA
+segment	.rodata
+; ALIGN
+align	4
+; LABEL
+$_L7:
+; CHAR
+	db	0x0A
+; CHAR
+	db	0x00
+; TEXT
+segment	.text
+; ADDR
+	push	dword $_L7
+; CALL
+	call	$_prints
+; TRASH
+	add	esp, 4
 ; IMM
 	push	dword 0
 ; POP
@@ -216,14 +316,6 @@ segment	.text
 	ret
 ; DATA
 segment	.data
-; LABEL
-$var_2:
-; INTEGER
-	dd	0
-; LABEL
-$var_1:
-; INTEGER
-	dd	0
 ; EXTRN
 extern	$_prints
 ; EXTRN
