@@ -1,5 +1,5 @@
 /*
-generated at Sat May  9 23:00:23 2020
+generated at Sat May  9 23:11:00 2020
 by $Id: pburg.c,v 2.7 2020/04/06 09:41:42 prs Exp $
 */
 #include <stdio.h>
@@ -694,51 +694,52 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
                                 fprintf(yyout, pfRODATA pfALIGN pfLABEL
                                 , p->SUB(0)->SUB(0)->value.s);
                                 outstr(toPrint);
+                                tmpStrInd = 0;
                                }
 		break;
 	case 6: /* decls: DECL(decls,decls) */
-		fprintf(stderr, "0x%p: line 65: decls: DECL(decls,decls)\n",(void*)p);
-#line 65 "minor.brg"
+		fprintf(stderr, "0x%p: line 66: decls: DECL(decls,decls)\n",(void*)p);
+#line 66 "minor.brg"
 {}
 		break;
 	case 7: /* main: FUNCTION(END,instrs) */
-		fprintf(stderr, "0x%p: line 67: main: FUNCTION(END,instrs)\n",(void*)p);
-#line 67 "minor.brg"
+		fprintf(stderr, "0x%p: line 68: main: FUNCTION(END,instrs)\n",(void*)p);
+#line 68 "minor.brg"
 {}
 		break;
 	case 8: /* instrs: FARGS(NIL,instr) */
-		fprintf(stderr, "0x%p: line 69: instrs: FARGS(NIL,instr)\n",(void*)p);
-#line 69 "minor.brg"
+		fprintf(stderr, "0x%p: line 70: instrs: FARGS(NIL,instr)\n",(void*)p);
+#line 70 "minor.brg"
 {}
 		break;
 	case 9: /* instr: START(NIL,instr) */
-		fprintf(stderr, "0x%p: line 71: instr: START(NIL,instr)\n",(void*)p);
-#line 71 "minor.brg"
+		fprintf(stderr, "0x%p: line 72: instr: START(NIL,instr)\n",(void*)p);
+#line 72 "minor.brg"
 {}
 		break;
 	case 10: /* instr: STMT(NIL,instr) */
-		fprintf(stderr, "0x%p: line 73: instr: STMT(NIL,instr)\n",(void*)p);
-#line 73 "minor.brg"
-
-		break;
-	case 11: /* instr: STMT(instr,instr) */
-		fprintf(stderr, "0x%p: line 74: instr: STMT(instr,instr)\n",(void*)p);
+		fprintf(stderr, "0x%p: line 74: instr: STMT(NIL,instr)\n",(void*)p);
 #line 74 "minor.brg"
 
 		break;
-	case 12: /* instr: print */
-		fprintf(stderr, "0x%p: line 75: instr: print\n",(void*)p);
+	case 11: /* instr: STMT(instr,instr) */
+		fprintf(stderr, "0x%p: line 75: instr: STMT(instr,instr)\n",(void*)p);
 #line 75 "minor.brg"
 
 		break;
+	case 12: /* instr: print */
+		fprintf(stderr, "0x%p: line 76: instr: print\n",(void*)p);
+#line 76 "minor.brg"
+
+		break;
 	case 13: /* print: PSTMT(READOP) */
-		fprintf(stderr, "0x%p: line 77: print: PSTMT(READOP)\n",(void*)p);
-#line 77 "minor.brg"
+		fprintf(stderr, "0x%p: line 78: print: PSTMT(READOP)\n",(void*)p);
+#line 78 "minor.brg"
 {}
 		break;
 	case 14: /* print: PSTMT(ID) */
-		fprintf(stderr, "0x%p: line 78: print: PSTMT(ID)\n",(void*)p);
-#line 78 "minor.brg"
+		fprintf(stderr, "0x%p: line 79: print: PSTMT(ID)\n",(void*)p);
+#line 79 "minor.brg"
 {
                   switch(p->SUB(0)->info){
                     case tINT:
@@ -753,8 +754,8 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
                   }
 		break;
 	case 15: /* print: PSTMT(chars) */
-		fprintf(stderr, "0x%p: line 90: print: PSTMT(chars)\n",(void*)p);
-#line 90 "minor.brg"
+		fprintf(stderr, "0x%p: line 91: print: PSTMT(chars)\n",(void*)p);
+#line 91 "minor.brg"
 {
                       char *l = mklbl(++lbl); tmpStr[tmpStrInd++] = '\0';
                       fprintf(yyout, pfRODATA pfALIGN pfLABEL, l);
@@ -765,28 +766,28 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
                       }
 		break;
 	case 16: /* chars: CHARS(NIL,chars) */
-		fprintf(stderr, "0x%p: line 98: chars: CHARS(NIL,chars)\n",(void*)p);
-#line 98 "minor.brg"
-{tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
+		fprintf(stderr, "0x%p: line 99: chars: CHARS(NIL,chars)\n",(void*)p);
+#line 99 "minor.brg"
+{}
 		break;
 	case 17: /* chars: INT */
-		fprintf(stderr, "0x%p: line 99: chars: INT\n",(void*)p);
-#line 99 "minor.brg"
-{ tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
-		break;
-	case 18: /* chars: CHAR */
-		fprintf(stderr, "0x%p: line 100: chars: CHAR\n",(void*)p);
+		fprintf(stderr, "0x%p: line 100: chars: INT\n",(void*)p);
 #line 100 "minor.brg"
 { tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
 		break;
-	case 19: /* chars: STR */
-		fprintf(stderr, "0x%p: line 101: chars: STR\n",(void*)p);
+	case 18: /* chars: CHAR */
+		fprintf(stderr, "0x%p: line 101: chars: CHAR\n",(void*)p);
 #line 101 "minor.brg"
-{ strcpy(&tmpStr[tmpStrInd], p->value.s); tmpStrInd = tmpStrInd + strlen(p->value.s);}
+{ tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
+		break;
+	case 19: /* chars: STR */
+		fprintf(stderr, "0x%p: line 102: chars: STR\n",(void*)p);
+#line 102 "minor.brg"
+{ strcpy(&tmpStr[tmpStrInd], p->value.s); tmpStrInd = tmpStrInd + strlen(p->value.s); toPrint = tmpStr;}
 		break;
 	case 20: /* chars: CHARS(chars,chars) */
-		fprintf(stderr, "0x%p: line 102: chars: CHARS(chars,chars)\n",(void*)p);
-#line 102 "minor.brg"
+		fprintf(stderr, "0x%p: line 103: chars: CHARS(chars,chars)\n",(void*)p);
+#line 103 "minor.brg"
 {}
 		break;
 	default: break;
@@ -805,7 +806,7 @@ int yyselect(NODEPTR_TYPE p)
 }
 
 
-#line 104 "minor.brg"
+#line 105 "minor.brg"
 
 extern char **yynames;
 extern int trace, errors, debugNode;

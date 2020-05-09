@@ -6,14 +6,14 @@ program
 start
   'C' 'o' 'n' 'c' 'a' 't' ':' 105 '\n'!
 
-  $$"Str 1 com newline\n"!
-  $$"Str 2 com newline\n"!
+  "Str 1 com newline\n"!
+  "Str 2 com newline\n"!
 
-  $$"Var_1 = "!
-  $$var_1! '\n'!
+  "Var_1 = "!
+  var_1! '\n'!
 
-  $$"Var_3 = "!
-  $$var_3! '\n'!
+  "Var_3 = "!
+  var_3! '\n'!
 
   $$?!
 end
