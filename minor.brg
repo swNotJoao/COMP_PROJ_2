@@ -57,6 +57,7 @@ decls : VAR(NUMBER(ID, INT)) {
                               p->SUB(0)->SUB(1)->value.i);
                              }
 decls : VAR(STRING(ID, chars)) {
+                                tmpStr[tmpStrInd++] = '\0'; toPrint = tmpStr;
                                 fprintf(yyout, pfRODATA pfALIGN pfLABEL
                                 , p->SUB(0)->SUB(0)->value.s);
                                 outstr(toPrint);
@@ -94,7 +95,7 @@ print : PSTMT(chars) {
                       l, "_prints", 4);
                       tmpStrInd = 0;
                       }
-chars : CHARS(NIL, chars) {}
+chars : CHARS(NIL, chars) {tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
 chars : INT { tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
 chars : CHAR { tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
 chars : STR { strcpy(&tmpStr[tmpStrInd], p->value.s); tmpStrInd = tmpStrInd + strlen(p->value.s);}
