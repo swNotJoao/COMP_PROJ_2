@@ -50,7 +50,7 @@ static char *mkfunc(char *s) {
 	return buf;
 }
 %}
-%term STMT=';' PSTMT='!' READOP='?' AND='&' OR='|'
+%term STMT=';' PSTMT='!' READOP='?' AND='&' OR='|' IND='['
 %term POW='^' ADD='+' SUB='-' MUL='*' DIV='/' MOD='%' NOT='~' LT='<' GT='>' ISEQ='='
 %include "y.tab.h"
 
@@ -58,7 +58,6 @@ static char *mkfunc(char *s) {
 file : PROGRAM(decls, main) 1 {}
 
 decls : NIL {}
-decls : DECL(NIL, decls) {fprintf(yyout, pfTEXT);}
 decls : VAR(NUMBER(ID, INT)) {
                               fprintf(yyout, pfDATA pfLABEL pfINTEGER,
                               p->SUB(0)->SUB(0)->value.s,
@@ -71,7 +70,7 @@ decls : VAR(STRING(ID, chars)) {
                                 outstr(toPrint);
                                 tmpStrInd = 0;
                                }
-decls : DECL(decls, decls) {}
+decls : DECL(decls, decls) {fprintf(yyout, pfTEXT);}
 
 main : FUNCTION(END, instrs) {}
 
@@ -115,8 +114,11 @@ chars : CHARS(chars, chars) {}
 
 expr:	CHARS(NIL, INT)	1 {fprintf(yyout, pfIMM, p->SUB(1)->value.i); }
 expr: ID 1 { fprintf(yyout, pfADDRV, p->value.s); }
+expr: IND(expr, ID) {}
 expr: READOP {fprintf(yyout, pfCALL pfPUSH, "_readi"); }
 
+expr: ADDR(ID) { fprintf(yyout, pfADDR, p->SUB(0)->value.s); }
+expr: ADDR(IND(expr, ID)) {}
 expr: UMINUS(expr) 1 { fprintf(yyout, pfIMM pfMUL, -1); }
 expr:	ADD(expr,expr)	1 { fprintf(yyout, pfADD); }
 expr:	SUB(expr,expr)	1 { fprintf(yyout, pfSUB); }

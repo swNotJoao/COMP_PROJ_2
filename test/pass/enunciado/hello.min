@@ -1,6 +1,6 @@
 program
-  $$number var_1 := 1;
-  $$number var_2 := 2;
+  number var_1 := 1;
+  number var_2 := 2
   $$string var_3 := "String declarada" ' ' '1' ' ' 105;
   $$string var_4 := "LIXO\n"
 start
@@ -26,6 +26,8 @@ start
 
   $$?! '\n'!
   $$"Escreve um numero para elevar a 2: "! ?^2! '\n'!
+
+  $$&var_2! '\n'!
 end
 
 A partir daqui pode haver texto ( de qualquer tipo ), incluindo operadores,
