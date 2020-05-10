@@ -39,7 +39,7 @@
 #define NE 295
 #define GE 296
 #define LE 297
-#define uminus 298
+#define UMINUS 298
 #ifdef YYSTYPE
 #undef  YYSTYPE_IS_DECLARED
 #define YYSTYPE_IS_DECLARED 1

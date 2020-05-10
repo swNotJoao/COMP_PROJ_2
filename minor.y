@@ -40,7 +40,7 @@ static int ret, cycle;
 %left '+' '-'
 %left '*' '/' '%'
 %right '^'
-%nonassoc uminus
+%nonassoc UMINUS
 
 %%
 file	: PROGRAM decls START { func="main"; ret=tPUB + tINT + tFUNC; IDpush(); } main END
@@ -206,7 +206,7 @@ expr	: chars			{ $$ = $1; }
 	| expr '&' expr		{ $$ = binNode('&', $1, $3); $$->info = isInt($$, "&"); }
 	| expr '|' expr		{ $$ = binNode('|', $1, $3); $$->info = isInt($$, "|"); }
 	| '~' expr		{ $$ = uniNode('~', $2); $$->info = isUniInt($$, "~"); }
-	| '-' expr %prec uminus	{ $$ = uniNode(uminus, $2); $$->info = isUniInt($$, "-"); }
+	| '-' expr %prec UMINUS	{ $$ = uniNode(UMINUS, $2); $$->info = isUniInt($$, "-"); }
 	| lval EQ expr		{ $$ = binNode(EQ, $3, $1); $$->info = isAssign($$); }
 	| ID '(' exprs ')'	{ Node *n; int t = IDfind($1, (void**)&n); $$ = binNode('(', TID($1), $3); $$->user = n; $$->info = $$->SUB(0)->info = t; isCall($1, n, $3); }
 	;

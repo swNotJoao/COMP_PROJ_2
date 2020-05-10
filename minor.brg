@@ -43,7 +43,8 @@ static char *mkfunc(char *s) {
 	return buf;
 }
 %}
-%term STMT=';' PSTMT='!' READOP='?'
+%term STMT=';' PSTMT='!' READOP='?' AND='&' OR='|'
+%term POW='^' ADD='+' SUB='-' MUL='*' DIV='/' MOD='%' NOT='~' LT='<' GT='>'
 %include "y.tab.h"
 
 %%
@@ -71,10 +72,13 @@ instrs : FARGS(NIL, instr) {}
 
 instr : START(NIL, instr) {}
 
+instr : NIL
 instr : STMT(NIL, instr)
 instr : STMT(instr, instr)
 instr : print
+instr : expr
 
+print : PSTMT(expr) {fprintf(yyout, pfCALL pfTRASH, "_printi", 4);}
 print : PSTMT(READOP) {}
 print : PSTMT(ID) {
                   switch(p->SUB(0)->info){
@@ -101,6 +105,22 @@ chars : INT { tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
 chars : CHAR { tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
 chars : STR { strcpy(&tmpStr[tmpStrInd], p->value.s); tmpStrInd = tmpStrInd + strlen(p->value.s); toPrint = tmpStr;}
 chars : CHARS(chars, chars) {}
+
+expr:	CHARS(NIL, INT)	1 {fprintf(yyout, pfIMM, p->SUB(1)->value.i); }
+
+expr:	ADD(expr,expr)	1 { fprintf(yyout, pfADD); }
+expr:	SUB(expr,expr)	1 { fprintf(yyout, pfSUB); }
+expr:	MUL(expr,expr)	1 { fprintf(yyout, pfMUL); }
+expr:	DIV(expr,expr)	1 { fprintf(yyout, pfDIV); }
+expr:	MOD(expr,expr)	1 { fprintf(yyout, pfMOD); }
+expr:	EQ(expr,expr)	1 { fprintf(yyout, pfEQ); }
+expr:	NE(expr,expr)	1 { fprintf(yyout, pfNE); }
+expr:	LT(expr,expr)	1 { fprintf(yyout, pfLT); }
+expr:	LE(expr,expr)	1 { fprintf(yyout, pfLE); }
+expr:	GT(expr,expr)	1 { fprintf(yyout, pfGT); }
+expr:	GE(expr,expr)	1 { fprintf(yyout, pfGE); }
+expr:	UMINUS(expr)	1 { fprintf(yyout, pfNEG); }
+expr:	NOT(expr)	1 { fprintf(yyout, pfIMM pfEQ, 0); }
 
 %%
 extern char **yynames;

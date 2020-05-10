@@ -117,7 +117,7 @@ extern int YYPARSE_DECL();
 #define NE 295
 #define GE 296
 #define LE 297
-#define uminus 298
+#define UMINUS 298
 #define YYERRCODE 256
 typedef short YYINT;
 static const YYINT yylhs[] = {                           -1,
@@ -575,7 +575,7 @@ static const char *const yyname[] = {
 "PROGRAM","MODULE","END","PUBLIC","FORWARD","STRING","NUMBER","ARRAY",
 "FUNCTION","VOID","CONST","IF","THEN","FI","ELIF","ELSE","RETURN","START","FOR",
 "UNTIL","STEP","DO","DONE","REPEAT","STOP","FARGS","CHARS","INTS","ADDR","VAR",
-"ARGS","DECL","NIL","EQ","NE","GE","LE","uminus",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+"ARGS","DECL","NIL","EQ","NE","GE","LE","UMINUS",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"illegal-symbol",
 };
 static const char *const yyrule[] = {
@@ -1530,7 +1530,7 @@ case 97:
 break;
 case 98:
 #line 209 "minor.y"
-	{ yyval.n = uniNode(uminus, yystack.l_mark[0].n); yyval.n->info = isUniInt(yyval.n, "-"); }
+	{ yyval.n = uniNode(UMINUS, yystack.l_mark[0].n); yyval.n->info = isUniInt(yyval.n, "-"); }
 break;
 case 99:
 #line 210 "minor.y"

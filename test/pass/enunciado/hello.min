@@ -1,19 +1,21 @@
 program
-  number var_1 := 1;
-  number var_2 := 2;
-  string var_3 := "String declarada" ' ' '1' ' ' 105;
-  string var_4 := "LIXO\n"
+  $$number var_1 := 1;
+  $$number var_2 := 2;
+  $$string var_3 := "String declarada" ' ' '1' ' ' 105;
+  $$string var_4 := "LIXO\n"
 start
-  'C' 'o' 'n' 'c' 'a' 't' ':' 105 '\n'!
+  $$'C' 'o' 'n' 'c' 'a' 't' ':' 105 '\n'!
 
-  "Str 1 com newline\n"!
-  "Str 2 com newline\n"!
+  $$"Str 1 com newline\n"!
+  $$"Str 2 com newline\n"!
 
-  "Var_1 = "!
-  var_1! '\n'!
+  $$"Var_1 = "!
+  $$var_1! '\n'!
 
-  "Var_3 = "!
-  var_3! '\n'!
+  $$"Var_3 = "!
+  $$var_3! '\n'!
+
+  ((1+2)*3 + 1)!
 
   $$?!
 end
