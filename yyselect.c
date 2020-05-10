@@ -1,5 +1,5 @@
 /*
-generated at Mon May 11 00:20:28 2020
+generated at Mon May 11 00:25:13 2020
 by $Id: pburg.c,v 2.7 2020/04/06 09:41:42 prs Exp $
 */
 #include <stdio.h>
@@ -251,6 +251,7 @@ static short *yynts[] = {
 	yynts_8,	/* 43 */
 	yynts_8,	/* 44 */
 	yynts_10,	/* 45 */
+	yynts_8,	/* 46 */
 };
 
 
@@ -301,6 +302,7 @@ static YYCONST char *yystring[] = {
 /* 43 */	"expr: UMINUS(expr)",
 /* 44 */	"expr: NOT(expr)",
 /* 45 */	"expr: POW(expr,expr)",
+/* 46 */	"expr: EQ(expr,ID)",
 };
 
 #ifndef TRACE
@@ -387,6 +389,7 @@ static short yydecode_expr[] = {
 	43,
 	44,
 	45,
+	46,
 };
 
 static int yyrule(void *state, int goalnt) {
@@ -927,7 +930,20 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		}
 		break;
 	case 294: /* EQ */
-		return;
+		yylabel(LEFT_CHILD(a),a);
+		yylabel(RIGHT_CHILD(a),a);
+		if (	/* expr: EQ(expr,ID) */
+			OP_LABEL(RIGHT_CHILD(a)) == 259 /* ID */
+		) {
+			c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyexpr_NT] + 1;
+			yytrace(a, 46, c + 0, p->cost[yyexpr_NT]);
+			if (c + 0 < p->cost[yyexpr_NT]) {
+				p->cost[yyexpr_NT] = c + 0;
+				p->rule.yyexpr = 25;
+				yyclosure_expr(a, c + 0);
+			}
+		}
+		break;
 	case 295: /* NE */
 		yylabel(LEFT_CHILD(a),a);
 		yylabel(RIGHT_CHILD(a),a);
@@ -1042,6 +1058,7 @@ static void yykids(NODEPTR_TYPE p, int eruleno, NODEPTR_TYPE kids[]) {
 	case 12: /* instr: print */
 		kids[0] = p;
 		break;
+	case 46: /* expr: EQ(expr,ID) */
 	case 44: /* expr: NOT(expr) */
 	case 43: /* expr: UMINUS(expr) */
 	case 29: /* expr: UMINUS(expr) */
@@ -1334,6 +1351,11 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
                                                 mklbl(lbl+1), mklbl(lbl));
                                                 lbl = lbl + 2;}
 		break;
+	case 46: /* expr: EQ(expr,ID) */
+		fprintf(stderr, "0x%p: line 152: expr: EQ(expr,ID)\n",(void*)p);
+#line 152 "minor.brg"
+{fprintf(yyout, pfADDRA, p->SUB(1)->value.s); }
+		break;
 	default: break;
   }
 }
@@ -1350,7 +1372,7 @@ int yyselect(NODEPTR_TYPE p)
 }
 
 
-#line 153 "minor.brg"
+#line 154 "minor.brg"
 
 extern char **yynames;
 extern int trace, errors, debugNode;

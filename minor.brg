@@ -149,6 +149,7 @@ expr: POW(expr, expr) 1 {lbl++; fprintf(yyout, ";POW\n"
                                                 mklbl(lbl+1), mklbl(lbl),
                                                 mklbl(lbl+1), mklbl(lbl));
                                                 lbl = lbl + 2;}
+expr: EQ(expr, ID) 1 {fprintf(yyout, pfADDRA, p->SUB(1)->value.s); }
 
 %%
 extern char **yynames;

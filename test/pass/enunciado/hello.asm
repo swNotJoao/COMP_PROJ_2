@@ -22,28 +22,23 @@ $var_2:
 	dd	2
 ; TEXT
 segment	.text
+; IMM
+	push	dword 2
+; ADDRA
+	pop	eax
+	mov	[$var_1], eax
+; ADDRV
+	push	dword [$var_1]
+; CALL
+	call	$_printi
+; TRASH
+	add	esp, 4
 ; RODATA
 segment	.rodata
 ; ALIGN
 align	4
 ; LABEL
 $_L1:
-; CHAR
-	db	0x43
-; CHAR
-	db	0x6F
-; CHAR
-	db	0x6E
-; CHAR
-	db	0x63
-; CHAR
-	db	0x61
-; CHAR
-	db	0x74
-; CHAR
-	db	0x3A
-; CHAR
-	db	0x69
 ; CHAR
 	db	0x0A
 ; CHAR
@@ -52,6 +47,40 @@ $_L1:
 segment	.text
 ; ADDR
 	push	dword $_L1
+; CALL
+	call	$_prints
+; TRASH
+	add	esp, 4
+; ADDRV
+	push	dword [$var_1]
+; IMM
+	push	dword 1
+; ADD
+	pop	eax
+	add	dword [esp], eax
+; ADDRA
+	pop	eax
+	mov	[$var_2], eax
+; ADDRV
+	push	dword [$var_2]
+; CALL
+	call	$_printi
+; TRASH
+	add	esp, 4
+; RODATA
+segment	.rodata
+; ALIGN
+align	4
+; LABEL
+$_L2:
+; CHAR
+	db	0x0A
+; CHAR
+	db	0x00
+; TEXT
+segment	.text
+; ADDR
+	push	dword $_L2
 ; CALL
 	call	$_prints
 ; TRASH
