@@ -6,26 +6,45 @@ align	4
 global	$_main:function
 ; LABEL
 $_main:
+; DATA
+segment	.data
+; LABEL
+$var_1:
+; INTEGER
+	dd	1
+; TEXT
+segment	.text
+; ADDRV
+	push	dword [$var_1]
 ; IMM
 	push	dword 1
-; CALL
-	call	$_printi
-; TRASH
-	add	esp, 4
+; EQ
+	pop	eax
+	xor	ecx, ecx
+	cmp	[esp], eax
+	sete	cl
+	mov	[esp], ecx
 ; IMM
-	push	dword 4
+	push	dword 0
+; EQ
+	pop	eax
+	xor	ecx, ecx
+	cmp	[esp], eax
+	sete	cl
+	mov	[esp], ecx
 ; IMM
-	push	dword 2
-;POW
-pop ebx
-pop ecx
-mov eax,1
-_L2:
-jcxz _L1
-mul ebx
-loop _L2
-_L1:
-push eax
+	push	dword 1
+; IMM
+	push	dword 1
+; EQ
+	pop	eax
+	xor	ecx, ecx
+	cmp	[esp], eax
+	sete	cl
+	mov	[esp], ecx
+; AND
+	pop	eax
+	and	dword [esp], eax
 ; CALL
 	call	$_printi
 ; TRASH
@@ -35,7 +54,7 @@ segment	.rodata
 ; ALIGN
 align	4
 ; LABEL
-$_L4:
+$_L1:
 ; CHAR
 	db	0x0A
 ; CHAR
@@ -43,7 +62,7 @@ $_L4:
 ; TEXT
 segment	.text
 ; ADDR
-	push	dword $_L4
+	push	dword $_L1
 ; CALL
 	call	$_prints
 ; TRASH

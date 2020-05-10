@@ -51,7 +51,7 @@ static char *mkfunc(char *s) {
 }
 %}
 %term STMT=';' PSTMT='!' READOP='?' AND='&' OR='|'
-%term POW='^' ADD='+' SUB='-' MUL='*' DIV='/' MOD='%' NOT='~' LT='<' GT='>'
+%term POW='^' ADD='+' SUB='-' MUL='*' DIV='/' MOD='%' NOT='~' LT='<' GT='>' ISEQ='='
 %include "y.tab.h"
 
 %%
@@ -86,7 +86,7 @@ instr : print
 instr : expr
 
 print : PSTMT(READOP) {}
-print : PSTMT(ID) {
+print : PSTMT(ID) 1{
                   switch(p->SUB(0)->info){
                     case tINT:
                       fprintf(yyout, pfADDRV pfCALL pfTRASH,
@@ -106,7 +106,7 @@ print : PSTMT(chars) {
                       l, "_prints", 4);
                       tmpStrInd = 0;
                       }
-print : PSTMT(expr) {fprintf(yyout, pfCALL pfTRASH, "_printi", 4);}
+print : PSTMT(expr) 2{fprintf(yyout, pfCALL pfTRASH, "_printi", 4);}
 
 chars : CHARS(NIL, chars) 2{}
 chars : INT { tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
@@ -115,18 +115,21 @@ chars : STR { strcpy(&tmpStr[tmpStrInd], p->value.s); tmpStrInd = tmpStrInd + st
 chars : CHARS(chars, chars) {}
 
 expr:	CHARS(NIL, INT)	1 {fprintf(yyout, pfIMM, p->SUB(1)->value.i); }
+expr: ID 1 { fprintf(yyout, pfTEXT pfADDRV, p->value.s); }
 
 expr:	ADD(expr,expr)	1 { fprintf(yyout, pfADD); }
 expr:	SUB(expr,expr)	1 { fprintf(yyout, pfSUB); }
 expr:	MUL(expr,expr)	1 { fprintf(yyout, pfMUL); }
 expr:	DIV(expr,expr)	1 { fprintf(yyout, pfDIV); }
 expr:	MOD(expr,expr)	1 { fprintf(yyout, pfMOD); }
-expr:	EQ(expr,expr)	1 { fprintf(yyout, pfEQ); }
+expr:	ISEQ(expr,expr)	1 { fprintf(yyout, pfEQ); }
 expr:	NE(expr,expr)	1 { fprintf(yyout, pfNE); }
 expr:	LT(expr,expr)	1 { fprintf(yyout, pfLT); }
 expr:	LE(expr,expr)	1 { fprintf(yyout, pfLE); }
 expr:	GT(expr,expr)	1 { fprintf(yyout, pfGT); }
 expr:	GE(expr,expr)	1 { fprintf(yyout, pfGE); }
+expr:	AND(expr,expr)	1 { fprintf(yyout, pfAND); }
+expr:	OR(expr,expr)	1 { fprintf(yyout, pfOR); }
 expr:	UMINUS(expr)	1 { fprintf(yyout, pfNEG); }
 expr:	NOT(expr)	1 { fprintf(yyout, pfIMM pfEQ, 0); }
 expr: POW(expr, expr) 1 {lbl++; fprintf(yyout, ";POW\n"
