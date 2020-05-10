@@ -6,45 +6,110 @@ align	4
 global	$_main:function
 ; LABEL
 $_main:
-; DATA
-segment	.data
+; RODATA
+segment	.rodata
+; ALIGN
+align	4
 ; LABEL
-$var_1:
-; INTEGER
-	dd	1
+$_L1:
+; CHAR
+	db	0x45
+; CHAR
+	db	0x73
+; CHAR
+	db	0x63
+; CHAR
+	db	0x72
+; CHAR
+	db	0x65
+; CHAR
+	db	0x76
+; CHAR
+	db	0x65
+; CHAR
+	db	0x20
+; CHAR
+	db	0x75
+; CHAR
+	db	0x6D
+; CHAR
+	db	0x20
+; CHAR
+	db	0x6E
+; CHAR
+	db	0x75
+; CHAR
+	db	0x6D
+; CHAR
+	db	0x65
+; CHAR
+	db	0x72
+; CHAR
+	db	0x6F
+; CHAR
+	db	0x20
+; CHAR
+	db	0x70
+; CHAR
+	db	0x61
+; CHAR
+	db	0x72
+; CHAR
+	db	0x61
+; CHAR
+	db	0x20
+; CHAR
+	db	0x65
+; CHAR
+	db	0x6C
+; CHAR
+	db	0x65
+; CHAR
+	db	0x76
+; CHAR
+	db	0x61
+; CHAR
+	db	0x72
+; CHAR
+	db	0x20
+; CHAR
+	db	0x61
+; CHAR
+	db	0x20
+; CHAR
+	db	0x32
+; CHAR
+	db	0x3A
+; CHAR
+	db	0x20
+; CHAR
+	db	0x00
 ; TEXT
 segment	.text
-; ADDRV
-	push	dword [$var_1]
+; ADDR
+	push	dword $_L1
+; CALL
+	call	$_prints
+; TRASH
+	add	esp, 4
 ; IMM
-	push	dword 1
-; EQ
-	pop	eax
-	xor	ecx, ecx
-	cmp	[esp], eax
-	sete	cl
-	mov	[esp], ecx
-; IMM
-	push	dword 0
-; EQ
-	pop	eax
-	xor	ecx, ecx
-	cmp	[esp], eax
-	sete	cl
-	mov	[esp], ecx
-; IMM
-	push	dword 1
-; IMM
-	push	dword 1
-; EQ
-	pop	eax
-	xor	ecx, ecx
-	cmp	[esp], eax
-	sete	cl
-	mov	[esp], ecx
-; AND
-	pop	eax
-	and	dword [esp], eax
+	push	dword 2
+; CALL
+	call	$_readi
+; PUSH
+	push	eax
+;POW
+pop ebx
+pop ecx
+mov eax,1
+_L3:
+jcxz _L2
+mul ebx
+loop _L3
+_L2:
+push eax
+; TEXT
+segment	.text
 ; CALL
 	call	$_printi
 ; TRASH
@@ -54,7 +119,7 @@ segment	.rodata
 ; ALIGN
 align	4
 ; LABEL
-$_L1:
+$_L5:
 ; CHAR
 	db	0x0A
 ; CHAR
@@ -62,7 +127,7 @@ $_L1:
 ; TEXT
 segment	.text
 ; ADDR
-	push	dword $_L1
+	push	dword $_L5
 ; CALL
 	call	$_prints
 ; TRASH

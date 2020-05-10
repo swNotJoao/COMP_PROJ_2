@@ -58,7 +58,7 @@ static char *mkfunc(char *s) {
 file : PROGRAM(decls, main) 1 {}
 
 decls : NIL {}
-decls : DECL(NIL, decls) {}
+decls : DECL(NIL, decls) {fprintf(yyout, pfTEXT);}
 decls : VAR(NUMBER(ID, INT)) {
                               fprintf(yyout, pfDATA pfLABEL pfINTEGER,
                               p->SUB(0)->SUB(0)->value.s,
@@ -85,7 +85,6 @@ instr : STMT(instr, instr)
 instr : print
 instr : expr
 
-print : PSTMT(READOP) {}
 print : PSTMT(ID) 1{
                   switch(p->SUB(0)->info){
                     case tINT:
@@ -106,7 +105,7 @@ print : PSTMT(chars) {
                       l, "_prints", 4);
                       tmpStrInd = 0;
                       }
-print : PSTMT(expr) 2{fprintf(yyout, pfCALL pfTRASH, "_printi", 4);}
+print : PSTMT(expr) 2{fprintf(yyout, pfTEXT pfCALL pfTRASH, "_printi", 4);}
 
 chars : CHARS(NIL, chars) 2{}
 chars : INT { tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
@@ -115,8 +114,10 @@ chars : STR { strcpy(&tmpStr[tmpStrInd], p->value.s); tmpStrInd = tmpStrInd + st
 chars : CHARS(chars, chars) {}
 
 expr:	CHARS(NIL, INT)	1 {fprintf(yyout, pfIMM, p->SUB(1)->value.i); }
-expr: ID 1 { fprintf(yyout, pfTEXT pfADDRV, p->value.s); }
+expr: ID 1 { fprintf(yyout, pfADDRV, p->value.s); }
+expr: READOP {fprintf(yyout, pfCALL pfPUSH, "_readi"); }
 
+expr: UMINUS(expr) 1 { fprintf(yyout, pfIMM pfMUL, -1); }
 expr:	ADD(expr,expr)	1 { fprintf(yyout, pfADD); }
 expr:	SUB(expr,expr)	1 { fprintf(yyout, pfSUB); }
 expr:	MUL(expr,expr)	1 { fprintf(yyout, pfMUL); }

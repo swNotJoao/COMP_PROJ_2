@@ -1,5 +1,5 @@
 program
-  number var_1 := 1
+  $$number var_1 := 1;
   $$number var_2 := 2;
   $$string var_3 := "String declarada" ' ' '1' ' ' 105;
   $$string var_4 := "LIXO\n"
@@ -22,8 +22,10 @@ start
   $$1 + 1! '\n'!
 
   $$~(var_1 = 1)&(1 = 1)! '\n'!
+  $$-((1+2)^2)! '\n'!
 
-  $$?!
+  $$?! '\n'!
+  $$"Escreve um numero para elevar a 2: "! ?^2! '\n'!
 end
 
 A partir daqui pode haver texto ( de qualquer tipo ), incluindo operadores,
