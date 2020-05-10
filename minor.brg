@@ -85,7 +85,6 @@ instr : STMT(instr, instr)
 instr : print
 instr : expr
 
-print : PSTMT(expr) {fprintf(yyout, pfCALL pfTRASH, "_printi", 4);}
 print : PSTMT(READOP) {}
 print : PSTMT(ID) {
                   switch(p->SUB(0)->info){
@@ -107,7 +106,9 @@ print : PSTMT(chars) {
                       l, "_prints", 4);
                       tmpStrInd = 0;
                       }
-chars : CHARS(NIL, chars) {}
+print : PSTMT(expr) {fprintf(yyout, pfCALL pfTRASH, "_printi", 4);}
+
+chars : CHARS(NIL, chars) 2{}
 chars : INT { tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
 chars : CHAR { tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
 chars : STR { strcpy(&tmpStr[tmpStrInd], p->value.s); tmpStrInd = tmpStrInd + strlen(p->value.s); toPrint = tmpStr;}
@@ -128,7 +129,19 @@ expr:	GT(expr,expr)	1 { fprintf(yyout, pfGT); }
 expr:	GE(expr,expr)	1 { fprintf(yyout, pfGE); }
 expr:	UMINUS(expr)	1 { fprintf(yyout, pfNEG); }
 expr:	NOT(expr)	1 { fprintf(yyout, pfIMM pfEQ, 0); }
-expr: POW(expr, expr) 1 {lbl++; fprintf(yyout, ";POW\npop ebx\npop ecx\nmov eax,1\n%s:\njcxz %s\nmul ebx\nloop %s\n%s:\npush eax\n", mklbl(lbl+1), mklbl(lbl),mklbl(lbl+1), mklbl(lbl)); lbl = lbl + 2;}
+expr: POW(expr, expr) 1 {lbl++; fprintf(yyout, ";POW\n"
+                                                "pop ebx\n"
+                                                "pop ecx\n"
+                                                "mov eax,1\n"
+                                                "%s:\n"
+                                                "jcxz %s\n"
+                                                "mul ebx\n"
+                                                "loop %s\n"
+                                                "%s:\n"
+                                                "push eax\n",
+                                                mklbl(lbl+1), mklbl(lbl),
+                                                mklbl(lbl+1), mklbl(lbl));
+                                                lbl = lbl + 2;}
 
 %%
 extern char **yynames;

@@ -6,22 +6,10 @@ align	4
 global	$_main:function
 ; LABEL
 $_main:
-; RODATA
-segment	.rodata
-; ALIGN
-align	4
-; LABEL
-$_L1:
-; CHAR
-	db	0x01
-; CHAR
-	db	0x00
-; TEXT
-segment	.text
-; ADDR
-	push	dword $_L1
+; IMM
+	push	dword 1
 ; CALL
-	call	$_prints
+	call	$_printi
 ; TRASH
 	add	esp, 4
 ; IMM
@@ -32,11 +20,11 @@ segment	.text
 pop ebx
 pop ecx
 mov eax,1
-_L3:
-jcxz _L2
-mul ebx
-loop _L3
 _L2:
+jcxz _L1
+mul ebx
+loop _L2
+_L1:
 push eax
 ; CALL
 	call	$_printi
@@ -47,7 +35,7 @@ segment	.rodata
 ; ALIGN
 align	4
 ; LABEL
-$_L5:
+$_L4:
 ; CHAR
 	db	0x0A
 ; CHAR
@@ -55,7 +43,7 @@ $_L5:
 ; TEXT
 segment	.text
 ; ADDR
-	push	dword $_L5
+	push	dword $_L4
 ; CALL
 	call	$_prints
 ; TRASH
