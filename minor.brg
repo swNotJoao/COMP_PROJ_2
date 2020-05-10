@@ -36,6 +36,13 @@ static void outstr(char *s) {
   fprintf(yyout, pfCHAR, 0);
 }
 
+static char *mkpowlbl(char *s) {
+static char buf[80];
+strcpy(buf, "_");
+strcat(buf, s);
+return buf;
+}
+
 static char *mkfunc(char *s) {
 	static char buf[80];
 	strcpy(buf, "_");
@@ -121,6 +128,7 @@ expr:	GT(expr,expr)	1 { fprintf(yyout, pfGT); }
 expr:	GE(expr,expr)	1 { fprintf(yyout, pfGE); }
 expr:	UMINUS(expr)	1 { fprintf(yyout, pfNEG); }
 expr:	NOT(expr)	1 { fprintf(yyout, pfIMM pfEQ, 0); }
+expr: POW(expr, expr) 1 {lbl++; fprintf(yyout, ";POW\npop ebx\npop ecx\nmov eax,1\n%s:\njcxz %s\nmul ebx\nloop %s\n%s:\npush eax\n", mklbl(lbl+1), mklbl(lbl),mklbl(lbl+1), mklbl(lbl)); lbl = lbl + 2;}
 
 %%
 extern char **yynames;
