@@ -112,7 +112,8 @@ chars : CHAR { tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
 chars : STR { strcpy(&tmpStr[tmpStrInd], p->value.s); tmpStrInd = tmpStrInd + strlen(p->value.s); toPrint = tmpStr;}
 chars : CHARS(chars, chars) {}
 
-expr:	CHARS(NIL, INT)	1 {fprintf(yyout, pfIMM, p->SUB(1)->value.i); }
+expr:	CHARS(NIL, INT)	1 {fprintf(yyout, pfIMM, p->SUB(1)->value.i);}
+expr:	CHARS(NIL, CHAR)	1 {fprintf(yyout, pfIMM, p->SUB(1)->value.i); }
 expr: ID 1 { fprintf(yyout, pfADDRV, p->value.s); }
 expr: IND(expr, ID) {}
 expr: READOP {fprintf(yyout, pfCALL pfPUSH, "_readi"); }

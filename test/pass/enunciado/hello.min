@@ -28,6 +28,8 @@ start
   $$"Escreve um numero para elevar a 2: "! ?^2! '\n'!
 
   $$&var_2! '\n'!
+
+  $$' ' + 1!
 end
 
 A partir daqui pode haver texto ( de qualquer tipo ), incluindo operadores,
