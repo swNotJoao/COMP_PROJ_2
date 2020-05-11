@@ -115,11 +115,20 @@ chars : CHARS(chars, chars) {}
 expr:	CHARS(NIL, INT)	1 {fprintf(yyout, pfIMM, p->SUB(1)->value.i);}
 expr:	CHARS(NIL, CHAR)	1 {fprintf(yyout, pfIMM, p->SUB(1)->value.i); }
 expr: ID 1 { fprintf(yyout, pfADDRV, p->value.s); }
-expr: IND(expr, ID) {}
+expr: IND(expr, ID) { fprintf(yyout, pfADDR pfADD pfPOP "push dword [eax]\n", p->SUB(1)->value.s); }
 expr: READOP {fprintf(yyout, pfCALL pfPUSH, "_readi"); }
 
 expr: ADDR(ID) { fprintf(yyout, pfADDR, p->SUB(0)->value.s); }
-expr: ADDR(IND(expr, ID)) {}
+expr: ADDR(IND(expr, ID)) { switch(p->SUB(0)->SUB(1)->info){
+                              case tINT:
+                                fprintf(yyout, pfIMM pfMUL pfADDR pfADD,
+                                4, p->SUB(0)->SUB(1)->value.s);
+                              break;
+                              case tSTR:
+                                fprintf(yyout, pfADDR pfADD,
+                                p->SUB(0)->SUB(1)->value.s);
+                              break;
+                            }}
 expr: UMINUS(expr) 1 { fprintf(yyout, pfIMM pfMUL, -1); }
 expr:	ADD(expr,expr)	1 { fprintf(yyout, pfADD); }
 expr:	SUB(expr,expr)	1 { fprintf(yyout, pfSUB); }
