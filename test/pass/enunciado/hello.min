@@ -34,7 +34,8 @@ start
   $$var_2 := var_1 + 1;
   $$var_2! '\n'!
   &var_3[1]! '\n'!
-  var_3[1]! '\n'!
+  $$var_3[1]! '\n'!
+  $$var_3[1] := 'J';
 end
 
 A partir daqui pode haver texto ( de qualquer tipo ), incluindo operadores,

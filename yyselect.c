@@ -1,5 +1,5 @@
 /*
-generated at Mon May 11 09:57:53 2020
+generated at Mon May 11 22:23:28 2020
 by $Id: pburg.c,v 2.7 2020/04/06 09:41:42 prs Exp $
 */
 #include <stdio.h>
@@ -1237,7 +1237,7 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
 	case 25: /* expr: IND(expr,ID) */
 		fprintf(stderr, "0x%p: line 118: expr: IND(expr,ID)\n",(void*)p);
 #line 118 "minor.brg"
-{ fprintf(yyout, pfADDR pfADD pfPOP "push dword [eax]\n", p->SUB(1)->value.s); }
+{ fprintf(yyout, pfADDR pfADD, p->SUB(1)->value.s); }
 		break;
 	case 26: /* expr: READOP */
 		fprintf(stderr, "0x%p: line 119: expr: READOP\n",(void*)p);

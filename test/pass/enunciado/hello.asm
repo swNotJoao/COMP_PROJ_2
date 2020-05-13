@@ -130,9 +130,6 @@ segment	.text
 ; ADD
 	pop	eax
 	add	dword [esp], eax
-; POP
-	pop	eax
-push dword [eax]
 ; TEXT
 segment	.text
 ; CALL
