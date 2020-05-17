@@ -7,7 +7,7 @@ global	$_main:function
 ; LABEL
 $_main:
 ; IMM
-	push	dword 1
+	push	dword 0
 ; JZ
 	pop	eax
 	cmp	eax, byte 0
@@ -37,7 +37,7 @@ segment	.text
 ; JMP
 	jmp	dword $_L3
 ; LABEL
-$.L-1:
+$_L1:
 ; RODATA
 segment	.rodata
 ; ALIGN
@@ -65,7 +65,7 @@ segment	.text
 ; TRASH
 	add	esp, 4
 ; LABEL
-$.L-1:
+$_L3:
 ; IMM
 	push	dword 0
 ; JZ
@@ -101,9 +101,9 @@ segment	.text
 ; JMP
 	jmp	dword $_L7
 ; LABEL
-$.L-1:
+$_L5:
 ; LABEL
-$.L-1:
+$_L7:
 ; IMM
 	push	dword 0
 ; POP

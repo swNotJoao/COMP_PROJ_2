@@ -1,5 +1,5 @@
 /*
-generated at Sun May 17 22:49:01 2020
+generated at Sun May 17 22:50:13 2020
 by $Id: pburg.c,v 2.7 2020/04/06 09:41:42 prs Exp $
 */
 #include <stdio.h>
@@ -1256,13 +1256,13 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
 		fprintf(stderr, "0x%p: line 88: instr: FI(THEN(if,NIL),instr)\n",(void*)p);
 #line 88 "minor.brg"
 { fprintf(yyout, pfLABEL,
-                                      mklbl(LEFT_CHILD(p)->place)); }
+                                      mklbl(LEFT_CHILD(p)->SUB(0)->place)); }
 		break;
 	case 15: /* if: IF(cond,instr) */
 		fprintf(stderr, "0x%p: line 90: if: IF(cond,instr)\n",(void*)p);
 #line 90 "minor.brg"
 {p->place = ++lbl; fprintf(yyout, pfJMP pfLABEL,
-				            mklbl(p->place), mklbl(LEFT_CHILD(p)->SUB(0)->place)); }
+				            mklbl(p->place), mklbl(LEFT_CHILD(p)->place)); }
 		break;
 	case 16: /* instr: FI(THEN(instr,NIL),NIL) */
 		fprintf(stderr, "0x%p: line 93: instr: FI(THEN(instr,NIL),NIL)\n",(void*)p);
