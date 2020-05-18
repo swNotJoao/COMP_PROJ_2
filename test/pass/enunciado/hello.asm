@@ -6,8 +6,24 @@ align	4
 global	$_main:function
 ; LABEL
 $_main:
+; DATA
+segment	.data
+; LABEL
+$x:
+; INTEGER
+	dd	0
+; TEXT
+segment	.text
+; ADDRV
+	push	dword [$x]
 ; IMM
-	push	dword 0
+	push	dword 1
+; EQ
+	pop	eax
+	xor	ecx, ecx
+	cmp	[esp], eax
+	sete	cl
+	mov	[esp], ecx
 ; JZ
 	pop	eax
 	cmp	eax, byte 0
@@ -19,9 +35,17 @@ align	4
 ; LABEL
 $_L2:
 ; CHAR
-	db	0x49
+	db	0x58
 ; CHAR
-	db	0x46
+	db	0x20
+; CHAR
+	db	0x3D
+; CHAR
+	db	0x3D
+; CHAR
+	db	0x20
+; CHAR
+	db	0x31
 ; CHAR
 	db	0x0A
 ; CHAR
@@ -38,20 +62,38 @@ segment	.text
 	jmp	dword $_L3
 ; LABEL
 $_L1:
+; ADDRV
+	push	dword [$x]
+; IMM
+	push	dword 0
+; EQ
+	pop	eax
+	xor	ecx, ecx
+	cmp	[esp], eax
+	sete	cl
+	mov	[esp], ecx
+; JZ
+	pop	eax
+	cmp	eax, byte 0
+	je	near $_L4
 ; RODATA
 segment	.rodata
 ; ALIGN
 align	4
 ; LABEL
-$_L4:
+$_L5:
 ; CHAR
-	db	0x45
+	db	0x58
 ; CHAR
-	db	0x4C
+	db	0x20
 ; CHAR
-	db	0x53
+	db	0x3D
 ; CHAR
-	db	0x45
+	db	0x3D
+; CHAR
+	db	0x20
+; CHAR
+	db	0x30
 ; CHAR
 	db	0x0A
 ; CHAR
@@ -59,51 +101,51 @@ $_L4:
 ; TEXT
 segment	.text
 ; ADDR
-	push	dword $_L4
+	push	dword $_L5
+; CALL
+	call	$_prints
+; TRASH
+	add	esp, 4
+; JMP
+	jmp	dword $_L6
+; LABEL
+$_L4:
+; JMP
+	jmp	dword $_L7
+; LABEL
+$_L6:
+; RODATA
+segment	.rodata
+; ALIGN
+align	4
+; LABEL
+$_L8:
+; CHAR
+	db	0x58
+; CHAR
+	db	0x20
+; CHAR
+	db	0x21
+; CHAR
+	db	0x3D
+; CHAR
+	db	0x20
+; CHAR
+	db	0x31
+; CHAR
+	db	0x0A
+; CHAR
+	db	0x00
+; TEXT
+segment	.text
+; ADDR
+	push	dword $_L8
 ; CALL
 	call	$_prints
 ; TRASH
 	add	esp, 4
 ; LABEL
 $_L3:
-; IMM
-	push	dword 0
-; JZ
-	pop	eax
-	cmp	eax, byte 0
-	je	near $_L5
-; RODATA
-segment	.rodata
-; ALIGN
-align	4
-; LABEL
-$_L6:
-; CHAR
-	db	0x4E
-; CHAR
-	db	0x4F
-; CHAR
-	db	0x50
-; CHAR
-	db	0x45
-; CHAR
-	db	0x0A
-; CHAR
-	db	0x00
-; TEXT
-segment	.text
-; ADDR
-	push	dword $_L6
-; CALL
-	call	$_prints
-; TRASH
-	add	esp, 4
-; JMP
-	jmp	dword $_L7
-; LABEL
-$_L5:
-; LABEL
-$_L7:
 ; IMM
 	push	dword 0
 ; POP

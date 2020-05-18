@@ -84,6 +84,11 @@ instr : STMT(instr, instr)
 instr : print
 instr : expr
 
+instr:	FI(THEN(if, elif), instr)	1 { fprintf(yyout, pfLABEL,
+                                      mklbl(LEFT_CHILD(p)->SUB(0)->place)); }
+elif : ELIF(elif, if) { p->place = ++lbl; fprintf(yyout, pfJMP pfLABEL,
+				                mklbl(RIGHT_CHILD(p)->place), mklbl(p->place)); }
+elif : NIL 2 {}
 
 instr:	FI(THEN(if, NIL), instr)	1 { fprintf(yyout, pfLABEL,
                                       mklbl(LEFT_CHILD(p)->SUB(0)->place)); }

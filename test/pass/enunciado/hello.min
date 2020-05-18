@@ -1,13 +1,12 @@
 program
-
+  number x := 0
 start
-  if 0 then
-    "IF\n"!
+  if x = 1 then
+    "X == 1\n"!
+  elif x = 0 then
+    "X == 0\n"!
   else
-    "ELSE\n"!
+    "X != 1\n"!
   fi
 
-  if 0 then
-    "NOPE\n"!
-  fi
 end
