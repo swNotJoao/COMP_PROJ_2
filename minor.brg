@@ -76,7 +76,14 @@ main : FUNCTION(END, instrs) {}
 
 instrs : FARGS(NIL, instr) {}
 
+instr : START(fvars, instr) {}
 instr : START(NIL, instr) {}
+
+fvars : ARGS(NIL, fvars) {}
+fvars : fvar {}
+fvar : NUMBER(ID, NIL) {fprintf(yyout, pfDATA pfLABEL pfINTEGER pfTEXT,
+                        p->SUB(0)->value.s,
+                        0);}
 
 instr : NIL
 instr : STMT(NIL, instr)
@@ -120,6 +127,7 @@ print : PSTMT(chars) {
                       tmpStrInd = 0;
                       }
 print : PSTMT(expr) 2{fprintf(yyout, pfTEXT pfCALL pfTRASH, "_printi", 4);}
+print : PSTMT(CHARS(NIL,INT)) 1{fprintf(yyout, pfTEXT pfIMM pfCALL pfTRASH, p->SUB(0)->SUB(1)->value.i, "_printi", 4);}
 
 chars : CHARS(NIL, chars) 2{}
 chars : INT { tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
