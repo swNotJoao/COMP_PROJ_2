@@ -24,6 +24,9 @@ int tmpStrInd = 0;
 char tmpStr[1024];
 char *toPrint = NULL;
 
+static char *extrns[100]; /* emit externs at the end only */
+static int extcnt;
+
 extern FILE *yyout;
 static char *mklbl(int n) {
 	static char buf[20];
@@ -58,6 +61,11 @@ static char *mkfunc(char *s) {
 file : PROGRAM(decls, main) 1 {}
 
 decls : NIL {}
+decls : VAR(ARRAY(ID, INTS(INT, NIL))) { fprintf(yyout, pfDATA pfLABEL,
+                                         p->SUB(0)->SUB(0)->value.s);
+                                         for(i = 0; i<p->SUB(0)->SUB(1)->SUB(0)->value.i; i++)
+                                        fprintf(yyout, pfINTEGER, 0);
+                                        }
 decls : VAR(NUMBER(ID, INT)) {
                               fprintf(yyout, pfDATA pfLABEL pfINTEGER,
                               p->SUB(0)->SUB(0)->value.s,
@@ -164,8 +172,10 @@ expr:	LT(expr,expr)	1 { fprintf(yyout, pfLT); }
 expr:	LE(expr,expr)	1 { fprintf(yyout, pfLE); }
 expr:	GT(expr,expr)	1 { fprintf(yyout, pfGT); }
 expr:	GE(expr,expr)	1 { fprintf(yyout, pfGE); }
-expr:	AND(expr,expr)	1 { fprintf(yyout, pfAND); }
-expr:	OR(expr,expr)	1 { fprintf(yyout, pfOR); }
+expr:	AND(and,expr)	1 { fprintf(yyout, pfLABEL, mklbl(LEFT_CHILD(p)->place)); }
+and:	expr		1 { p->place = ++lbl; fprintf(yyout, pfDUP pfJZ pfTRASH, mklbl(p->place), pfWORD); }
+expr:	OR(or,expr)	1 { fprintf(yyout, pfLABEL, mklbl(LEFT_CHILD(p)->place)); }
+or:	expr		1 { p->place = ++lbl; fprintf(yyout, pfDUP pfJNZ pfTRASH, mklbl(p->place), pfWORD); }
 expr:	UMINUS(expr)	1 { fprintf(yyout, pfNEG); }
 expr:	NOT(expr)	1 { fprintf(yyout, pfIMM pfEQ, 0); }
 expr: POW(expr, expr) 1 {lbl++; fprintf(yyout, ";POW\n"
@@ -187,6 +197,15 @@ expr: EQ(expr, ID) 1 {fprintf(yyout, pfADDRA, p->SUB(1)->value.s); }
 extern char **yynames;
 extern int trace, errors, debugNode;
 
+void externs()
+{
+  int i;
+
+  for (i = 0; i < extcnt; i++)
+    if (extrns[i])
+      fprintf(yyout, pfEXTRN, extrns[i]);
+}
+
 static int data(int t, char *s, void *a, void *user) {
   if (s) fprintf(yyout, pfLABEL pfINTEGER, s, 0);
   return 1;
@@ -201,6 +220,7 @@ void evaluate(Node *p) {
   /*IDevery(data,0);*/
   fprintf(yyout, pfEXTRN pfEXTRN pfEXTRN pfEXTRN,
   		"_prints", "_printi", "_println", "_readi");
+  externs();
 }
 
 #ifndef NOTRACE
