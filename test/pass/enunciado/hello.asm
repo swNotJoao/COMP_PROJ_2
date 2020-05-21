@@ -11,72 +11,27 @@ segment	.data
 ; LABEL
 $x:
 ; INTEGER
-	dd	0
+	dd	1
 ; INTEGER
-	dd	0
+	dd	2
 ; INTEGER
-	dd	0
+	dd	3
+; INTEGER
+	dd	4
+; INTEGER
+	dd	5
+; TEXT
+segment	.text
+; DATA
+segment	.data
+; LABEL
+$y:
+; INTEGER
+	dd	77
 ; TEXT
 segment	.text
 ; IMM
-	push	dword 1
-; IMM
-	push	dword 0
-; IMM
-	push	dword 4
-; MUL
-	pop	eax
-	imul	dword eax, [esp]
-	mov	[esp], eax
-; ADDR
-	push	dword $x
-; ADD
-	pop	eax
-	add	dword [esp], eax
-; STORE
-	pop	ecx
-	pop	eax
-	mov	[ecx], eax
-; IMM
-	push	dword 4
-; IMM
-	push	dword 1
-; IMM
-	push	dword 4
-; MUL
-	pop	eax
-	imul	dword eax, [esp]
-	mov	[esp], eax
-; ADDR
-	push	dword $x
-; ADD
-	pop	eax
-	add	dword [esp], eax
-; STORE
-	pop	ecx
-	pop	eax
-	mov	[ecx], eax
-; IMM
-	push	dword 3
-; IMM
 	push	dword 2
-; IMM
-	push	dword 4
-; MUL
-	pop	eax
-	imul	dword eax, [esp]
-	mov	[esp], eax
-; ADDR
-	push	dword $x
-; ADD
-	pop	eax
-	add	dword [esp], eax
-; STORE
-	pop	ecx
-	pop	eax
-	mov	[ecx], eax
-; IMM
-	push	dword 0
 ; IMM
 	push	dword 4
 ; MUL
@@ -120,7 +75,7 @@ segment	.text
 ; TRASH
 	add	esp, 4
 ; IMM
-	push	dword 2
+	push	dword 0
 ; IMM
 	push	dword 4
 ; MUL
@@ -155,6 +110,46 @@ $_L1:
 segment	.text
 ; ADDR
 	push	dword $_L1
+; CALL
+	call	$_prints
+; TRASH
+	add	esp, 4
+; IMM
+	push	dword 0
+; IMM
+	push	dword 4
+; MUL
+	pop	eax
+	imul	dword eax, [esp]
+	mov	[esp], eax
+; ADDR
+	push	dword $y
+; ADD
+	pop	eax
+	add	dword [esp], eax
+; LOAD
+	pop	eax
+	push	dword [eax]
+; TEXT
+segment	.text
+; CALL
+	call	$_printi
+; TRASH
+	add	esp, 4
+; RODATA
+segment	.rodata
+; ALIGN
+align	4
+; LABEL
+$_L2:
+; CHAR
+	db	0x0A
+; CHAR
+	db	0x00
+; TEXT
+segment	.text
+; ADDR
+	push	dword $_L2
 ; CALL
 	call	$_prints
 ; TRASH

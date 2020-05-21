@@ -20,8 +20,9 @@
 static void yytrace(NODEPTR_TYPE p, int eruleno, int cost, int bestcost);
 
 int lbl;
-int tmpStrInd = 0;
+int tmpStrInd = 0, eqintsind = 0;
 char tmpStr[1024];
+int eqints[1024];
 char *toPrint = NULL;
 
 static char *extrns[100]; /* emit externs at the end only */
@@ -64,8 +65,23 @@ decls : NIL {}
 decls : VAR(ARRAY(ID, INTS(INT, NIL))) { fprintf(yyout, pfDATA pfLABEL,
                                          p->SUB(0)->SUB(0)->value.s);
                                          for(i = 0; i<p->SUB(0)->SUB(1)->SUB(0)->value.i; i++)
-                                        fprintf(yyout, pfINTEGER, 0);
+                                          fprintf(yyout, pfINTEGER, 0);
                                         }
+decls : VAR(ARRAY(ID, INTS(INT, eqints))) { fprintf(yyout, pfDATA pfLABEL,
+                                         p->SUB(0)->SUB(0)->value.s);
+                                         for(i = 0; i<p->SUB(0)->SUB(1)->SUB(0)->value.i; i++)
+                                          fprintf(yyout, pfINTEGER, eqints[i]);
+                                          eqintsind = 0;
+                                        }
+decls : VAR(ARRAY(ID, INTS(INT, INT))) { fprintf(yyout, pfDATA pfLABEL,
+                                         p->SUB(0)->SUB(0)->value.s);
+                                         for(i = 0; i<p->SUB(0)->SUB(1)->SUB(0)->value.i; i++)
+                                          fprintf(yyout, pfINTEGER, p->SUB(0)->SUB(1)->SUB(1)->value.i);
+                                        }
+eqints : INTS(eqints, INT) {eqints[eqintsind++] = p->SUB(1)->value.i;}
+eqints: INTS(INT, INT) {eqints[eqintsind++] = p->SUB(0)->value.i;
+                        eqints[eqintsind++] = p->SUB(1)->value.i;}
+
 decls : VAR(NUMBER(ID, INT)) {
                               fprintf(yyout, pfDATA pfLABEL pfINTEGER,
                               p->SUB(0)->SUB(0)->value.s,
