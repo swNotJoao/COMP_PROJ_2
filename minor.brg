@@ -23,6 +23,7 @@ int lbl;
 int tmpStrInd = 0, eqintsind = 0;
 char tmpStr[1024];
 int eqints[1024];
+int fvarspos=0;
 char *toPrint = NULL;
 
 static char *extrns[100]; /* emit externs at the end only */
@@ -87,6 +88,7 @@ decls : VAR(NUMBER(ID, INT)) {
                               p->SUB(0)->SUB(0)->value.s,
                               p->SUB(0)->SUB(1)->value.i);
                              }
+decls : VAR(NUMBER(ID, NIL)) {fprintf(yyout, pfDATA pfLABEL pfINTEGER, p->SUB(0)->SUB(0)->value.s, 0);}
 decls : VAR(STRING(ID, chars)) {
                                 tmpStr[tmpStrInd++] = '\0'; toPrint = tmpStr;
                                 fprintf(yyout, pfRODATA pfALIGN pfLABEL
@@ -103,11 +105,19 @@ instrs : FARGS(NIL, instr) {}
 instr : START(fvars, instr) {}
 instr : START(NIL, instr) {}
 
-fvars : ARGS(NIL, fvars) {}
+fvars : ARGS(NIL, fvars) {fvarspos = 0;}
 fvars : fvar {}
-fvar : NUMBER(ID, NIL) {fprintf(yyout, pfDATA pfLABEL pfINTEGER pfTEXT,
-                        p->SUB(0)->value.s,
-                        0);}
+fvar : NUMBER(ID, NIL) {fvarspos-=4;
+                        p->SUB(0)->value.i = fvarspos;
+                        p->SUB(0)->info = 0;
+                        fprintf(yyout, "sub esp, 4\n");}
+
+fvar : ARRAY(ID, INTS(INT, NIL)) {fprintf(yyout, pfDATA pfLABEL,
+                                   p->SUB(0)->value.s);
+                                   for(i = 0; i<p->SUB(1)->SUB(0)->value.i; i++)
+                                    fprintf(yyout, pfINTEGER, 0);
+                                    fprintf(yyout, pfTEXT);
+                                  }
 
 instr : NIL
 instr : STMT(NIL, instr)
@@ -233,9 +243,9 @@ static int data(int t, char *s, void *a, void *user) {
 void evaluate(Node *p) {
 	if (errors) return;
 	/* if (trace) */ printNode(p, stdout, yynames);
-  fprintf(yyout, pfTEXT pfALIGN pfGLOBL pfLABEL, "_main", pfFUNC, "_main");
+  fprintf(yyout, pfTEXT pfALIGN pfGLOBL pfLABEL pfENTER, "_main", pfFUNC, "_main", 4);
 	if (!yyselect(p) && trace) printf("selection successful\n");
-  fprintf(yyout, pfIMM pfPOP pfRET pfDATA, 0);
+  fprintf(yyout, pfIMM pfPOP pfLEAVE pfRET pfDATA, 0);
   /*IDevery(data,0);*/
   fprintf(yyout, pfEXTRN pfEXTRN pfEXTRN pfEXTRN,
   		"_prints", "_printi", "_println", "_readi");

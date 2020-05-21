@@ -1,5 +1,5 @@
 /*
-generated at Thu May 21 22:56:19 2020
+generated at Fri May 22 00:39:44 2020
 by $Id: pburg.c,v 2.7 2020/04/06 09:41:42 prs Exp $
 */
 #include <stdio.h>
@@ -40,6 +40,7 @@ int lbl;
 int tmpStrInd = 0, eqintsind = 0;
 char tmpStr[1024];
 int eqints[1024];
+int fvarspos=0;
 char *toPrint = NULL;
 
 static char *extrns[100]; /* emit externs at the end only */
@@ -202,14 +203,14 @@ struct yystate {
 	short cost[17];
 	struct {
 		unsigned int yyfile:1;
-		unsigned int yydecls:3;
+		unsigned int yydecls:4;
 		unsigned int yymain:1;
 		unsigned int yyeqints:2;
 		unsigned int yychars:3;
 		unsigned int yyinstrs:1;
 		unsigned int yyinstr:4;
 		unsigned int yyfvars:2;
-		unsigned int yyfvar:1;
+		unsigned int yyfvar:2;
 		unsigned int yyprint:3;
 		unsigned int yyexpr:5;
 		unsigned int yyif:1;
@@ -252,46 +253,46 @@ static short *yynts[] = {
 	yynts_2,	/* 6 */
 	yynts_1,	/* 7 */
 	yynts_1,	/* 8 */
-	yynts_3,	/* 9 */
-	yynts_4,	/* 10 */
-	yynts_5,	/* 11 */
-	yynts_6,	/* 12 */
-	yynts_7,	/* 13 */
-	yynts_6,	/* 14 */
-	yynts_8,	/* 15 */
-	yynts_9,	/* 16 */
-	yynts_1,	/* 17 */
+	yynts_1,	/* 9 */
+	yynts_3,	/* 10 */
+	yynts_4,	/* 11 */
+	yynts_5,	/* 12 */
+	yynts_6,	/* 13 */
+	yynts_7,	/* 14 */
+	yynts_6,	/* 15 */
+	yynts_8,	/* 16 */
+	yynts_9,	/* 17 */
 	yynts_1,	/* 18 */
-	yynts_6,	/* 19 */
-	yynts_10,	/* 20 */
-	yynts_11,	/* 21 */
-	yynts_12,	/* 22 */
-	yynts_13,	/* 23 */
-	yynts_14,	/* 24 */
-	yynts_1,	/* 25 */
-	yynts_15,	/* 26 */
-	yynts_16,	/* 27 */
-	yynts_6,	/* 28 */
+	yynts_1,	/* 19 */
+	yynts_1,	/* 20 */
+	yynts_6,	/* 21 */
+	yynts_10,	/* 22 */
+	yynts_11,	/* 23 */
+	yynts_12,	/* 24 */
+	yynts_13,	/* 25 */
+	yynts_14,	/* 26 */
+	yynts_1,	/* 27 */
+	yynts_15,	/* 28 */
 	yynts_16,	/* 29 */
-	yynts_12,	/* 30 */
-	yynts_1,	/* 31 */
-	yynts_3,	/* 32 */
-	yynts_12,	/* 33 */
-	yynts_1,	/* 34 */
-	yynts_3,	/* 35 */
+	yynts_6,	/* 30 */
+	yynts_16,	/* 31 */
+	yynts_12,	/* 32 */
+	yynts_1,	/* 33 */
+	yynts_3,	/* 34 */
+	yynts_12,	/* 35 */
 	yynts_1,	/* 36 */
-	yynts_1,	/* 37 */
+	yynts_3,	/* 37 */
 	yynts_1,	/* 38 */
-	yynts_17,	/* 39 */
+	yynts_1,	/* 39 */
 	yynts_1,	/* 40 */
-	yynts_1,	/* 41 */
+	yynts_17,	/* 41 */
 	yynts_1,	/* 42 */
 	yynts_1,	/* 43 */
 	yynts_1,	/* 44 */
-	yynts_12,	/* 45 */
-	yynts_12,	/* 46 */
-	yynts_18,	/* 47 */
-	yynts_18,	/* 48 */
+	yynts_1,	/* 45 */
+	yynts_1,	/* 46 */
+	yynts_12,	/* 47 */
+	yynts_12,	/* 48 */
 	yynts_18,	/* 49 */
 	yynts_18,	/* 50 */
 	yynts_18,	/* 51 */
@@ -301,16 +302,18 @@ static short *yynts[] = {
 	yynts_18,	/* 55 */
 	yynts_18,	/* 56 */
 	yynts_18,	/* 57 */
-	yynts_19,	/* 58 */
-	yynts_12,	/* 59 */
-	yynts_20,	/* 60 */
+	yynts_18,	/* 58 */
+	yynts_18,	/* 59 */
+	yynts_19,	/* 60 */
 	yynts_12,	/* 61 */
-	yynts_12,	/* 62 */
+	yynts_20,	/* 62 */
 	yynts_12,	/* 63 */
-	yynts_18,	/* 64 */
+	yynts_12,	/* 64 */
 	yynts_12,	/* 65 */
-	yynts_12,	/* 66 */
-	yynts_18,	/* 67 */
+	yynts_18,	/* 66 */
+	yynts_12,	/* 67 */
+	yynts_12,	/* 68 */
+	yynts_18,	/* 69 */
 };
 
 
@@ -324,65 +327,67 @@ static YYCONST char *yystring[] = {
 /* 6 */	"eqints: INTS(eqints,INT)",
 /* 7 */	"eqints: INTS(INT,INT)",
 /* 8 */	"decls: VAR(NUMBER(ID,INT))",
-/* 9 */	"decls: VAR(STRING(ID,chars))",
-/* 10 */	"decls: DECL(decls,decls)",
-/* 11 */	"main: FUNCTION(END,instrs)",
-/* 12 */	"instrs: FARGS(NIL,instr)",
-/* 13 */	"instr: START(fvars,instr)",
-/* 14 */	"instr: START(NIL,instr)",
-/* 15 */	"fvars: ARGS(NIL,fvars)",
-/* 16 */	"fvars: fvar",
-/* 17 */	"fvar: NUMBER(ID,NIL)",
-/* 18 */	"instr: NIL",
-/* 19 */	"instr: STMT(NIL,instr)",
-/* 20 */	"instr: STMT(instr,instr)",
-/* 21 */	"instr: print",
-/* 22 */	"instr: expr",
-/* 23 */	"instr: FI(THEN(if,elif),instr)",
-/* 24 */	"elif: ELIF(elif,if)",
-/* 25 */	"elif: NIL",
-/* 26 */	"instr: FI(THEN(if,NIL),instr)",
-/* 27 */	"if: IF(cond,instr)",
-/* 28 */	"instr: FI(THEN(instr,NIL),NIL)",
-/* 29 */	"instr: IF(cond,instr)",
-/* 30 */	"cond: expr",
-/* 31 */	"print: PSTMT(ID)",
-/* 32 */	"print: PSTMT(chars)",
-/* 33 */	"print: PSTMT(expr)",
-/* 34 */	"print: PSTMT(CHARS(NIL,INT))",
-/* 35 */	"chars: CHARS(NIL,chars)",
-/* 36 */	"chars: INT",
-/* 37 */	"chars: CHAR",
-/* 38 */	"chars: STR",
-/* 39 */	"chars: CHARS(chars,chars)",
-/* 40 */	"expr: CHARS(NIL,INT)",
-/* 41 */	"expr: CHARS(NIL,CHAR)",
-/* 42 */	"expr: ID",
-/* 43 */	"expr: READOP",
-/* 44 */	"expr: ADDR(ID)",
-/* 45 */	"expr: ADDR(IND(expr,ID))",
-/* 46 */	"expr: UMINUS(expr)",
-/* 47 */	"expr: ADD(expr,expr)",
-/* 48 */	"expr: SUB(expr,expr)",
-/* 49 */	"expr: MUL(expr,expr)",
-/* 50 */	"expr: DIV(expr,expr)",
-/* 51 */	"expr: MOD(expr,expr)",
-/* 52 */	"expr: ISEQ(expr,expr)",
-/* 53 */	"expr: NE(expr,expr)",
-/* 54 */	"expr: LT(expr,expr)",
-/* 55 */	"expr: LE(expr,expr)",
-/* 56 */	"expr: GT(expr,expr)",
-/* 57 */	"expr: GE(expr,expr)",
-/* 58 */	"expr: AND(and,expr)",
-/* 59 */	"and: expr",
-/* 60 */	"expr: OR(or,expr)",
-/* 61 */	"or: expr",
-/* 62 */	"expr: UMINUS(expr)",
-/* 63 */	"expr: NOT(expr)",
-/* 64 */	"expr: POW(expr,expr)",
-/* 65 */	"expr: EQ(expr,ID)",
-/* 66 */	"expr: IND(expr,ID)",
-/* 67 */	"expr: EQ(expr,IND(expr,ID))",
+/* 9 */	"decls: VAR(NUMBER(ID,NIL))",
+/* 10 */	"decls: VAR(STRING(ID,chars))",
+/* 11 */	"decls: DECL(decls,decls)",
+/* 12 */	"main: FUNCTION(END,instrs)",
+/* 13 */	"instrs: FARGS(NIL,instr)",
+/* 14 */	"instr: START(fvars,instr)",
+/* 15 */	"instr: START(NIL,instr)",
+/* 16 */	"fvars: ARGS(NIL,fvars)",
+/* 17 */	"fvars: fvar",
+/* 18 */	"fvar: NUMBER(ID,NIL)",
+/* 19 */	"fvar: ARRAY(ID,INTS(INT,NIL))",
+/* 20 */	"instr: NIL",
+/* 21 */	"instr: STMT(NIL,instr)",
+/* 22 */	"instr: STMT(instr,instr)",
+/* 23 */	"instr: print",
+/* 24 */	"instr: expr",
+/* 25 */	"instr: FI(THEN(if,elif),instr)",
+/* 26 */	"elif: ELIF(elif,if)",
+/* 27 */	"elif: NIL",
+/* 28 */	"instr: FI(THEN(if,NIL),instr)",
+/* 29 */	"if: IF(cond,instr)",
+/* 30 */	"instr: FI(THEN(instr,NIL),NIL)",
+/* 31 */	"instr: IF(cond,instr)",
+/* 32 */	"cond: expr",
+/* 33 */	"print: PSTMT(ID)",
+/* 34 */	"print: PSTMT(chars)",
+/* 35 */	"print: PSTMT(expr)",
+/* 36 */	"print: PSTMT(CHARS(NIL,INT))",
+/* 37 */	"chars: CHARS(NIL,chars)",
+/* 38 */	"chars: INT",
+/* 39 */	"chars: CHAR",
+/* 40 */	"chars: STR",
+/* 41 */	"chars: CHARS(chars,chars)",
+/* 42 */	"expr: CHARS(NIL,INT)",
+/* 43 */	"expr: CHARS(NIL,CHAR)",
+/* 44 */	"expr: ID",
+/* 45 */	"expr: READOP",
+/* 46 */	"expr: ADDR(ID)",
+/* 47 */	"expr: ADDR(IND(expr,ID))",
+/* 48 */	"expr: UMINUS(expr)",
+/* 49 */	"expr: ADD(expr,expr)",
+/* 50 */	"expr: SUB(expr,expr)",
+/* 51 */	"expr: MUL(expr,expr)",
+/* 52 */	"expr: DIV(expr,expr)",
+/* 53 */	"expr: MOD(expr,expr)",
+/* 54 */	"expr: ISEQ(expr,expr)",
+/* 55 */	"expr: NE(expr,expr)",
+/* 56 */	"expr: LT(expr,expr)",
+/* 57 */	"expr: LE(expr,expr)",
+/* 58 */	"expr: GT(expr,expr)",
+/* 59 */	"expr: GE(expr,expr)",
+/* 60 */	"expr: AND(and,expr)",
+/* 61 */	"and: expr",
+/* 62 */	"expr: OR(or,expr)",
+/* 63 */	"or: expr",
+/* 64 */	"expr: UMINUS(expr)",
+/* 65 */	"expr: NOT(expr)",
+/* 66 */	"expr: POW(expr,expr)",
+/* 67 */	"expr: EQ(expr,ID)",
+/* 68 */	"expr: IND(expr,ID)",
+/* 69 */	"expr: EQ(expr,IND(expr,ID))",
 };
 
 #ifndef TRACE
@@ -408,11 +413,12 @@ static short yydecode_decls[] = {
 	8,
 	9,
 	10,
+	11,
 };
 
 static short yydecode_main[] = {
 	0,
-	11,
+	12,
 };
 
 static short yydecode_eqints[] = {
@@ -423,56 +429,55 @@ static short yydecode_eqints[] = {
 
 static short yydecode_chars[] = {
 	0,
-	35,
-	36,
 	37,
 	38,
 	39,
+	40,
+	41,
 };
 
 static short yydecode_instrs[] = {
 	0,
-	12,
+	13,
 };
 
 static short yydecode_instr[] = {
 	0,
-	13,
 	14,
-	18,
-	19,
+	15,
 	20,
 	21,
 	22,
 	23,
-	26,
+	24,
+	25,
 	28,
-	29,
+	30,
+	31,
 };
 
 static short yydecode_fvars[] = {
 	0,
-	15,
 	16,
+	17,
 };
 
 static short yydecode_fvar[] = {
 	0,
-	17,
+	18,
+	19,
 };
 
 static short yydecode_print[] = {
 	0,
-	31,
-	32,
 	33,
 	34,
+	35,
+	36,
 };
 
 static short yydecode_expr[] = {
 	0,
-	40,
-	41,
 	42,
 	43,
 	44,
@@ -490,39 +495,41 @@ static short yydecode_expr[] = {
 	56,
 	57,
 	58,
+	59,
 	60,
 	62,
-	63,
 	64,
 	65,
 	66,
 	67,
+	68,
+	69,
 };
 
 static short yydecode_if[] = {
 	0,
-	27,
+	29,
 };
 
 static short yydecode_elif[] = {
 	0,
-	24,
-	25,
+	26,
+	27,
 };
 
 static short yydecode_cond[] = {
 	0,
-	30,
+	32,
 };
 
 static short yydecode_and[] = {
 	0,
-	59,
+	61,
 };
 
 static short yydecode_or[] = {
 	0,
-	61,
+	63,
 };
 
 static int yyrule(void *state, int goalnt) {
@@ -559,7 +566,7 @@ static void yyclosure_expr(NODEPTR_TYPE, int);
 
 static void yyclosure_fvar(NODEPTR_TYPE a, int c) {
 	struct yystate *p = (struct yystate *)STATE_LABEL(a);
-	yytrace(a, 16, c + 0, p->cost[yyfvars_NT]);
+	yytrace(a, 17, c + 0, p->cost[yyfvars_NT]);
 	if (c + 0 < p->cost[yyfvars_NT]) {
 		p->cost[yyfvars_NT] = c + 0;
 		p->rule.yyfvars = 2;
@@ -568,7 +575,7 @@ static void yyclosure_fvar(NODEPTR_TYPE a, int c) {
 
 static void yyclosure_print(NODEPTR_TYPE a, int c) {
 	struct yystate *p = (struct yystate *)STATE_LABEL(a);
-	yytrace(a, 21, c + 0, p->cost[yyinstr_NT]);
+	yytrace(a, 23, c + 0, p->cost[yyinstr_NT]);
 	if (c + 0 < p->cost[yyinstr_NT]) {
 		p->cost[yyinstr_NT] = c + 0;
 		p->rule.yyinstr = 6;
@@ -577,22 +584,22 @@ static void yyclosure_print(NODEPTR_TYPE a, int c) {
 
 static void yyclosure_expr(NODEPTR_TYPE a, int c) {
 	struct yystate *p = (struct yystate *)STATE_LABEL(a);
-	yytrace(a, 61, c + 1, p->cost[yyor_NT]);
+	yytrace(a, 63, c + 1, p->cost[yyor_NT]);
 	if (c + 1 < p->cost[yyor_NT]) {
 		p->cost[yyor_NT] = c + 1;
 		p->rule.yyor = 1;
 	}
-	yytrace(a, 59, c + 1, p->cost[yyand_NT]);
+	yytrace(a, 61, c + 1, p->cost[yyand_NT]);
 	if (c + 1 < p->cost[yyand_NT]) {
 		p->cost[yyand_NT] = c + 1;
 		p->rule.yyand = 1;
 	}
-	yytrace(a, 30, c + 1, p->cost[yycond_NT]);
+	yytrace(a, 32, c + 1, p->cost[yycond_NT]);
 	if (c + 1 < p->cost[yycond_NT]) {
 		p->cost[yycond_NT] = c + 1;
 		p->rule.yycond = 1;
 	}
-	yytrace(a, 22, c + 0, p->cost[yyinstr_NT]);
+	yytrace(a, 24, c + 0, p->cost[yyinstr_NT]);
 	if (c + 0 < p->cost[yyinstr_NT]) {
 		p->cost[yyinstr_NT] = c + 0;
 		p->rule.yyinstr = 7;
@@ -631,7 +638,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 			OP_LABEL(LEFT_CHILD(a)) == 259 /* ID */
 		) {
 			c = 1;
-			yytrace(a, 31, c + 0, p->cost[yyprint_NT]);
+			yytrace(a, 33, c + 0, p->cost[yyprint_NT]);
 			if (c + 0 < p->cost[yyprint_NT]) {
 				p->cost[yyprint_NT] = c + 0;
 				p->rule.yyprint = 1;
@@ -640,7 +647,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		}
 		/* print: PSTMT(chars) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yychars_NT] + 0;
-		yytrace(a, 32, c + 0, p->cost[yyprint_NT]);
+		yytrace(a, 34, c + 0, p->cost[yyprint_NT]);
 		if (c + 0 < p->cost[yyprint_NT]) {
 			p->cost[yyprint_NT] = c + 0;
 			p->rule.yyprint = 2;
@@ -648,7 +655,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		}
 		/* print: PSTMT(expr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyexpr_NT] + 2;
-		yytrace(a, 33, c + 0, p->cost[yyprint_NT]);
+		yytrace(a, 35, c + 0, p->cost[yyprint_NT]);
 		if (c + 0 < p->cost[yyprint_NT]) {
 			p->cost[yyprint_NT] = c + 0;
 			p->rule.yyprint = 3;
@@ -660,7 +667,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 			OP_LABEL(RIGHT_CHILD(LEFT_CHILD(a))) == 257 /* INT */
 		) {
 			c = 1;
-			yytrace(a, 34, c + 0, p->cost[yyprint_NT]);
+			yytrace(a, 36, c + 0, p->cost[yyprint_NT]);
 			if (c + 0 < p->cost[yyprint_NT]) {
 				p->cost[yyprint_NT] = c + 0;
 				p->rule.yyprint = 4;
@@ -673,7 +680,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		yylabel(RIGHT_CHILD(a),a);
 		/* expr: MOD(expr,expr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyexpr_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyexpr_NT] + 1;
-		yytrace(a, 51, c + 0, p->cost[yyexpr_NT]);
+		yytrace(a, 53, c + 0, p->cost[yyexpr_NT]);
 		if (c + 0 < p->cost[yyexpr_NT]) {
 			p->cost[yyexpr_NT] = c + 0;
 			p->rule.yyexpr = 12;
@@ -685,7 +692,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		yylabel(RIGHT_CHILD(a),a);
 		/* expr: AND(and,expr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyand_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyexpr_NT] + 1;
-		yytrace(a, 58, c + 0, p->cost[yyexpr_NT]);
+		yytrace(a, 60, c + 0, p->cost[yyexpr_NT]);
 		if (c + 0 < p->cost[yyexpr_NT]) {
 			p->cost[yyexpr_NT] = c + 0;
 			p->rule.yyexpr = 19;
@@ -697,7 +704,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		yylabel(RIGHT_CHILD(a),a);
 		/* expr: MUL(expr,expr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyexpr_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyexpr_NT] + 1;
-		yytrace(a, 49, c + 0, p->cost[yyexpr_NT]);
+		yytrace(a, 51, c + 0, p->cost[yyexpr_NT]);
 		if (c + 0 < p->cost[yyexpr_NT]) {
 			p->cost[yyexpr_NT] = c + 0;
 			p->rule.yyexpr = 10;
@@ -709,7 +716,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		yylabel(RIGHT_CHILD(a),a);
 		/* expr: ADD(expr,expr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyexpr_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyexpr_NT] + 1;
-		yytrace(a, 47, c + 0, p->cost[yyexpr_NT]);
+		yytrace(a, 49, c + 0, p->cost[yyexpr_NT]);
 		if (c + 0 < p->cost[yyexpr_NT]) {
 			p->cost[yyexpr_NT] = c + 0;
 			p->rule.yyexpr = 8;
@@ -721,7 +728,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		yylabel(RIGHT_CHILD(a),a);
 		/* expr: SUB(expr,expr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyexpr_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyexpr_NT] + 1;
-		yytrace(a, 48, c + 0, p->cost[yyexpr_NT]);
+		yytrace(a, 50, c + 0, p->cost[yyexpr_NT]);
 		if (c + 0 < p->cost[yyexpr_NT]) {
 			p->cost[yyexpr_NT] = c + 0;
 			p->rule.yyexpr = 9;
@@ -733,7 +740,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		yylabel(RIGHT_CHILD(a),a);
 		/* expr: DIV(expr,expr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyexpr_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyexpr_NT] + 1;
-		yytrace(a, 50, c + 0, p->cost[yyexpr_NT]);
+		yytrace(a, 52, c + 0, p->cost[yyexpr_NT]);
 		if (c + 0 < p->cost[yyexpr_NT]) {
 			p->cost[yyexpr_NT] = c + 0;
 			p->rule.yyexpr = 11;
@@ -747,7 +754,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 			OP_LABEL(LEFT_CHILD(a)) == 293 /* NIL */
 		) {
 			c = ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyinstr_NT] + 0;
-			yytrace(a, 19, c + 0, p->cost[yyinstr_NT]);
+			yytrace(a, 21, c + 0, p->cost[yyinstr_NT]);
 			if (c + 0 < p->cost[yyinstr_NT]) {
 				p->cost[yyinstr_NT] = c + 0;
 				p->rule.yyinstr = 4;
@@ -755,7 +762,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		}
 		/* instr: STMT(instr,instr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyinstr_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyinstr_NT] + 0;
-		yytrace(a, 20, c + 0, p->cost[yyinstr_NT]);
+		yytrace(a, 22, c + 0, p->cost[yyinstr_NT]);
 		if (c + 0 < p->cost[yyinstr_NT]) {
 			p->cost[yyinstr_NT] = c + 0;
 			p->rule.yyinstr = 5;
@@ -766,7 +773,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		yylabel(RIGHT_CHILD(a),a);
 		/* expr: LT(expr,expr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyexpr_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyexpr_NT] + 1;
-		yytrace(a, 54, c + 0, p->cost[yyexpr_NT]);
+		yytrace(a, 56, c + 0, p->cost[yyexpr_NT]);
 		if (c + 0 < p->cost[yyexpr_NT]) {
 			p->cost[yyexpr_NT] = c + 0;
 			p->rule.yyexpr = 15;
@@ -778,7 +785,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		yylabel(RIGHT_CHILD(a),a);
 		/* expr: ISEQ(expr,expr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyexpr_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyexpr_NT] + 1;
-		yytrace(a, 52, c + 0, p->cost[yyexpr_NT]);
+		yytrace(a, 54, c + 0, p->cost[yyexpr_NT]);
 		if (c + 0 < p->cost[yyexpr_NT]) {
 			p->cost[yyexpr_NT] = c + 0;
 			p->rule.yyexpr = 13;
@@ -790,7 +797,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		yylabel(RIGHT_CHILD(a),a);
 		/* expr: GT(expr,expr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyexpr_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyexpr_NT] + 1;
-		yytrace(a, 56, c + 0, p->cost[yyexpr_NT]);
+		yytrace(a, 58, c + 0, p->cost[yyexpr_NT]);
 		if (c + 0 < p->cost[yyexpr_NT]) {
 			p->cost[yyexpr_NT] = c + 0;
 			p->rule.yyexpr = 17;
@@ -799,7 +806,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		break;
 	case 63: /* READOP */
 		/* expr: READOP */
-		yytrace(a, 43, 0 + 0, p->cost[yyexpr_NT]);
+		yytrace(a, 45, 0 + 0, p->cost[yyexpr_NT]);
 		if (0 + 0 < p->cost[yyexpr_NT]) {
 			p->cost[yyexpr_NT] = 0 + 0;
 			p->rule.yyexpr = 4;
@@ -813,7 +820,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 			OP_LABEL(RIGHT_CHILD(a)) == 259 /* ID */
 		) {
 			c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyexpr_NT] + 1;
-			yytrace(a, 66, c + 0, p->cost[yyexpr_NT]);
+			yytrace(a, 68, c + 0, p->cost[yyexpr_NT]);
 			if (c + 0 < p->cost[yyexpr_NT]) {
 				p->cost[yyexpr_NT] = c + 0;
 				p->rule.yyexpr = 25;
@@ -826,7 +833,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		yylabel(RIGHT_CHILD(a),a);
 		/* expr: POW(expr,expr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyexpr_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyexpr_NT] + 1;
-		yytrace(a, 64, c + 0, p->cost[yyexpr_NT]);
+		yytrace(a, 66, c + 0, p->cost[yyexpr_NT]);
 		if (c + 0 < p->cost[yyexpr_NT]) {
 			p->cost[yyexpr_NT] = c + 0;
 			p->rule.yyexpr = 23;
@@ -838,7 +845,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		yylabel(RIGHT_CHILD(a),a);
 		/* expr: OR(or,expr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyor_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyexpr_NT] + 1;
-		yytrace(a, 60, c + 0, p->cost[yyexpr_NT]);
+		yytrace(a, 62, c + 0, p->cost[yyexpr_NT]);
 		if (c + 0 < p->cost[yyexpr_NT]) {
 			p->cost[yyexpr_NT] = c + 0;
 			p->rule.yyexpr = 20;
@@ -849,7 +856,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		yylabel(LEFT_CHILD(a),a);
 		/* expr: NOT(expr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyexpr_NT] + 1;
-		yytrace(a, 63, c + 0, p->cost[yyexpr_NT]);
+		yytrace(a, 65, c + 0, p->cost[yyexpr_NT]);
 		if (c + 0 < p->cost[yyexpr_NT]) {
 			p->cost[yyexpr_NT] = c + 0;
 			p->rule.yyexpr = 22;
@@ -858,7 +865,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		break;
 	case 257: /* INT */
 		/* chars: INT */
-		yytrace(a, 36, 0 + 0, p->cost[yychars_NT]);
+		yytrace(a, 38, 0 + 0, p->cost[yychars_NT]);
 		if (0 + 0 < p->cost[yychars_NT]) {
 			p->cost[yychars_NT] = 0 + 0;
 			p->rule.yychars = 2;
@@ -866,7 +873,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		break;
 	case 258: /* CHAR */
 		/* chars: CHAR */
-		yytrace(a, 37, 0 + 0, p->cost[yychars_NT]);
+		yytrace(a, 39, 0 + 0, p->cost[yychars_NT]);
 		if (0 + 0 < p->cost[yychars_NT]) {
 			p->cost[yychars_NT] = 0 + 0;
 			p->rule.yychars = 3;
@@ -874,7 +881,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		break;
 	case 259: /* ID */
 		/* expr: ID */
-		yytrace(a, 42, 1 + 0, p->cost[yyexpr_NT]);
+		yytrace(a, 44, 1 + 0, p->cost[yyexpr_NT]);
 		if (1 + 0 < p->cost[yyexpr_NT]) {
 			p->cost[yyexpr_NT] = 1 + 0;
 			p->rule.yyexpr = 3;
@@ -883,7 +890,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		break;
 	case 260: /* STR */
 		/* chars: STR */
-		yytrace(a, 38, 0 + 0, p->cost[yychars_NT]);
+		yytrace(a, 40, 0 + 0, p->cost[yychars_NT]);
 		if (0 + 0 < p->cost[yychars_NT]) {
 			p->cost[yychars_NT] = 0 + 0;
 			p->rule.yychars = 4;
@@ -920,7 +927,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 			OP_LABEL(RIGHT_CHILD(a)) == 293 /* NIL */
 		) {
 			c = 0;
-			yytrace(a, 17, c + 0, p->cost[yyfvar_NT]);
+			yytrace(a, 18, c + 0, p->cost[yyfvar_NT]);
 			if (c + 0 < p->cost[yyfvar_NT]) {
 				p->cost[yyfvar_NT] = c + 0;
 				p->rule.yyfvar = 1;
@@ -931,7 +938,21 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 	case 268: /* ARRAY */
 		yylabel(LEFT_CHILD(a),a);
 		yylabel(RIGHT_CHILD(a),a);
-		return;
+		if (	/* fvar: ARRAY(ID,INTS(INT,NIL)) */
+			OP_LABEL(LEFT_CHILD(a)) == 259 && /* ID */
+			OP_LABEL(RIGHT_CHILD(a)) == 288 && /* INTS */
+			OP_LABEL(LEFT_CHILD(RIGHT_CHILD(a))) == 257 && /* INT */
+			OP_LABEL(RIGHT_CHILD(RIGHT_CHILD(a))) == 293 /* NIL */
+		) {
+			c = 0;
+			yytrace(a, 19, c + 0, p->cost[yyfvar_NT]);
+			if (c + 0 < p->cost[yyfvar_NT]) {
+				p->cost[yyfvar_NT] = c + 0;
+				p->rule.yyfvar = 2;
+				yyclosure_fvar(a, c + 0);
+			}
+		}
+		break;
 	case 269: /* FUNCTION */
 		yylabel(LEFT_CHILD(a),a);
 		yylabel(RIGHT_CHILD(a),a);
@@ -939,7 +960,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 			OP_LABEL(LEFT_CHILD(a)) == 263 /* END */
 		) {
 			c = ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyinstrs_NT] + 0;
-			yytrace(a, 11, c + 0, p->cost[yymain_NT]);
+			yytrace(a, 12, c + 0, p->cost[yymain_NT]);
 			if (c + 0 < p->cost[yymain_NT]) {
 				p->cost[yymain_NT] = c + 0;
 				p->rule.yymain = 1;
@@ -955,14 +976,14 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		yylabel(RIGHT_CHILD(a),a);
 		/* if: IF(cond,instr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yycond_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyinstr_NT] + 0;
-		yytrace(a, 27, c + 0, p->cost[yyif_NT]);
+		yytrace(a, 29, c + 0, p->cost[yyif_NT]);
 		if (c + 0 < p->cost[yyif_NT]) {
 			p->cost[yyif_NT] = c + 0;
 			p->rule.yyif = 1;
 		}
 		/* instr: IF(cond,instr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yycond_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyinstr_NT] + 1;
-		yytrace(a, 29, c + 0, p->cost[yyinstr_NT]);
+		yytrace(a, 31, c + 0, p->cost[yyinstr_NT]);
 		if (c + 0 < p->cost[yyinstr_NT]) {
 			p->cost[yyinstr_NT] = c + 0;
 			p->rule.yyinstr = 11;
@@ -979,7 +1000,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 			OP_LABEL(LEFT_CHILD(a)) == 273 /* THEN */
 		) {
 			c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(LEFT_CHILD(a))))->cost[yyif_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(LEFT_CHILD(a))))->cost[yyelif_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyinstr_NT] + 1;
-			yytrace(a, 23, c + 0, p->cost[yyinstr_NT]);
+			yytrace(a, 25, c + 0, p->cost[yyinstr_NT]);
 			if (c + 0 < p->cost[yyinstr_NT]) {
 				p->cost[yyinstr_NT] = c + 0;
 				p->rule.yyinstr = 8;
@@ -990,7 +1011,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 			OP_LABEL(RIGHT_CHILD(LEFT_CHILD(a))) == 293 /* NIL */
 		) {
 			c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(LEFT_CHILD(a))))->cost[yyif_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyinstr_NT] + 1;
-			yytrace(a, 26, c + 0, p->cost[yyinstr_NT]);
+			yytrace(a, 28, c + 0, p->cost[yyinstr_NT]);
 			if (c + 0 < p->cost[yyinstr_NT]) {
 				p->cost[yyinstr_NT] = c + 0;
 				p->rule.yyinstr = 9;
@@ -1002,7 +1023,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 			OP_LABEL(RIGHT_CHILD(a)) == 293 /* NIL */
 		) {
 			c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(LEFT_CHILD(a))))->cost[yyinstr_NT] + 0;
-			yytrace(a, 28, c + 0, p->cost[yyinstr_NT]);
+			yytrace(a, 30, c + 0, p->cost[yyinstr_NT]);
 			if (c + 0 < p->cost[yyinstr_NT]) {
 				p->cost[yyinstr_NT] = c + 0;
 				p->rule.yyinstr = 10;
@@ -1014,7 +1035,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		yylabel(RIGHT_CHILD(a),a);
 		/* elif: ELIF(elif,if) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyelif_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyif_NT] + 0;
-		yytrace(a, 24, c + 0, p->cost[yyelif_NT]);
+		yytrace(a, 26, c + 0, p->cost[yyelif_NT]);
 		if (c + 0 < p->cost[yyelif_NT]) {
 			p->cost[yyelif_NT] = c + 0;
 			p->rule.yyelif = 1;
@@ -1029,7 +1050,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		yylabel(RIGHT_CHILD(a),a);
 		/* instr: START(fvars,instr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyfvars_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyinstr_NT] + 0;
-		yytrace(a, 13, c + 0, p->cost[yyinstr_NT]);
+		yytrace(a, 14, c + 0, p->cost[yyinstr_NT]);
 		if (c + 0 < p->cost[yyinstr_NT]) {
 			p->cost[yyinstr_NT] = c + 0;
 			p->rule.yyinstr = 1;
@@ -1038,7 +1059,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 			OP_LABEL(LEFT_CHILD(a)) == 293 /* NIL */
 		) {
 			c = ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyinstr_NT] + 0;
-			yytrace(a, 14, c + 0, p->cost[yyinstr_NT]);
+			yytrace(a, 15, c + 0, p->cost[yyinstr_NT]);
 			if (c + 0 < p->cost[yyinstr_NT]) {
 				p->cost[yyinstr_NT] = c + 0;
 				p->rule.yyinstr = 2;
@@ -1066,7 +1087,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 			OP_LABEL(LEFT_CHILD(a)) == 293 /* NIL */
 		) {
 			c = ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyinstr_NT] + 0;
-			yytrace(a, 12, c + 0, p->cost[yyinstrs_NT]);
+			yytrace(a, 13, c + 0, p->cost[yyinstrs_NT]);
 			if (c + 0 < p->cost[yyinstrs_NT]) {
 				p->cost[yyinstrs_NT] = c + 0;
 				p->rule.yyinstrs = 1;
@@ -1080,7 +1101,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 			OP_LABEL(LEFT_CHILD(a)) == 293 /* NIL */
 		) {
 			c = ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yychars_NT] + 2;
-			yytrace(a, 35, c + 0, p->cost[yychars_NT]);
+			yytrace(a, 37, c + 0, p->cost[yychars_NT]);
 			if (c + 0 < p->cost[yychars_NT]) {
 				p->cost[yychars_NT] = c + 0;
 				p->rule.yychars = 1;
@@ -1088,7 +1109,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		}
 		/* chars: CHARS(chars,chars) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yychars_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yychars_NT] + 0;
-		yytrace(a, 39, c + 0, p->cost[yychars_NT]);
+		yytrace(a, 41, c + 0, p->cost[yychars_NT]);
 		if (c + 0 < p->cost[yychars_NT]) {
 			p->cost[yychars_NT] = c + 0;
 			p->rule.yychars = 5;
@@ -1098,7 +1119,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 			OP_LABEL(RIGHT_CHILD(a)) == 257 /* INT */
 		) {
 			c = 1;
-			yytrace(a, 40, c + 0, p->cost[yyexpr_NT]);
+			yytrace(a, 42, c + 0, p->cost[yyexpr_NT]);
 			if (c + 0 < p->cost[yyexpr_NT]) {
 				p->cost[yyexpr_NT] = c + 0;
 				p->rule.yyexpr = 1;
@@ -1110,7 +1131,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 			OP_LABEL(RIGHT_CHILD(a)) == 258 /* CHAR */
 		) {
 			c = 1;
-			yytrace(a, 41, c + 0, p->cost[yyexpr_NT]);
+			yytrace(a, 43, c + 0, p->cost[yyexpr_NT]);
 			if (c + 0 < p->cost[yyexpr_NT]) {
 				p->cost[yyexpr_NT] = c + 0;
 				p->rule.yyexpr = 2;
@@ -1149,7 +1170,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 			OP_LABEL(LEFT_CHILD(a)) == 259 /* ID */
 		) {
 			c = 0;
-			yytrace(a, 44, c + 0, p->cost[yyexpr_NT]);
+			yytrace(a, 46, c + 0, p->cost[yyexpr_NT]);
 			if (c + 0 < p->cost[yyexpr_NT]) {
 				p->cost[yyexpr_NT] = c + 0;
 				p->rule.yyexpr = 5;
@@ -1161,7 +1182,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 			OP_LABEL(RIGHT_CHILD(LEFT_CHILD(a))) == 259 /* ID */
 		) {
 			c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(LEFT_CHILD(a))))->cost[yyexpr_NT] + 0;
-			yytrace(a, 45, c + 0, p->cost[yyexpr_NT]);
+			yytrace(a, 47, c + 0, p->cost[yyexpr_NT]);
 			if (c + 0 < p->cost[yyexpr_NT]) {
 				p->cost[yyexpr_NT] = c + 0;
 				p->rule.yyexpr = 6;
@@ -1224,15 +1245,27 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 				p->rule.yydecls = 5;
 			}
 		}
+		if (	/* decls: VAR(NUMBER(ID,NIL)) */
+			OP_LABEL(LEFT_CHILD(a)) == 267 && /* NUMBER */
+			OP_LABEL(LEFT_CHILD(LEFT_CHILD(a))) == 259 && /* ID */
+			OP_LABEL(RIGHT_CHILD(LEFT_CHILD(a))) == 293 /* NIL */
+		) {
+			c = 0;
+			yytrace(a, 9, c + 0, p->cost[yydecls_NT]);
+			if (c + 0 < p->cost[yydecls_NT]) {
+				p->cost[yydecls_NT] = c + 0;
+				p->rule.yydecls = 6;
+			}
+		}
 		if (	/* decls: VAR(STRING(ID,chars)) */
 			OP_LABEL(LEFT_CHILD(a)) == 266 && /* STRING */
 			OP_LABEL(LEFT_CHILD(LEFT_CHILD(a))) == 259 /* ID */
 		) {
 			c = ((struct yystate *)STATE_LABEL(RIGHT_CHILD(LEFT_CHILD(a))))->cost[yychars_NT] + 0;
-			yytrace(a, 9, c + 0, p->cost[yydecls_NT]);
+			yytrace(a, 10, c + 0, p->cost[yydecls_NT]);
 			if (c + 0 < p->cost[yydecls_NT]) {
 				p->cost[yydecls_NT] = c + 0;
-				p->rule.yydecls = 6;
+				p->rule.yydecls = 7;
 			}
 		}
 		break;
@@ -1243,7 +1276,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 			OP_LABEL(LEFT_CHILD(a)) == 293 /* NIL */
 		) {
 			c = ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyfvars_NT] + 0;
-			yytrace(a, 15, c + 0, p->cost[yyfvars_NT]);
+			yytrace(a, 16, c + 0, p->cost[yyfvars_NT]);
 			if (c + 0 < p->cost[yyfvars_NT]) {
 				p->cost[yyfvars_NT] = c + 0;
 				p->rule.yyfvars = 1;
@@ -1255,10 +1288,10 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		yylabel(RIGHT_CHILD(a),a);
 		/* decls: DECL(decls,decls) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yydecls_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yydecls_NT] + 0;
-		yytrace(a, 10, c + 0, p->cost[yydecls_NT]);
+		yytrace(a, 11, c + 0, p->cost[yydecls_NT]);
 		if (c + 0 < p->cost[yydecls_NT]) {
 			p->cost[yydecls_NT] = c + 0;
-			p->rule.yydecls = 7;
+			p->rule.yydecls = 8;
 		}
 		break;
 	case 293: /* NIL */
@@ -1269,13 +1302,13 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 			p->rule.yydecls = 1;
 		}
 		/* instr: NIL */
-		yytrace(a, 18, 0 + 0, p->cost[yyinstr_NT]);
+		yytrace(a, 20, 0 + 0, p->cost[yyinstr_NT]);
 		if (0 + 0 < p->cost[yyinstr_NT]) {
 			p->cost[yyinstr_NT] = 0 + 0;
 			p->rule.yyinstr = 3;
 		}
 		/* elif: NIL */
-		yytrace(a, 25, 2 + 0, p->cost[yyelif_NT]);
+		yytrace(a, 27, 2 + 0, p->cost[yyelif_NT]);
 		if (2 + 0 < p->cost[yyelif_NT]) {
 			p->cost[yyelif_NT] = 2 + 0;
 			p->rule.yyelif = 2;
@@ -1288,7 +1321,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 			OP_LABEL(RIGHT_CHILD(a)) == 259 /* ID */
 		) {
 			c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyexpr_NT] + 1;
-			yytrace(a, 65, c + 0, p->cost[yyexpr_NT]);
+			yytrace(a, 67, c + 0, p->cost[yyexpr_NT]);
 			if (c + 0 < p->cost[yyexpr_NT]) {
 				p->cost[yyexpr_NT] = c + 0;
 				p->rule.yyexpr = 24;
@@ -1300,7 +1333,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 			OP_LABEL(RIGHT_CHILD(RIGHT_CHILD(a))) == 259 /* ID */
 		) {
 			c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyexpr_NT] + ((struct yystate *)STATE_LABEL(LEFT_CHILD(RIGHT_CHILD(a))))->cost[yyexpr_NT] + 0;
-			yytrace(a, 67, c + 0, p->cost[yyexpr_NT]);
+			yytrace(a, 69, c + 0, p->cost[yyexpr_NT]);
 			if (c + 0 < p->cost[yyexpr_NT]) {
 				p->cost[yyexpr_NT] = c + 0;
 				p->rule.yyexpr = 26;
@@ -1313,7 +1346,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		yylabel(RIGHT_CHILD(a),a);
 		/* expr: NE(expr,expr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyexpr_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyexpr_NT] + 1;
-		yytrace(a, 53, c + 0, p->cost[yyexpr_NT]);
+		yytrace(a, 55, c + 0, p->cost[yyexpr_NT]);
 		if (c + 0 < p->cost[yyexpr_NT]) {
 			p->cost[yyexpr_NT] = c + 0;
 			p->rule.yyexpr = 14;
@@ -1325,7 +1358,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		yylabel(RIGHT_CHILD(a),a);
 		/* expr: GE(expr,expr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyexpr_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyexpr_NT] + 1;
-		yytrace(a, 57, c + 0, p->cost[yyexpr_NT]);
+		yytrace(a, 59, c + 0, p->cost[yyexpr_NT]);
 		if (c + 0 < p->cost[yyexpr_NT]) {
 			p->cost[yyexpr_NT] = c + 0;
 			p->rule.yyexpr = 18;
@@ -1337,7 +1370,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		yylabel(RIGHT_CHILD(a),a);
 		/* expr: LE(expr,expr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyexpr_NT] + ((struct yystate *)STATE_LABEL(RIGHT_CHILD(a)))->cost[yyexpr_NT] + 1;
-		yytrace(a, 55, c + 0, p->cost[yyexpr_NT]);
+		yytrace(a, 57, c + 0, p->cost[yyexpr_NT]);
 		if (c + 0 < p->cost[yyexpr_NT]) {
 			p->cost[yyexpr_NT] = c + 0;
 			p->rule.yyexpr = 16;
@@ -1348,7 +1381,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		yylabel(LEFT_CHILD(a),a);
 		/* expr: UMINUS(expr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyexpr_NT] + 1;
-		yytrace(a, 46, c + 0, p->cost[yyexpr_NT]);
+		yytrace(a, 48, c + 0, p->cost[yyexpr_NT]);
 		if (c + 0 < p->cost[yyexpr_NT]) {
 			p->cost[yyexpr_NT] = c + 0;
 			p->rule.yyexpr = 7;
@@ -1356,7 +1389,7 @@ static void yylabel(NODEPTR_TYPE a, NODEPTR_TYPE u) {
 		}
 		/* expr: UMINUS(expr) */
 		c = ((struct yystate *)STATE_LABEL(LEFT_CHILD(a)))->cost[yyexpr_NT] + 1;
-		yytrace(a, 62, c + 0, p->cost[yyexpr_NT]);
+		yytrace(a, 64, c + 0, p->cost[yyexpr_NT]);
 		if (c + 0 < p->cost[yyexpr_NT]) {
 			p->cost[yyexpr_NT] = c + 0;
 			p->rule.yyexpr = 21;
@@ -1374,44 +1407,46 @@ static void yykids(NODEPTR_TYPE p, int eruleno, NODEPTR_TYPE kids[]) {
 	if (!kids)
 		PANIC("yykids", "Null kids in", OP_LABEL(p));
 	switch (eruleno) {
-	case 64: /* expr: POW(expr,expr) */
-	case 60: /* expr: OR(or,expr) */
-	case 58: /* expr: AND(and,expr) */
-	case 57: /* expr: GE(expr,expr) */
-	case 56: /* expr: GT(expr,expr) */
-	case 55: /* expr: LE(expr,expr) */
-	case 54: /* expr: LT(expr,expr) */
-	case 53: /* expr: NE(expr,expr) */
-	case 52: /* expr: ISEQ(expr,expr) */
-	case 51: /* expr: MOD(expr,expr) */
-	case 50: /* expr: DIV(expr,expr) */
-	case 49: /* expr: MUL(expr,expr) */
-	case 48: /* expr: SUB(expr,expr) */
-	case 47: /* expr: ADD(expr,expr) */
-	case 39: /* chars: CHARS(chars,chars) */
-	case 29: /* instr: IF(cond,instr) */
-	case 27: /* if: IF(cond,instr) */
-	case 24: /* elif: ELIF(elif,if) */
-	case 20: /* instr: STMT(instr,instr) */
-	case 13: /* instr: START(fvars,instr) */
-	case 10: /* decls: DECL(decls,decls) */
+	case 66: /* expr: POW(expr,expr) */
+	case 62: /* expr: OR(or,expr) */
+	case 60: /* expr: AND(and,expr) */
+	case 59: /* expr: GE(expr,expr) */
+	case 58: /* expr: GT(expr,expr) */
+	case 57: /* expr: LE(expr,expr) */
+	case 56: /* expr: LT(expr,expr) */
+	case 55: /* expr: NE(expr,expr) */
+	case 54: /* expr: ISEQ(expr,expr) */
+	case 53: /* expr: MOD(expr,expr) */
+	case 52: /* expr: DIV(expr,expr) */
+	case 51: /* expr: MUL(expr,expr) */
+	case 50: /* expr: SUB(expr,expr) */
+	case 49: /* expr: ADD(expr,expr) */
+	case 41: /* chars: CHARS(chars,chars) */
+	case 31: /* instr: IF(cond,instr) */
+	case 29: /* if: IF(cond,instr) */
+	case 26: /* elif: ELIF(elif,if) */
+	case 22: /* instr: STMT(instr,instr) */
+	case 14: /* instr: START(fvars,instr) */
+	case 11: /* decls: DECL(decls,decls) */
 	case 1: /* file: PROGRAM(decls,main) */
 		kids[0] = LEFT_CHILD(p);
 		kids[1] = RIGHT_CHILD(p);
 		break;
-	case 44: /* expr: ADDR(ID) */
-	case 43: /* expr: READOP */
-	case 42: /* expr: ID */
-	case 41: /* expr: CHARS(NIL,CHAR) */
-	case 40: /* expr: CHARS(NIL,INT) */
-	case 38: /* chars: STR */
-	case 37: /* chars: CHAR */
-	case 36: /* chars: INT */
-	case 34: /* print: PSTMT(CHARS(NIL,INT)) */
-	case 31: /* print: PSTMT(ID) */
-	case 25: /* elif: NIL */
-	case 18: /* instr: NIL */
-	case 17: /* fvar: NUMBER(ID,NIL) */
+	case 46: /* expr: ADDR(ID) */
+	case 45: /* expr: READOP */
+	case 44: /* expr: ID */
+	case 43: /* expr: CHARS(NIL,CHAR) */
+	case 42: /* expr: CHARS(NIL,INT) */
+	case 40: /* chars: STR */
+	case 39: /* chars: CHAR */
+	case 38: /* chars: INT */
+	case 36: /* print: PSTMT(CHARS(NIL,INT)) */
+	case 33: /* print: PSTMT(ID) */
+	case 27: /* elif: NIL */
+	case 20: /* instr: NIL */
+	case 19: /* fvar: ARRAY(ID,INTS(INT,NIL)) */
+	case 18: /* fvar: NUMBER(ID,NIL) */
+	case 9: /* decls: VAR(NUMBER(ID,NIL)) */
 	case 8: /* decls: VAR(NUMBER(ID,INT)) */
 	case 7: /* eqints: INTS(INT,INT) */
 	case 5: /* decls: VAR(ARRAY(ID,INTS(INT,INT))) */
@@ -1421,49 +1456,49 @@ static void yykids(NODEPTR_TYPE p, int eruleno, NODEPTR_TYPE kids[]) {
 	case 4: /* decls: VAR(ARRAY(ID,INTS(INT,eqints))) */
 		kids[0] = RIGHT_CHILD(RIGHT_CHILD(LEFT_CHILD(p)));
 		break;
-	case 66: /* expr: IND(expr,ID) */
-	case 65: /* expr: EQ(expr,ID) */
-	case 63: /* expr: NOT(expr) */
-	case 62: /* expr: UMINUS(expr) */
-	case 46: /* expr: UMINUS(expr) */
-	case 33: /* print: PSTMT(expr) */
-	case 32: /* print: PSTMT(chars) */
+	case 68: /* expr: IND(expr,ID) */
+	case 67: /* expr: EQ(expr,ID) */
+	case 65: /* expr: NOT(expr) */
+	case 64: /* expr: UMINUS(expr) */
+	case 48: /* expr: UMINUS(expr) */
+	case 35: /* print: PSTMT(expr) */
+	case 34: /* print: PSTMT(chars) */
 	case 6: /* eqints: INTS(eqints,INT) */
 		kids[0] = LEFT_CHILD(p);
 		break;
-	case 9: /* decls: VAR(STRING(ID,chars)) */
+	case 10: /* decls: VAR(STRING(ID,chars)) */
 		kids[0] = RIGHT_CHILD(LEFT_CHILD(p));
 		break;
-	case 35: /* chars: CHARS(NIL,chars) */
-	case 19: /* instr: STMT(NIL,instr) */
-	case 15: /* fvars: ARGS(NIL,fvars) */
-	case 14: /* instr: START(NIL,instr) */
-	case 12: /* instrs: FARGS(NIL,instr) */
-	case 11: /* main: FUNCTION(END,instrs) */
+	case 37: /* chars: CHARS(NIL,chars) */
+	case 21: /* instr: STMT(NIL,instr) */
+	case 16: /* fvars: ARGS(NIL,fvars) */
+	case 15: /* instr: START(NIL,instr) */
+	case 13: /* instrs: FARGS(NIL,instr) */
+	case 12: /* main: FUNCTION(END,instrs) */
 		kids[0] = RIGHT_CHILD(p);
 		break;
-	case 61: /* or: expr */
-	case 59: /* and: expr */
-	case 30: /* cond: expr */
-	case 22: /* instr: expr */
-	case 21: /* instr: print */
-	case 16: /* fvars: fvar */
+	case 63: /* or: expr */
+	case 61: /* and: expr */
+	case 32: /* cond: expr */
+	case 24: /* instr: expr */
+	case 23: /* instr: print */
+	case 17: /* fvars: fvar */
 		kids[0] = p;
 		break;
-	case 23: /* instr: FI(THEN(if,elif),instr) */
+	case 25: /* instr: FI(THEN(if,elif),instr) */
 		kids[0] = LEFT_CHILD(LEFT_CHILD(p));
 		kids[1] = RIGHT_CHILD(LEFT_CHILD(p));
 		kids[2] = RIGHT_CHILD(p);
 		break;
-	case 26: /* instr: FI(THEN(if,NIL),instr) */
+	case 28: /* instr: FI(THEN(if,NIL),instr) */
 		kids[0] = LEFT_CHILD(LEFT_CHILD(p));
 		kids[1] = RIGHT_CHILD(p);
 		break;
-	case 45: /* expr: ADDR(IND(expr,ID)) */
-	case 28: /* instr: FI(THEN(instr,NIL),NIL) */
+	case 47: /* expr: ADDR(IND(expr,ID)) */
+	case 30: /* instr: FI(THEN(instr,NIL),NIL) */
 		kids[0] = LEFT_CHILD(LEFT_CHILD(p));
 		break;
-	case 67: /* expr: EQ(expr,IND(expr,ID)) */
+	case 69: /* expr: EQ(expr,IND(expr,ID)) */
 		kids[0] = LEFT_CHILD(p);
 		kids[1] = LEFT_CHILD(RIGHT_CHILD(p));
 		break;
@@ -1484,18 +1519,18 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
 
   switch(eruleno) {
 	case 1: /* file: PROGRAM(decls,main) */
-		fprintf(stderr, "0x%p: line 62: file: PROGRAM(decls,main)\n",(void*)p);
-#line 62 "minor.brg"
+		fprintf(stderr, "0x%p: line 63: file: PROGRAM(decls,main)\n",(void*)p);
+#line 63 "minor.brg"
 {}
 		break;
 	case 2: /* decls: NIL */
-		fprintf(stderr, "0x%p: line 64: decls: NIL\n",(void*)p);
-#line 64 "minor.brg"
+		fprintf(stderr, "0x%p: line 65: decls: NIL\n",(void*)p);
+#line 65 "minor.brg"
 {}
 		break;
 	case 3: /* decls: VAR(ARRAY(ID,INTS(INT,NIL))) */
-		fprintf(stderr, "0x%p: line 65: decls: VAR(ARRAY(ID,INTS(INT,NIL)))\n",(void*)p);
-#line 65 "minor.brg"
+		fprintf(stderr, "0x%p: line 66: decls: VAR(ARRAY(ID,INTS(INT,NIL)))\n",(void*)p);
+#line 66 "minor.brg"
 { fprintf(yyout, pfDATA pfLABEL,
                                          p->SUB(0)->SUB(0)->value.s);
                                          for(i = 0; i<p->SUB(0)->SUB(1)->SUB(0)->value.i; i++)
@@ -1503,8 +1538,8 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
                                         }
 		break;
 	case 4: /* decls: VAR(ARRAY(ID,INTS(INT,eqints))) */
-		fprintf(stderr, "0x%p: line 70: decls: VAR(ARRAY(ID,INTS(INT,eqints)))\n",(void*)p);
-#line 70 "minor.brg"
+		fprintf(stderr, "0x%p: line 71: decls: VAR(ARRAY(ID,INTS(INT,eqints)))\n",(void*)p);
+#line 71 "minor.brg"
 { fprintf(yyout, pfDATA pfLABEL,
                                          p->SUB(0)->SUB(0)->value.s);
                                          for(i = 0; i<p->SUB(0)->SUB(1)->SUB(0)->value.i; i++)
@@ -1513,8 +1548,8 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
                                         }
 		break;
 	case 5: /* decls: VAR(ARRAY(ID,INTS(INT,INT))) */
-		fprintf(stderr, "0x%p: line 76: decls: VAR(ARRAY(ID,INTS(INT,INT)))\n",(void*)p);
-#line 76 "minor.brg"
+		fprintf(stderr, "0x%p: line 77: decls: VAR(ARRAY(ID,INTS(INT,INT)))\n",(void*)p);
+#line 77 "minor.brg"
 { fprintf(yyout, pfDATA pfLABEL,
                                          p->SUB(0)->SUB(0)->value.s);
                                          for(i = 0; i<p->SUB(0)->SUB(1)->SUB(0)->value.i; i++)
@@ -1522,28 +1557,33 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
                                         }
 		break;
 	case 6: /* eqints: INTS(eqints,INT) */
-		fprintf(stderr, "0x%p: line 81: eqints: INTS(eqints,INT)\n",(void*)p);
-#line 81 "minor.brg"
+		fprintf(stderr, "0x%p: line 82: eqints: INTS(eqints,INT)\n",(void*)p);
+#line 82 "minor.brg"
 {eqints[eqintsind++] = p->SUB(1)->value.i;}
 		break;
 	case 7: /* eqints: INTS(INT,INT) */
-		fprintf(stderr, "0x%p: line 82: eqints: INTS(INT,INT)\n",(void*)p);
-#line 82 "minor.brg"
+		fprintf(stderr, "0x%p: line 83: eqints: INTS(INT,INT)\n",(void*)p);
+#line 83 "minor.brg"
 {eqints[eqintsind++] = p->SUB(0)->value.i;
                         eqints[eqintsind++] = p->SUB(1)->value.i;}
 		break;
 	case 8: /* decls: VAR(NUMBER(ID,INT)) */
-		fprintf(stderr, "0x%p: line 85: decls: VAR(NUMBER(ID,INT))\n",(void*)p);
-#line 85 "minor.brg"
+		fprintf(stderr, "0x%p: line 86: decls: VAR(NUMBER(ID,INT))\n",(void*)p);
+#line 86 "minor.brg"
 {
                               fprintf(yyout, pfDATA pfLABEL pfINTEGER,
                               p->SUB(0)->SUB(0)->value.s,
                               p->SUB(0)->SUB(1)->value.i);
                              }
 		break;
-	case 9: /* decls: VAR(STRING(ID,chars)) */
-		fprintf(stderr, "0x%p: line 90: decls: VAR(STRING(ID,chars))\n",(void*)p);
-#line 90 "minor.brg"
+	case 9: /* decls: VAR(NUMBER(ID,NIL)) */
+		fprintf(stderr, "0x%p: line 91: decls: VAR(NUMBER(ID,NIL))\n",(void*)p);
+#line 91 "minor.brg"
+{fprintf(yyout, pfDATA pfLABEL pfINTEGER, p->SUB(0)->SUB(0)->value.s, 0);}
+		break;
+	case 10: /* decls: VAR(STRING(ID,chars)) */
+		fprintf(stderr, "0x%p: line 92: decls: VAR(STRING(ID,chars))\n",(void*)p);
+#line 92 "minor.brg"
 {
                                 tmpStr[tmpStrInd++] = '\0'; toPrint = tmpStr;
                                 fprintf(yyout, pfRODATA pfALIGN pfLABEL
@@ -1552,120 +1592,131 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
                                 tmpStrInd = 0;
                                }
 		break;
-	case 10: /* decls: DECL(decls,decls) */
-		fprintf(stderr, "0x%p: line 97: decls: DECL(decls,decls)\n",(void*)p);
-#line 97 "minor.brg"
+	case 11: /* decls: DECL(decls,decls) */
+		fprintf(stderr, "0x%p: line 99: decls: DECL(decls,decls)\n",(void*)p);
+#line 99 "minor.brg"
 {fprintf(yyout, pfTEXT);}
 		break;
-	case 11: /* main: FUNCTION(END,instrs) */
-		fprintf(stderr, "0x%p: line 99: main: FUNCTION(END,instrs)\n",(void*)p);
-#line 99 "minor.brg"
-{}
-		break;
-	case 12: /* instrs: FARGS(NIL,instr) */
-		fprintf(stderr, "0x%p: line 101: instrs: FARGS(NIL,instr)\n",(void*)p);
+	case 12: /* main: FUNCTION(END,instrs) */
+		fprintf(stderr, "0x%p: line 101: main: FUNCTION(END,instrs)\n",(void*)p);
 #line 101 "minor.brg"
 {}
 		break;
-	case 13: /* instr: START(fvars,instr) */
-		fprintf(stderr, "0x%p: line 103: instr: START(fvars,instr)\n",(void*)p);
+	case 13: /* instrs: FARGS(NIL,instr) */
+		fprintf(stderr, "0x%p: line 103: instrs: FARGS(NIL,instr)\n",(void*)p);
 #line 103 "minor.brg"
 {}
 		break;
-	case 14: /* instr: START(NIL,instr) */
-		fprintf(stderr, "0x%p: line 104: instr: START(NIL,instr)\n",(void*)p);
-#line 104 "minor.brg"
+	case 14: /* instr: START(fvars,instr) */
+		fprintf(stderr, "0x%p: line 105: instr: START(fvars,instr)\n",(void*)p);
+#line 105 "minor.brg"
 {}
 		break;
-	case 15: /* fvars: ARGS(NIL,fvars) */
-		fprintf(stderr, "0x%p: line 106: fvars: ARGS(NIL,fvars)\n",(void*)p);
+	case 15: /* instr: START(NIL,instr) */
+		fprintf(stderr, "0x%p: line 106: instr: START(NIL,instr)\n",(void*)p);
 #line 106 "minor.brg"
 {}
 		break;
-	case 16: /* fvars: fvar */
-		fprintf(stderr, "0x%p: line 107: fvars: fvar\n",(void*)p);
-#line 107 "minor.brg"
+	case 16: /* fvars: ARGS(NIL,fvars) */
+		fprintf(stderr, "0x%p: line 108: fvars: ARGS(NIL,fvars)\n",(void*)p);
+#line 108 "minor.brg"
+{fvarspos = 0;}
+		break;
+	case 17: /* fvars: fvar */
+		fprintf(stderr, "0x%p: line 109: fvars: fvar\n",(void*)p);
+#line 109 "minor.brg"
 {}
 		break;
-	case 17: /* fvar: NUMBER(ID,NIL) */
-		fprintf(stderr, "0x%p: line 108: fvar: NUMBER(ID,NIL)\n",(void*)p);
-#line 108 "minor.brg"
-{fprintf(yyout, pfDATA pfLABEL pfINTEGER pfTEXT,
-                        p->SUB(0)->value.s,
-                        0);}
+	case 18: /* fvar: NUMBER(ID,NIL) */
+		fprintf(stderr, "0x%p: line 110: fvar: NUMBER(ID,NIL)\n",(void*)p);
+#line 110 "minor.brg"
+{fvarspos-=4;
+                        p->SUB(0)->value.i = fvarspos;
+                        p->SUB(0)->info = 0;
+                        fprintf(yyout, "sub esp, 4\n");}
 		break;
-	case 18: /* instr: NIL */
-		fprintf(stderr, "0x%p: line 112: instr: NIL\n",(void*)p);
-#line 112 "minor.brg"
-
-		break;
-	case 19: /* instr: STMT(NIL,instr) */
-		fprintf(stderr, "0x%p: line 113: instr: STMT(NIL,instr)\n",(void*)p);
-#line 113 "minor.brg"
-
-		break;
-	case 20: /* instr: STMT(instr,instr) */
-		fprintf(stderr, "0x%p: line 114: instr: STMT(instr,instr)\n",(void*)p);
-#line 114 "minor.brg"
-
-		break;
-	case 21: /* instr: print */
-		fprintf(stderr, "0x%p: line 115: instr: print\n",(void*)p);
+	case 19: /* fvar: ARRAY(ID,INTS(INT,NIL)) */
+		fprintf(stderr, "0x%p: line 115: fvar: ARRAY(ID,INTS(INT,NIL))\n",(void*)p);
 #line 115 "minor.brg"
+{fprintf(yyout, pfDATA pfLABEL,
+                                   p->SUB(0)->value.s);
+                                   for(i = 0; i<p->SUB(1)->SUB(0)->value.i; i++)
+                                    fprintf(yyout, pfINTEGER, 0);
+                                    fprintf(yyout, pfTEXT);
+                                  }
+		break;
+	case 20: /* instr: NIL */
+		fprintf(stderr, "0x%p: line 122: instr: NIL\n",(void*)p);
+#line 122 "minor.brg"
 
 		break;
-	case 22: /* instr: expr */
-		fprintf(stderr, "0x%p: line 116: instr: expr\n",(void*)p);
-#line 116 "minor.brg"
+	case 21: /* instr: STMT(NIL,instr) */
+		fprintf(stderr, "0x%p: line 123: instr: STMT(NIL,instr)\n",(void*)p);
+#line 123 "minor.brg"
 
 		break;
-	case 23: /* instr: FI(THEN(if,elif),instr) */
-		fprintf(stderr, "0x%p: line 118: instr: FI(THEN(if,elif),instr)\n",(void*)p);
-#line 118 "minor.brg"
+	case 22: /* instr: STMT(instr,instr) */
+		fprintf(stderr, "0x%p: line 124: instr: STMT(instr,instr)\n",(void*)p);
+#line 124 "minor.brg"
+
+		break;
+	case 23: /* instr: print */
+		fprintf(stderr, "0x%p: line 125: instr: print\n",(void*)p);
+#line 125 "minor.brg"
+
+		break;
+	case 24: /* instr: expr */
+		fprintf(stderr, "0x%p: line 126: instr: expr\n",(void*)p);
+#line 126 "minor.brg"
+
+		break;
+	case 25: /* instr: FI(THEN(if,elif),instr) */
+		fprintf(stderr, "0x%p: line 128: instr: FI(THEN(if,elif),instr)\n",(void*)p);
+#line 128 "minor.brg"
 { fprintf(yyout, pfLABEL,
                                       mklbl(LEFT_CHILD(p)->SUB(0)->place)); }
 		break;
-	case 24: /* elif: ELIF(elif,if) */
-		fprintf(stderr, "0x%p: line 120: elif: ELIF(elif,if)\n",(void*)p);
-#line 120 "minor.brg"
+	case 26: /* elif: ELIF(elif,if) */
+		fprintf(stderr, "0x%p: line 130: elif: ELIF(elif,if)\n",(void*)p);
+#line 130 "minor.brg"
 { p->place = ++lbl; fprintf(yyout, pfJMP pfLABEL,
 				                mklbl(RIGHT_CHILD(p)->place), mklbl(p->place)); }
 		break;
-	case 25: /* elif: NIL */
-		fprintf(stderr, "0x%p: line 122: elif: NIL\n",(void*)p);
-#line 122 "minor.brg"
+	case 27: /* elif: NIL */
+		fprintf(stderr, "0x%p: line 132: elif: NIL\n",(void*)p);
+#line 132 "minor.brg"
 {}
 		break;
-	case 26: /* instr: FI(THEN(if,NIL),instr) */
-		fprintf(stderr, "0x%p: line 124: instr: FI(THEN(if,NIL),instr)\n",(void*)p);
-#line 124 "minor.brg"
+	case 28: /* instr: FI(THEN(if,NIL),instr) */
+		fprintf(stderr, "0x%p: line 134: instr: FI(THEN(if,NIL),instr)\n",(void*)p);
+#line 134 "minor.brg"
 { fprintf(yyout, pfLABEL,
                                       mklbl(LEFT_CHILD(p)->SUB(0)->place)); }
 		break;
-	case 27: /* if: IF(cond,instr) */
-		fprintf(stderr, "0x%p: line 126: if: IF(cond,instr)\n",(void*)p);
-#line 126 "minor.brg"
+	case 29: /* if: IF(cond,instr) */
+		fprintf(stderr, "0x%p: line 136: if: IF(cond,instr)\n",(void*)p);
+#line 136 "minor.brg"
 {p->place = ++lbl; fprintf(yyout, pfJMP pfLABEL,
 				            mklbl(p->place), mklbl(LEFT_CHILD(p)->place)); }
 		break;
-	case 28: /* instr: FI(THEN(instr,NIL),NIL) */
-		fprintf(stderr, "0x%p: line 129: instr: FI(THEN(instr,NIL),NIL)\n",(void*)p);
-#line 129 "minor.brg"
+	case 30: /* instr: FI(THEN(instr,NIL),NIL) */
+		fprintf(stderr, "0x%p: line 139: instr: FI(THEN(instr,NIL),NIL)\n",(void*)p);
+#line 139 "minor.brg"
 {/*Simple if*/}
 		break;
-	case 29: /* instr: IF(cond,instr) */
-		fprintf(stderr, "0x%p: line 130: instr: IF(cond,instr)\n",(void*)p);
-#line 130 "minor.brg"
+	case 31: /* instr: IF(cond,instr) */
+		fprintf(stderr, "0x%p: line 140: instr: IF(cond,instr)\n",(void*)p);
+#line 140 "minor.brg"
 { fprintf(yyout, pfLABEL, mklbl(LEFT_CHILD(p)->place)); }
 		break;
-	case 30: /* cond: expr */
-		fprintf(stderr, "0x%p: line 131: cond: expr\n",(void*)p);
-#line 131 "minor.brg"
+	case 32: /* cond: expr */
+		fprintf(stderr, "0x%p: line 141: cond: expr\n",(void*)p);
+#line 141 "minor.brg"
 { p->place = ++lbl; fprintf(yyout, pfJZ, mklbl(p->place)); }
 		break;
-	case 31: /* print: PSTMT(ID) */
-		fprintf(stderr, "0x%p: line 133: print: PSTMT(ID)\n",(void*)p);
-#line 133 "minor.brg"
+	case 33: /* print: PSTMT(ID) */
+		fprintf(stderr, "0x%p: line 143: print: PSTMT(ID)\n",(void*)p);
+#line 143 "minor.brg"
 {
                   switch(p->SUB(0)->info){
                     case tINT:
@@ -1679,9 +1730,9 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
                   }
                   }
 		break;
-	case 32: /* print: PSTMT(chars) */
-		fprintf(stderr, "0x%p: line 145: print: PSTMT(chars)\n",(void*)p);
-#line 145 "minor.brg"
+	case 34: /* print: PSTMT(chars) */
+		fprintf(stderr, "0x%p: line 155: print: PSTMT(chars)\n",(void*)p);
+#line 155 "minor.brg"
 {
                       char *l = mklbl(++lbl); tmpStr[tmpStrInd++] = '\0';
                       fprintf(yyout, pfRODATA pfALIGN pfLABEL, l);
@@ -1691,69 +1742,69 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
                       tmpStrInd = 0;
                       }
 		break;
-	case 33: /* print: PSTMT(expr) */
-		fprintf(stderr, "0x%p: line 153: print: PSTMT(expr)\n",(void*)p);
-#line 153 "minor.brg"
+	case 35: /* print: PSTMT(expr) */
+		fprintf(stderr, "0x%p: line 163: print: PSTMT(expr)\n",(void*)p);
+#line 163 "minor.brg"
 {fprintf(yyout, pfTEXT pfCALL pfTRASH, "_printi", 4);}
 		break;
-	case 34: /* print: PSTMT(CHARS(NIL,INT)) */
-		fprintf(stderr, "0x%p: line 154: print: PSTMT(CHARS(NIL,INT))\n",(void*)p);
-#line 154 "minor.brg"
+	case 36: /* print: PSTMT(CHARS(NIL,INT)) */
+		fprintf(stderr, "0x%p: line 164: print: PSTMT(CHARS(NIL,INT))\n",(void*)p);
+#line 164 "minor.brg"
 {fprintf(yyout, pfTEXT pfIMM pfCALL pfTRASH, p->SUB(0)->SUB(1)->value.i, "_printi", 4);}
 		break;
-	case 35: /* chars: CHARS(NIL,chars) */
-		fprintf(stderr, "0x%p: line 156: chars: CHARS(NIL,chars)\n",(void*)p);
-#line 156 "minor.brg"
+	case 37: /* chars: CHARS(NIL,chars) */
+		fprintf(stderr, "0x%p: line 166: chars: CHARS(NIL,chars)\n",(void*)p);
+#line 166 "minor.brg"
 {}
 		break;
-	case 36: /* chars: INT */
-		fprintf(stderr, "0x%p: line 157: chars: INT\n",(void*)p);
-#line 157 "minor.brg"
+	case 38: /* chars: INT */
+		fprintf(stderr, "0x%p: line 167: chars: INT\n",(void*)p);
+#line 167 "minor.brg"
 { tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
 		break;
-	case 37: /* chars: CHAR */
-		fprintf(stderr, "0x%p: line 158: chars: CHAR\n",(void*)p);
-#line 158 "minor.brg"
+	case 39: /* chars: CHAR */
+		fprintf(stderr, "0x%p: line 168: chars: CHAR\n",(void*)p);
+#line 168 "minor.brg"
 { tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
 		break;
-	case 38: /* chars: STR */
-		fprintf(stderr, "0x%p: line 159: chars: STR\n",(void*)p);
-#line 159 "minor.brg"
+	case 40: /* chars: STR */
+		fprintf(stderr, "0x%p: line 169: chars: STR\n",(void*)p);
+#line 169 "minor.brg"
 { strcpy(&tmpStr[tmpStrInd], p->value.s); tmpStrInd = tmpStrInd + strlen(p->value.s); toPrint = tmpStr;}
 		break;
-	case 39: /* chars: CHARS(chars,chars) */
-		fprintf(stderr, "0x%p: line 160: chars: CHARS(chars,chars)\n",(void*)p);
-#line 160 "minor.brg"
+	case 41: /* chars: CHARS(chars,chars) */
+		fprintf(stderr, "0x%p: line 170: chars: CHARS(chars,chars)\n",(void*)p);
+#line 170 "minor.brg"
 {}
 		break;
-	case 40: /* expr: CHARS(NIL,INT) */
-		fprintf(stderr, "0x%p: line 162: expr: CHARS(NIL,INT)\n",(void*)p);
-#line 162 "minor.brg"
+	case 42: /* expr: CHARS(NIL,INT) */
+		fprintf(stderr, "0x%p: line 172: expr: CHARS(NIL,INT)\n",(void*)p);
+#line 172 "minor.brg"
 {fprintf(yyout, pfIMM, p->SUB(1)->value.i);}
 		break;
-	case 41: /* expr: CHARS(NIL,CHAR) */
-		fprintf(stderr, "0x%p: line 163: expr: CHARS(NIL,CHAR)\n",(void*)p);
-#line 163 "minor.brg"
+	case 43: /* expr: CHARS(NIL,CHAR) */
+		fprintf(stderr, "0x%p: line 173: expr: CHARS(NIL,CHAR)\n",(void*)p);
+#line 173 "minor.brg"
 {fprintf(yyout, pfIMM, p->SUB(1)->value.i); }
 		break;
-	case 42: /* expr: ID */
-		fprintf(stderr, "0x%p: line 164: expr: ID\n",(void*)p);
-#line 164 "minor.brg"
+	case 44: /* expr: ID */
+		fprintf(stderr, "0x%p: line 174: expr: ID\n",(void*)p);
+#line 174 "minor.brg"
 { fprintf(yyout, pfADDRV, p->value.s); }
 		break;
-	case 43: /* expr: READOP */
-		fprintf(stderr, "0x%p: line 165: expr: READOP\n",(void*)p);
-#line 165 "minor.brg"
+	case 45: /* expr: READOP */
+		fprintf(stderr, "0x%p: line 175: expr: READOP\n",(void*)p);
+#line 175 "minor.brg"
 {fprintf(yyout, pfCALL pfPUSH, "_readi"); }
 		break;
-	case 44: /* expr: ADDR(ID) */
-		fprintf(stderr, "0x%p: line 167: expr: ADDR(ID)\n",(void*)p);
-#line 167 "minor.brg"
+	case 46: /* expr: ADDR(ID) */
+		fprintf(stderr, "0x%p: line 177: expr: ADDR(ID)\n",(void*)p);
+#line 177 "minor.brg"
 { fprintf(yyout, pfADDR, p->SUB(0)->value.s); }
 		break;
-	case 45: /* expr: ADDR(IND(expr,ID)) */
-		fprintf(stderr, "0x%p: line 168: expr: ADDR(IND(expr,ID))\n",(void*)p);
-#line 168 "minor.brg"
+	case 47: /* expr: ADDR(IND(expr,ID)) */
+		fprintf(stderr, "0x%p: line 178: expr: ADDR(IND(expr,ID))\n",(void*)p);
+#line 178 "minor.brg"
 { switch(p->SUB(0)->SUB(1)->info){
                               case tINT:
                                 fprintf(yyout, pfIMM pfMUL pfADDR pfADD,
@@ -1765,99 +1816,99 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
                               break;
                             }}
 		break;
-	case 46: /* expr: UMINUS(expr) */
-		fprintf(stderr, "0x%p: line 178: expr: UMINUS(expr)\n",(void*)p);
-#line 178 "minor.brg"
+	case 48: /* expr: UMINUS(expr) */
+		fprintf(stderr, "0x%p: line 188: expr: UMINUS(expr)\n",(void*)p);
+#line 188 "minor.brg"
 { fprintf(yyout, pfIMM pfMUL, -1); }
 		break;
-	case 47: /* expr: ADD(expr,expr) */
-		fprintf(stderr, "0x%p: line 179: expr: ADD(expr,expr)\n",(void*)p);
-#line 179 "minor.brg"
+	case 49: /* expr: ADD(expr,expr) */
+		fprintf(stderr, "0x%p: line 189: expr: ADD(expr,expr)\n",(void*)p);
+#line 189 "minor.brg"
 { fprintf(yyout, pfADD); }
 		break;
-	case 48: /* expr: SUB(expr,expr) */
-		fprintf(stderr, "0x%p: line 180: expr: SUB(expr,expr)\n",(void*)p);
-#line 180 "minor.brg"
+	case 50: /* expr: SUB(expr,expr) */
+		fprintf(stderr, "0x%p: line 190: expr: SUB(expr,expr)\n",(void*)p);
+#line 190 "minor.brg"
 { fprintf(yyout, pfSUB); }
 		break;
-	case 49: /* expr: MUL(expr,expr) */
-		fprintf(stderr, "0x%p: line 181: expr: MUL(expr,expr)\n",(void*)p);
-#line 181 "minor.brg"
+	case 51: /* expr: MUL(expr,expr) */
+		fprintf(stderr, "0x%p: line 191: expr: MUL(expr,expr)\n",(void*)p);
+#line 191 "minor.brg"
 { fprintf(yyout, pfMUL); }
 		break;
-	case 50: /* expr: DIV(expr,expr) */
-		fprintf(stderr, "0x%p: line 182: expr: DIV(expr,expr)\n",(void*)p);
-#line 182 "minor.brg"
+	case 52: /* expr: DIV(expr,expr) */
+		fprintf(stderr, "0x%p: line 192: expr: DIV(expr,expr)\n",(void*)p);
+#line 192 "minor.brg"
 { fprintf(yyout, pfDIV); }
 		break;
-	case 51: /* expr: MOD(expr,expr) */
-		fprintf(stderr, "0x%p: line 183: expr: MOD(expr,expr)\n",(void*)p);
-#line 183 "minor.brg"
+	case 53: /* expr: MOD(expr,expr) */
+		fprintf(stderr, "0x%p: line 193: expr: MOD(expr,expr)\n",(void*)p);
+#line 193 "minor.brg"
 { fprintf(yyout, pfMOD); }
 		break;
-	case 52: /* expr: ISEQ(expr,expr) */
-		fprintf(stderr, "0x%p: line 184: expr: ISEQ(expr,expr)\n",(void*)p);
-#line 184 "minor.brg"
+	case 54: /* expr: ISEQ(expr,expr) */
+		fprintf(stderr, "0x%p: line 194: expr: ISEQ(expr,expr)\n",(void*)p);
+#line 194 "minor.brg"
 { fprintf(yyout, pfEQ); }
 		break;
-	case 53: /* expr: NE(expr,expr) */
-		fprintf(stderr, "0x%p: line 185: expr: NE(expr,expr)\n",(void*)p);
-#line 185 "minor.brg"
+	case 55: /* expr: NE(expr,expr) */
+		fprintf(stderr, "0x%p: line 195: expr: NE(expr,expr)\n",(void*)p);
+#line 195 "minor.brg"
 { fprintf(yyout, pfNE); }
 		break;
-	case 54: /* expr: LT(expr,expr) */
-		fprintf(stderr, "0x%p: line 186: expr: LT(expr,expr)\n",(void*)p);
-#line 186 "minor.brg"
+	case 56: /* expr: LT(expr,expr) */
+		fprintf(stderr, "0x%p: line 196: expr: LT(expr,expr)\n",(void*)p);
+#line 196 "minor.brg"
 { fprintf(yyout, pfLT); }
 		break;
-	case 55: /* expr: LE(expr,expr) */
-		fprintf(stderr, "0x%p: line 187: expr: LE(expr,expr)\n",(void*)p);
-#line 187 "minor.brg"
+	case 57: /* expr: LE(expr,expr) */
+		fprintf(stderr, "0x%p: line 197: expr: LE(expr,expr)\n",(void*)p);
+#line 197 "minor.brg"
 { fprintf(yyout, pfLE); }
 		break;
-	case 56: /* expr: GT(expr,expr) */
-		fprintf(stderr, "0x%p: line 188: expr: GT(expr,expr)\n",(void*)p);
-#line 188 "minor.brg"
+	case 58: /* expr: GT(expr,expr) */
+		fprintf(stderr, "0x%p: line 198: expr: GT(expr,expr)\n",(void*)p);
+#line 198 "minor.brg"
 { fprintf(yyout, pfGT); }
 		break;
-	case 57: /* expr: GE(expr,expr) */
-		fprintf(stderr, "0x%p: line 189: expr: GE(expr,expr)\n",(void*)p);
-#line 189 "minor.brg"
+	case 59: /* expr: GE(expr,expr) */
+		fprintf(stderr, "0x%p: line 199: expr: GE(expr,expr)\n",(void*)p);
+#line 199 "minor.brg"
 { fprintf(yyout, pfGE); }
 		break;
-	case 58: /* expr: AND(and,expr) */
-		fprintf(stderr, "0x%p: line 190: expr: AND(and,expr)\n",(void*)p);
-#line 190 "minor.brg"
+	case 60: /* expr: AND(and,expr) */
+		fprintf(stderr, "0x%p: line 200: expr: AND(and,expr)\n",(void*)p);
+#line 200 "minor.brg"
 { fprintf(yyout, pfLABEL, mklbl(LEFT_CHILD(p)->place)); }
 		break;
-	case 59: /* and: expr */
-		fprintf(stderr, "0x%p: line 191: and: expr\n",(void*)p);
-#line 191 "minor.brg"
+	case 61: /* and: expr */
+		fprintf(stderr, "0x%p: line 201: and: expr\n",(void*)p);
+#line 201 "minor.brg"
 { p->place = ++lbl; fprintf(yyout, pfDUP pfJZ pfTRASH, mklbl(p->place), pfWORD); }
 		break;
-	case 60: /* expr: OR(or,expr) */
-		fprintf(stderr, "0x%p: line 192: expr: OR(or,expr)\n",(void*)p);
-#line 192 "minor.brg"
+	case 62: /* expr: OR(or,expr) */
+		fprintf(stderr, "0x%p: line 202: expr: OR(or,expr)\n",(void*)p);
+#line 202 "minor.brg"
 { fprintf(yyout, pfLABEL, mklbl(LEFT_CHILD(p)->place)); }
 		break;
-	case 61: /* or: expr */
-		fprintf(stderr, "0x%p: line 193: or: expr\n",(void*)p);
-#line 193 "minor.brg"
+	case 63: /* or: expr */
+		fprintf(stderr, "0x%p: line 203: or: expr\n",(void*)p);
+#line 203 "minor.brg"
 { p->place = ++lbl; fprintf(yyout, pfDUP pfJNZ pfTRASH, mklbl(p->place), pfWORD); }
 		break;
-	case 62: /* expr: UMINUS(expr) */
-		fprintf(stderr, "0x%p: line 194: expr: UMINUS(expr)\n",(void*)p);
-#line 194 "minor.brg"
+	case 64: /* expr: UMINUS(expr) */
+		fprintf(stderr, "0x%p: line 204: expr: UMINUS(expr)\n",(void*)p);
+#line 204 "minor.brg"
 { fprintf(yyout, pfNEG); }
 		break;
-	case 63: /* expr: NOT(expr) */
-		fprintf(stderr, "0x%p: line 195: expr: NOT(expr)\n",(void*)p);
-#line 195 "minor.brg"
+	case 65: /* expr: NOT(expr) */
+		fprintf(stderr, "0x%p: line 205: expr: NOT(expr)\n",(void*)p);
+#line 205 "minor.brg"
 { fprintf(yyout, pfIMM pfEQ, 0); }
 		break;
-	case 64: /* expr: POW(expr,expr) */
-		fprintf(stderr, "0x%p: line 196: expr: POW(expr,expr)\n",(void*)p);
-#line 196 "minor.brg"
+	case 66: /* expr: POW(expr,expr) */
+		fprintf(stderr, "0x%p: line 206: expr: POW(expr,expr)\n",(void*)p);
+#line 206 "minor.brg"
 {lbl++; fprintf(yyout, ";POW\n"
                                                 "pop ebx\n"
                                                 "pop ecx\n"
@@ -1872,20 +1923,20 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
                                                 mklbl(lbl+1), mklbl(lbl));
                                                 lbl = lbl + 2;}
 		break;
-	case 65: /* expr: EQ(expr,ID) */
-		fprintf(stderr, "0x%p: line 209: expr: EQ(expr,ID)\n",(void*)p);
-#line 209 "minor.brg"
+	case 67: /* expr: EQ(expr,ID) */
+		fprintf(stderr, "0x%p: line 219: expr: EQ(expr,ID)\n",(void*)p);
+#line 219 "minor.brg"
 { fprintf(yyout, pfADDRA, p->SUB(1)->value.s); }
 		break;
-	case 66: /* expr: IND(expr,ID) */
-		fprintf(stderr, "0x%p: line 210: expr: IND(expr,ID)\n",(void*)p);
-#line 210 "minor.brg"
+	case 68: /* expr: IND(expr,ID) */
+		fprintf(stderr, "0x%p: line 220: expr: IND(expr,ID)\n",(void*)p);
+#line 220 "minor.brg"
 { fprintf(yyout, pfIMM pfMUL pfADDR pfADD pfLOAD,
                         4, p->SUB(1)->value.s);  }
 		break;
-	case 67: /* expr: EQ(expr,IND(expr,ID)) */
-		fprintf(stderr, "0x%p: line 212: expr: EQ(expr,IND(expr,ID))\n",(void*)p);
-#line 212 "minor.brg"
+	case 69: /* expr: EQ(expr,IND(expr,ID)) */
+		fprintf(stderr, "0x%p: line 222: expr: EQ(expr,IND(expr,ID))\n",(void*)p);
+#line 222 "minor.brg"
 { fprintf(yyout, pfIMM pfMUL pfADDR pfADD pfSTORE,
                                 4, p->SUB(1)->SUB(1)->value.s); }
 		break;
@@ -1905,7 +1956,7 @@ int yyselect(NODEPTR_TYPE p)
 }
 
 
-#line 215 "minor.brg"
+#line 225 "minor.brg"
 
 extern char **yynames;
 extern int trace, errors, debugNode;
@@ -1927,9 +1978,9 @@ static int data(int t, char *s, void *a, void *user) {
 void evaluate(Node *p) {
 	if (errors) return;
 	/* if (trace) */ printNode(p, stdout, yynames);
-  fprintf(yyout, pfTEXT pfALIGN pfGLOBL pfLABEL, "_main", pfFUNC, "_main");
+  fprintf(yyout, pfTEXT pfALIGN pfGLOBL pfLABEL pfENTER, "_main", pfFUNC, "_main", 4);
 	if (!yyselect(p) && trace) printf("selection successful\n");
-  fprintf(yyout, pfIMM pfPOP pfRET pfDATA, 0);
+  fprintf(yyout, pfIMM pfPOP pfLEAVE pfRET pfDATA, 0);
   /*IDevery(data,0);*/
   fprintf(yyout, pfEXTRN pfEXTRN pfEXTRN pfEXTRN,
   		"_prints", "_printi", "_println", "_readi");
