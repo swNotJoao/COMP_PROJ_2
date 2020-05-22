@@ -1,4 +1,0 @@
-program
-    function forward number xpto do return 42
-start
-end

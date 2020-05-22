@@ -1,4 +1,0 @@
-program
-    function void hello done $$ should be forward
-start
-end

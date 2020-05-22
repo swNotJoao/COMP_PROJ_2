@@ -1,6 +1,0 @@
-program
-    array x[3] := 1, 2, 3
-start
-    x["123"];
-end
-

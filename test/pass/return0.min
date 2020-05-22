@@ -1,3 +1,0 @@
-program start
-    if 1 = 1 then return 0 fi
-end

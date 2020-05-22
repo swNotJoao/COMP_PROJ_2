@@ -1,7 +1,0 @@
-program
-    array x[2] := 1, 2;
-    string y
-start
-    y := 0;
-    x[y] := 3;
-end

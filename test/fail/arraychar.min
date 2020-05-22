@@ -1,4 +1,0 @@
-program
-    array x[2] := 2, '\n'
-start
-end

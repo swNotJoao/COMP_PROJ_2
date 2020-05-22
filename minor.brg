@@ -117,7 +117,7 @@ instr : START(NIL, instr) {}
 
 fvars: ARGS(fvars, fvar) {/*fprintf(yyout, "sub esp, %d\n", -accoffset);*/}
 fvars : ARGS(NIL, fvars) {/*fprintf(yyout, "sub esp, %d\n", -accoffset);*/}
-fvars : fvar {}
+fvars : fvar 1{}
 fvar : NUMBER(ID, NIL) {locals[localvarind].id = p->SUB(0)->value.s;
                         accoffset-=4;
                         locals[localvarind].offset = accoffset;
@@ -130,6 +130,12 @@ fvar : ARRAY(ID, INTS(INT, NIL)) { locals[localvarind].id = p->SUB(0)->value.s;
                                     fprintf(yyout, "sub esp, %d\n",
                                     (p->SUB(1)->SUB(0)->value.i)*4);
                                     localvarind++;}
+
+fvar : STRING(ID, NIL) 1{locals[localvarind].id = p->SUB(0)->value.s;
+                        accoffset-=4;
+                        locals[localvarind].offset = accoffset;
+                        fprintf(yyout, "sub esp, 4\n");
+                        localvarind++;}
 
 instr : NIL
 instr : STMT(NIL, instr)
@@ -162,7 +168,9 @@ print : PSTMT(ID) 1{ret = getOffset(p->SUB(0)->value.s);
                "_printi", 4);
               break;
               case tSTR:
-                fprintf(yyout, "push dword [eax]\n" pfCALL pfTRASH,
+                fprintf(yyout, pfIMM "push ebp\n"
+                pfADD pfPOP "push dword [eax]\n", ret);
+                fprintf(yyout, pfCALL pfTRASH,
                  "_prints", 4);
               break;
             }
@@ -251,6 +259,19 @@ expr: POW(expr, expr) 1 {lbl++; fprintf(yyout, ";POW\n"
                                                 mklbl(lbl+1), mklbl(lbl),
                                                 mklbl(lbl+1), mklbl(lbl));
                                                 lbl = lbl + 2;}
+expr: EQ(chars, ID) {ret = getOffset(p->SUB(1)->value.s);
+                    if(ret){
+                      tmpStr[tmpStrInd++] = '\0'; toPrint = tmpStr;
+                      fprintf(yyout, pfRODATA pfALIGN pfLABEL
+                      , mklbl(++lbl));
+                      outstr(toPrint);
+                      fprintf(yyout, pfTEXT pfIMM "push ebp\n"
+                      pfADD pfPOP "mov ecx, $%s\n" "mov [eax], ecx\n", ret, mklbl(lbl));
+                      tmpStrInd = 0;
+                    }
+                    else{
+                      /*GLOBAL string*/
+                    }}
 expr: EQ(expr, ID) 1 { ret = getOffset(p->SUB(1)->value.s);
                         if(ret){
                           fprintf(yyout, pfIMM "push ebp\n"

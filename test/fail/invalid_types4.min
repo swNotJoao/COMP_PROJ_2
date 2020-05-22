@@ -1,4 +1,0 @@
-program
-    function void hello do return 123
-start
-end

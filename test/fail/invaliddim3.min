@@ -1,4 +1,0 @@
-program
-    array x[1+1] := 30, 17
-start
-end

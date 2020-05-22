@@ -1,5 +1,0 @@
-# Should join these strings
-program
-start
-    "hello" 32 "world" 0xa 0 !
-end

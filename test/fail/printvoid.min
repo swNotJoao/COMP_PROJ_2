@@ -1,5 +1,0 @@
-program
-    function void hello do 123!
-start
-    hello!
-end    

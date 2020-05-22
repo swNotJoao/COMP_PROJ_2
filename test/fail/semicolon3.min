@@ -1,6 +1,0 @@
-program
-    number y := 2;
-    number x;      $$ Should not have semicolon
-start
-    x := y;
-end

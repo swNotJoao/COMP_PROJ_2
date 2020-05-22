@@ -1,5 +1,0 @@
-program
-    array x
-start
-    x # 123;
-end

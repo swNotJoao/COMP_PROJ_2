@@ -1,5 +1,0 @@
-program
-    number x := 3
-start
-    x + "123" !
-end

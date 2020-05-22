@@ -1,5 +1,0 @@
-program
-	string s
-start
-	s := '\0';
-end

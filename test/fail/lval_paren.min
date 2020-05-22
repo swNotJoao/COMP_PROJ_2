@@ -1,4 +1,0 @@
-program start
-    number x;
-    (x) := 1;
-end

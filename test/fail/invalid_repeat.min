@@ -1,5 +1,0 @@
-program start
-if 0 = 0 then
-    repeat
-fi
-end

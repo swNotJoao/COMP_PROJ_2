@@ -1,7 +1,0 @@
-program
-    number x
-start
-   x := 2;
-   x := 3 $$ Semicolon missing
-end
-

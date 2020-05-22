@@ -1,4 +1,0 @@
-program
-    int c := 'ab'
-start
-end

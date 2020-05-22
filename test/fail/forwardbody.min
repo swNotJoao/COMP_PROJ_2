@@ -1,4 +1,0 @@
-program
-    forward number x := 3
-start
-end

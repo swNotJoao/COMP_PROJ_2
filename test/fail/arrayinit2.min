@@ -1,4 +1,0 @@
-program
-start
-    1, 2, 3 ! $$ Array initializer can't be used in expressions
-end

@@ -1,4 +1,0 @@
-program
-start
- '\a' '\n' '\a7' '\\' '\'' !
-end

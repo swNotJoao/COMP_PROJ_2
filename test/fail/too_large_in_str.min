@@ -1,4 +1,0 @@
-program 
-    string s := 999999999999999 " is a large number"
-start
-end

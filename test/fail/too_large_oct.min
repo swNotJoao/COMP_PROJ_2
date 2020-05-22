@@ -1,4 +1,0 @@
-program 
-    number x := 020000000000 $$ 2^31
-start
-end

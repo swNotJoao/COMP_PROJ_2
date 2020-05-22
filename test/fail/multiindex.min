@@ -1,5 +1,0 @@
-program
-    array x
-start
-    x[0][0] := 2;
-end
