@@ -1,5 +1,5 @@
 /*
-generated at Fri May 22 13:20:11 2020
+generated at Fri May 22 14:20:17 2020
 by $Id: pburg.c,v 2.7 2020/04/06 09:41:42 prs Exp $
 */
 #include <stdio.h>
@@ -1642,17 +1642,17 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
 	case 16: /* fvars: ARGS(fvars,fvar) */
 		fprintf(stderr, "0x%p: line 118: fvars: ARGS(fvars,fvar)\n",(void*)p);
 #line 118 "minor.brg"
-{fprintf(yyout, "sub esp, %d\n", -accoffset);}
+{/*fprintf(yyout, "sub esp, %d\n", -accoffset);*/}
 		break;
 	case 17: /* fvars: ARGS(NIL,fvars) */
 		fprintf(stderr, "0x%p: line 119: fvars: ARGS(NIL,fvars)\n",(void*)p);
 #line 119 "minor.brg"
-{fprintf(yyout, "sub esp, %d\n", -accoffset);}
+{/*fprintf(yyout, "sub esp, %d\n", -accoffset);*/}
 		break;
 	case 18: /* fvars: fvar */
 		fprintf(stderr, "0x%p: line 120: fvars: fvar\n",(void*)p);
 #line 120 "minor.brg"
-{localvarind++;}
+{}
 		break;
 	case 19: /* fvar: NUMBER(ID,NIL) */
 		fprintf(stderr, "0x%p: line 121: fvar: NUMBER(ID,NIL)\n",(void*)p);
@@ -1660,105 +1660,122 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
 {locals[localvarind].id = p->SUB(0)->value.s;
                         accoffset-=4;
                         locals[localvarind].offset = accoffset;
-                        /*fprintf(yyout, "sub esp, 4\n");*/}
+                        fprintf(yyout, "sub esp, 4\n");
+                        localvarind++;}
 		break;
 	case 20: /* fvar: ARRAY(ID,INTS(INT,NIL)) */
-		fprintf(stderr, "0x%p: line 126: fvar: ARRAY(ID,INTS(INT,NIL))\n",(void*)p);
-#line 126 "minor.brg"
+		fprintf(stderr, "0x%p: line 127: fvar: ARRAY(ID,INTS(INT,NIL))\n",(void*)p);
+#line 127 "minor.brg"
 { locals[localvarind].id = p->SUB(0)->value.s;
                                     accoffset-=(p->SUB(1)->SUB(0)->value.i)*4;
                                     locals[localvarind].offset = accoffset;
-                                    /*fprintf(yyout, "sub esp, %d\n",
-                                    (p->SUB(1)->SUB(0)->value.i)*4);*/}
+                                    fprintf(yyout, "sub esp, %d\n",
+                                    (p->SUB(1)->SUB(0)->value.i)*4);
+                                    localvarind++;}
 		break;
 	case 21: /* instr: NIL */
-		fprintf(stderr, "0x%p: line 132: instr: NIL\n",(void*)p);
-#line 132 "minor.brg"
-
-		break;
-	case 22: /* instr: STMT(NIL,instr) */
-		fprintf(stderr, "0x%p: line 133: instr: STMT(NIL,instr)\n",(void*)p);
-#line 133 "minor.brg"
-
-		break;
-	case 23: /* instr: STMT(instr,instr) */
-		fprintf(stderr, "0x%p: line 134: instr: STMT(instr,instr)\n",(void*)p);
+		fprintf(stderr, "0x%p: line 134: instr: NIL\n",(void*)p);
 #line 134 "minor.brg"
 
 		break;
-	case 24: /* instr: print */
-		fprintf(stderr, "0x%p: line 135: instr: print\n",(void*)p);
+	case 22: /* instr: STMT(NIL,instr) */
+		fprintf(stderr, "0x%p: line 135: instr: STMT(NIL,instr)\n",(void*)p);
 #line 135 "minor.brg"
 
 		break;
-	case 25: /* instr: expr */
-		fprintf(stderr, "0x%p: line 136: instr: expr\n",(void*)p);
+	case 23: /* instr: STMT(instr,instr) */
+		fprintf(stderr, "0x%p: line 136: instr: STMT(instr,instr)\n",(void*)p);
 #line 136 "minor.brg"
 
 		break;
-	case 26: /* instr: FI(THEN(if,elif),instr) */
-		fprintf(stderr, "0x%p: line 138: instr: FI(THEN(if,elif),instr)\n",(void*)p);
+	case 24: /* instr: print */
+		fprintf(stderr, "0x%p: line 137: instr: print\n",(void*)p);
+#line 137 "minor.brg"
+
+		break;
+	case 25: /* instr: expr */
+		fprintf(stderr, "0x%p: line 138: instr: expr\n",(void*)p);
 #line 138 "minor.brg"
+
+		break;
+	case 26: /* instr: FI(THEN(if,elif),instr) */
+		fprintf(stderr, "0x%p: line 140: instr: FI(THEN(if,elif),instr)\n",(void*)p);
+#line 140 "minor.brg"
 { fprintf(yyout, pfLABEL,
                                       mklbl(LEFT_CHILD(p)->SUB(0)->place)); }
 		break;
 	case 27: /* elif: ELIF(elif,if) */
-		fprintf(stderr, "0x%p: line 140: elif: ELIF(elif,if)\n",(void*)p);
-#line 140 "minor.brg"
+		fprintf(stderr, "0x%p: line 142: elif: ELIF(elif,if)\n",(void*)p);
+#line 142 "minor.brg"
 { p->place = ++lbl; fprintf(yyout, pfJMP pfLABEL,
 				                mklbl(RIGHT_CHILD(p)->place), mklbl(p->place)); }
 		break;
 	case 28: /* elif: NIL */
-		fprintf(stderr, "0x%p: line 142: elif: NIL\n",(void*)p);
-#line 142 "minor.brg"
+		fprintf(stderr, "0x%p: line 144: elif: NIL\n",(void*)p);
+#line 144 "minor.brg"
 {}
 		break;
 	case 29: /* instr: FI(THEN(if,NIL),instr) */
-		fprintf(stderr, "0x%p: line 144: instr: FI(THEN(if,NIL),instr)\n",(void*)p);
-#line 144 "minor.brg"
+		fprintf(stderr, "0x%p: line 146: instr: FI(THEN(if,NIL),instr)\n",(void*)p);
+#line 146 "minor.brg"
 { fprintf(yyout, pfLABEL,
                                       mklbl(LEFT_CHILD(p)->SUB(0)->place)); }
 		break;
 	case 30: /* if: IF(cond,instr) */
-		fprintf(stderr, "0x%p: line 146: if: IF(cond,instr)\n",(void*)p);
-#line 146 "minor.brg"
+		fprintf(stderr, "0x%p: line 148: if: IF(cond,instr)\n",(void*)p);
+#line 148 "minor.brg"
 {p->place = ++lbl; fprintf(yyout, pfJMP pfLABEL,
 				            mklbl(p->place), mklbl(LEFT_CHILD(p)->place)); }
 		break;
 	case 31: /* instr: FI(THEN(instr,NIL),NIL) */
-		fprintf(stderr, "0x%p: line 149: instr: FI(THEN(instr,NIL),NIL)\n",(void*)p);
-#line 149 "minor.brg"
+		fprintf(stderr, "0x%p: line 151: instr: FI(THEN(instr,NIL),NIL)\n",(void*)p);
+#line 151 "minor.brg"
 {/*Simple if*/}
 		break;
 	case 32: /* instr: IF(cond,instr) */
-		fprintf(stderr, "0x%p: line 150: instr: IF(cond,instr)\n",(void*)p);
-#line 150 "minor.brg"
+		fprintf(stderr, "0x%p: line 152: instr: IF(cond,instr)\n",(void*)p);
+#line 152 "minor.brg"
 { fprintf(yyout, pfLABEL, mklbl(LEFT_CHILD(p)->place)); }
 		break;
 	case 33: /* cond: expr */
-		fprintf(stderr, "0x%p: line 151: cond: expr\n",(void*)p);
-#line 151 "minor.brg"
+		fprintf(stderr, "0x%p: line 153: cond: expr\n",(void*)p);
+#line 153 "minor.brg"
 { p->place = ++lbl; fprintf(yyout, pfJZ, mklbl(p->place)); }
 		break;
 	case 34: /* print: PSTMT(ID) */
-		fprintf(stderr, "0x%p: line 153: print: PSTMT(ID)\n",(void*)p);
-#line 153 "minor.brg"
-{
-                  switch(p->SUB(0)->info){
-                    case tINT:
-                      fprintf(yyout, pfADDRV pfCALL pfTRASH,
-                      p->SUB(0)->value.s, "_printi", 4);
-                    break;
-                    case tSTR:
-                      fprintf(yyout, pfADDR pfCALL pfTRASH,
-                      p->SUB(0)->value.s, "_prints", 4);
-                    break;
-                  }
-                  }
+		fprintf(stderr, "0x%p: line 155: print: PSTMT(ID)\n",(void*)p);
+#line 155 "minor.brg"
+{ret = getOffset(p->SUB(0)->value.s);
+            if(ret){
+            switch(p->SUB(0)->info){
+              case tINT:
+                fprintf(yyout, pfIMM "push ebp\n"
+                pfADD pfPOP "push dword [eax]\n", ret);
+                fprintf(yyout, pfCALL pfTRASH,
+               "_printi", 4);
+              break;
+              case tSTR:
+                fprintf(yyout, "push dword [eax]\n" pfCALL pfTRASH,
+                 "_prints", 4);
+              break;
+            }
+            }
+            else{
+            switch(p->SUB(0)->info){
+              case tINT:
+                fprintf(yyout, pfADDRV pfCALL pfTRASH,
+                p->SUB(0)->value.s, "_printi", 4);
+              break;
+              case tSTR:
+                fprintf(yyout, pfADDR pfCALL pfTRASH,
+                p->SUB(0)->value.s, "_prints", 4);
+              break;
+            }
+              }}
 		break;
 	case 35: /* print: PSTMT(chars) */
-		fprintf(stderr, "0x%p: line 165: print: PSTMT(chars)\n",(void*)p);
-#line 165 "minor.brg"
+		fprintf(stderr, "0x%p: line 182: print: PSTMT(chars)\n",(void*)p);
+#line 182 "minor.brg"
 {
                       char *l = mklbl(++lbl); tmpStr[tmpStrInd++] = '\0';
                       fprintf(yyout, pfRODATA pfALIGN pfLABEL, l);
@@ -1769,68 +1786,75 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
                       }
 		break;
 	case 36: /* print: PSTMT(expr) */
-		fprintf(stderr, "0x%p: line 173: print: PSTMT(expr)\n",(void*)p);
-#line 173 "minor.brg"
+		fprintf(stderr, "0x%p: line 190: print: PSTMT(expr)\n",(void*)p);
+#line 190 "minor.brg"
 {fprintf(yyout, pfTEXT pfCALL pfTRASH, "_printi", 4);}
 		break;
 	case 37: /* print: PSTMT(CHARS(NIL,INT)) */
-		fprintf(stderr, "0x%p: line 174: print: PSTMT(CHARS(NIL,INT))\n",(void*)p);
-#line 174 "minor.brg"
+		fprintf(stderr, "0x%p: line 191: print: PSTMT(CHARS(NIL,INT))\n",(void*)p);
+#line 191 "minor.brg"
 {fprintf(yyout, pfTEXT pfIMM pfCALL pfTRASH, p->SUB(0)->SUB(1)->value.i, "_printi", 4);}
 		break;
 	case 38: /* chars: CHARS(NIL,chars) */
-		fprintf(stderr, "0x%p: line 176: chars: CHARS(NIL,chars)\n",(void*)p);
-#line 176 "minor.brg"
+		fprintf(stderr, "0x%p: line 193: chars: CHARS(NIL,chars)\n",(void*)p);
+#line 193 "minor.brg"
 {}
 		break;
 	case 39: /* chars: INT */
-		fprintf(stderr, "0x%p: line 177: chars: INT\n",(void*)p);
-#line 177 "minor.brg"
+		fprintf(stderr, "0x%p: line 194: chars: INT\n",(void*)p);
+#line 194 "minor.brg"
 { tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
 		break;
 	case 40: /* chars: CHAR */
-		fprintf(stderr, "0x%p: line 178: chars: CHAR\n",(void*)p);
-#line 178 "minor.brg"
+		fprintf(stderr, "0x%p: line 195: chars: CHAR\n",(void*)p);
+#line 195 "minor.brg"
 { tmpStr[tmpStrInd++] = p->value.i; toPrint = tmpStr;}
 		break;
 	case 41: /* chars: STR */
-		fprintf(stderr, "0x%p: line 179: chars: STR\n",(void*)p);
-#line 179 "minor.brg"
+		fprintf(stderr, "0x%p: line 196: chars: STR\n",(void*)p);
+#line 196 "minor.brg"
 { strcpy(&tmpStr[tmpStrInd], p->value.s); tmpStrInd = tmpStrInd + strlen(p->value.s); toPrint = tmpStr;}
 		break;
 	case 42: /* chars: CHARS(chars,chars) */
-		fprintf(stderr, "0x%p: line 180: chars: CHARS(chars,chars)\n",(void*)p);
-#line 180 "minor.brg"
+		fprintf(stderr, "0x%p: line 197: chars: CHARS(chars,chars)\n",(void*)p);
+#line 197 "minor.brg"
 {}
 		break;
 	case 43: /* expr: CHARS(NIL,INT) */
-		fprintf(stderr, "0x%p: line 182: expr: CHARS(NIL,INT)\n",(void*)p);
-#line 182 "minor.brg"
+		fprintf(stderr, "0x%p: line 199: expr: CHARS(NIL,INT)\n",(void*)p);
+#line 199 "minor.brg"
 {fprintf(yyout, pfIMM, p->SUB(1)->value.i);}
 		break;
 	case 44: /* expr: CHARS(NIL,CHAR) */
-		fprintf(stderr, "0x%p: line 183: expr: CHARS(NIL,CHAR)\n",(void*)p);
-#line 183 "minor.brg"
+		fprintf(stderr, "0x%p: line 200: expr: CHARS(NIL,CHAR)\n",(void*)p);
+#line 200 "minor.brg"
 {fprintf(yyout, pfIMM, p->SUB(1)->value.i); }
 		break;
 	case 45: /* expr: ID */
-		fprintf(stderr, "0x%p: line 184: expr: ID\n",(void*)p);
-#line 184 "minor.brg"
-{ fprintf(yyout, pfADDRV, p->value.s); }
+		fprintf(stderr, "0x%p: line 201: expr: ID\n",(void*)p);
+#line 201 "minor.brg"
+{ret = getOffset(p->value.s);
+            if(ret){
+              fprintf(yyout, pfIMM "push ebp\n"
+              pfADD pfPOP "push dword [eax]\n", ret);
+            }
+            else{
+              fprintf(yyout, pfADDRV, p->value.s);
+              }}
 		break;
 	case 46: /* expr: READOP */
-		fprintf(stderr, "0x%p: line 185: expr: READOP\n",(void*)p);
-#line 185 "minor.brg"
+		fprintf(stderr, "0x%p: line 210: expr: READOP\n",(void*)p);
+#line 210 "minor.brg"
 {fprintf(yyout, pfCALL pfPUSH, "_readi"); }
 		break;
 	case 47: /* expr: ADDR(ID) */
-		fprintf(stderr, "0x%p: line 187: expr: ADDR(ID)\n",(void*)p);
-#line 187 "minor.brg"
+		fprintf(stderr, "0x%p: line 212: expr: ADDR(ID)\n",(void*)p);
+#line 212 "minor.brg"
 { fprintf(yyout, pfADDR, p->SUB(0)->value.s); }
 		break;
 	case 48: /* expr: ADDR(IND(expr,ID)) */
-		fprintf(stderr, "0x%p: line 188: expr: ADDR(IND(expr,ID))\n",(void*)p);
-#line 188 "minor.brg"
+		fprintf(stderr, "0x%p: line 213: expr: ADDR(IND(expr,ID))\n",(void*)p);
+#line 213 "minor.brg"
 { switch(p->SUB(0)->SUB(1)->info){
                               case tINT:
                                 fprintf(yyout, pfIMM pfMUL pfADDR pfADD,
@@ -1843,98 +1867,98 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
                             }}
 		break;
 	case 49: /* expr: UMINUS(expr) */
-		fprintf(stderr, "0x%p: line 198: expr: UMINUS(expr)\n",(void*)p);
-#line 198 "minor.brg"
+		fprintf(stderr, "0x%p: line 223: expr: UMINUS(expr)\n",(void*)p);
+#line 223 "minor.brg"
 { fprintf(yyout, pfIMM pfMUL, -1); }
 		break;
 	case 50: /* expr: ADD(expr,expr) */
-		fprintf(stderr, "0x%p: line 199: expr: ADD(expr,expr)\n",(void*)p);
-#line 199 "minor.brg"
+		fprintf(stderr, "0x%p: line 224: expr: ADD(expr,expr)\n",(void*)p);
+#line 224 "minor.brg"
 { fprintf(yyout, pfADD); }
 		break;
 	case 51: /* expr: SUB(expr,expr) */
-		fprintf(stderr, "0x%p: line 200: expr: SUB(expr,expr)\n",(void*)p);
-#line 200 "minor.brg"
+		fprintf(stderr, "0x%p: line 225: expr: SUB(expr,expr)\n",(void*)p);
+#line 225 "minor.brg"
 { fprintf(yyout, pfSUB); }
 		break;
 	case 52: /* expr: MUL(expr,expr) */
-		fprintf(stderr, "0x%p: line 201: expr: MUL(expr,expr)\n",(void*)p);
-#line 201 "minor.brg"
+		fprintf(stderr, "0x%p: line 226: expr: MUL(expr,expr)\n",(void*)p);
+#line 226 "minor.brg"
 { fprintf(yyout, pfMUL); }
 		break;
 	case 53: /* expr: DIV(expr,expr) */
-		fprintf(stderr, "0x%p: line 202: expr: DIV(expr,expr)\n",(void*)p);
-#line 202 "minor.brg"
+		fprintf(stderr, "0x%p: line 227: expr: DIV(expr,expr)\n",(void*)p);
+#line 227 "minor.brg"
 { fprintf(yyout, pfDIV); }
 		break;
 	case 54: /* expr: MOD(expr,expr) */
-		fprintf(stderr, "0x%p: line 203: expr: MOD(expr,expr)\n",(void*)p);
-#line 203 "minor.brg"
+		fprintf(stderr, "0x%p: line 228: expr: MOD(expr,expr)\n",(void*)p);
+#line 228 "minor.brg"
 { fprintf(yyout, pfMOD); }
 		break;
 	case 55: /* expr: ISEQ(expr,expr) */
-		fprintf(stderr, "0x%p: line 204: expr: ISEQ(expr,expr)\n",(void*)p);
-#line 204 "minor.brg"
+		fprintf(stderr, "0x%p: line 229: expr: ISEQ(expr,expr)\n",(void*)p);
+#line 229 "minor.brg"
 { fprintf(yyout, pfEQ); }
 		break;
 	case 56: /* expr: NE(expr,expr) */
-		fprintf(stderr, "0x%p: line 205: expr: NE(expr,expr)\n",(void*)p);
-#line 205 "minor.brg"
+		fprintf(stderr, "0x%p: line 230: expr: NE(expr,expr)\n",(void*)p);
+#line 230 "minor.brg"
 { fprintf(yyout, pfNE); }
 		break;
 	case 57: /* expr: LT(expr,expr) */
-		fprintf(stderr, "0x%p: line 206: expr: LT(expr,expr)\n",(void*)p);
-#line 206 "minor.brg"
+		fprintf(stderr, "0x%p: line 231: expr: LT(expr,expr)\n",(void*)p);
+#line 231 "minor.brg"
 { fprintf(yyout, pfLT); }
 		break;
 	case 58: /* expr: LE(expr,expr) */
-		fprintf(stderr, "0x%p: line 207: expr: LE(expr,expr)\n",(void*)p);
-#line 207 "minor.brg"
+		fprintf(stderr, "0x%p: line 232: expr: LE(expr,expr)\n",(void*)p);
+#line 232 "minor.brg"
 { fprintf(yyout, pfLE); }
 		break;
 	case 59: /* expr: GT(expr,expr) */
-		fprintf(stderr, "0x%p: line 208: expr: GT(expr,expr)\n",(void*)p);
-#line 208 "minor.brg"
+		fprintf(stderr, "0x%p: line 233: expr: GT(expr,expr)\n",(void*)p);
+#line 233 "minor.brg"
 { fprintf(yyout, pfGT); }
 		break;
 	case 60: /* expr: GE(expr,expr) */
-		fprintf(stderr, "0x%p: line 209: expr: GE(expr,expr)\n",(void*)p);
-#line 209 "minor.brg"
+		fprintf(stderr, "0x%p: line 234: expr: GE(expr,expr)\n",(void*)p);
+#line 234 "minor.brg"
 { fprintf(yyout, pfGE); }
 		break;
 	case 61: /* expr: AND(and,expr) */
-		fprintf(stderr, "0x%p: line 210: expr: AND(and,expr)\n",(void*)p);
-#line 210 "minor.brg"
+		fprintf(stderr, "0x%p: line 235: expr: AND(and,expr)\n",(void*)p);
+#line 235 "minor.brg"
 { fprintf(yyout, pfLABEL, mklbl(LEFT_CHILD(p)->place)); }
 		break;
 	case 62: /* and: expr */
-		fprintf(stderr, "0x%p: line 211: and: expr\n",(void*)p);
-#line 211 "minor.brg"
+		fprintf(stderr, "0x%p: line 236: and: expr\n",(void*)p);
+#line 236 "minor.brg"
 { p->place = ++lbl; fprintf(yyout, pfDUP pfJZ pfTRASH, mklbl(p->place), pfWORD); }
 		break;
 	case 63: /* expr: OR(or,expr) */
-		fprintf(stderr, "0x%p: line 212: expr: OR(or,expr)\n",(void*)p);
-#line 212 "minor.brg"
+		fprintf(stderr, "0x%p: line 237: expr: OR(or,expr)\n",(void*)p);
+#line 237 "minor.brg"
 { fprintf(yyout, pfLABEL, mklbl(LEFT_CHILD(p)->place)); }
 		break;
 	case 64: /* or: expr */
-		fprintf(stderr, "0x%p: line 213: or: expr\n",(void*)p);
-#line 213 "minor.brg"
+		fprintf(stderr, "0x%p: line 238: or: expr\n",(void*)p);
+#line 238 "minor.brg"
 { p->place = ++lbl; fprintf(yyout, pfDUP pfJNZ pfTRASH, mklbl(p->place), pfWORD); }
 		break;
 	case 65: /* expr: UMINUS(expr) */
-		fprintf(stderr, "0x%p: line 214: expr: UMINUS(expr)\n",(void*)p);
-#line 214 "minor.brg"
+		fprintf(stderr, "0x%p: line 239: expr: UMINUS(expr)\n",(void*)p);
+#line 239 "minor.brg"
 { fprintf(yyout, pfNEG); }
 		break;
 	case 66: /* expr: NOT(expr) */
-		fprintf(stderr, "0x%p: line 215: expr: NOT(expr)\n",(void*)p);
-#line 215 "minor.brg"
+		fprintf(stderr, "0x%p: line 240: expr: NOT(expr)\n",(void*)p);
+#line 240 "minor.brg"
 { fprintf(yyout, pfIMM pfEQ, 0); }
 		break;
 	case 67: /* expr: POW(expr,expr) */
-		fprintf(stderr, "0x%p: line 216: expr: POW(expr,expr)\n",(void*)p);
-#line 216 "minor.brg"
+		fprintf(stderr, "0x%p: line 241: expr: POW(expr,expr)\n",(void*)p);
+#line 241 "minor.brg"
 {lbl++; fprintf(yyout, ";POW\n"
                                                 "pop ebx\n"
                                                 "pop ecx\n"
@@ -1950,14 +1974,19 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
                                                 lbl = lbl + 2;}
 		break;
 	case 68: /* expr: EQ(expr,ID) */
-		fprintf(stderr, "0x%p: line 229: expr: EQ(expr,ID)\n",(void*)p);
-#line 229 "minor.brg"
-{ fprintf(yyout, pfADDRA, p->SUB(1)->value.s);
-                      }
+		fprintf(stderr, "0x%p: line 254: expr: EQ(expr,ID)\n",(void*)p);
+#line 254 "minor.brg"
+{ ret = getOffset(p->SUB(1)->value.s);
+                        if(ret){
+                          fprintf(yyout, pfIMM "push ebp\n"
+                          pfADD pfPOP "pop dword [eax]\n", ret);
+                        }
+                        else{
+                          fprintf(yyout, pfADDRA, p->SUB(1)->value.s);}}
 		break;
 	case 69: /* expr: IND(expr,ID) */
-		fprintf(stderr, "0x%p: line 231: expr: IND(expr,ID)\n",(void*)p);
-#line 231 "minor.brg"
+		fprintf(stderr, "0x%p: line 262: expr: IND(expr,ID)\n",(void*)p);
+#line 262 "minor.brg"
 { ret = getOffset(p->SUB(1)->value.s);
                         if(ret){
                           fprintf(yyout, pfIMM pfMUL pfIMM "push ebp\n"
@@ -1968,8 +1997,8 @@ static void yyreduce(NODEPTR_TYPE p, int goalnt)
                           4, p->SUB(1)->value.s); }}
 		break;
 	case 70: /* expr: EQ(expr,IND(expr,ID)) */
-		fprintf(stderr, "0x%p: line 240: expr: EQ(expr,IND(expr,ID))\n",(void*)p);
-#line 240 "minor.brg"
+		fprintf(stderr, "0x%p: line 271: expr: EQ(expr,IND(expr,ID))\n",(void*)p);
+#line 271 "minor.brg"
 { ret = getOffset(p->SUB(1)->SUB(1)->value.s);
                                 if(ret){
                                   fprintf(yyout, pfIMM pfMUL pfIMM "push ebp\n"
@@ -1995,7 +2024,7 @@ int yyselect(NODEPTR_TYPE p)
 }
 
 
-#line 249 "minor.brg"
+#line 280 "minor.brg"
 
 extern char **yynames;
 extern int trace, errors, debugNode;

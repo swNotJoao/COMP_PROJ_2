@@ -115,19 +115,21 @@ instrs : FARGS(NIL, instr) {}
 instr : START(fvars, instr) {}
 instr : START(NIL, instr) {}
 
-fvars: ARGS(fvars, fvar) {fprintf(yyout, "sub esp, %d\n", -accoffset);}
-fvars : ARGS(NIL, fvars) {fprintf(yyout, "sub esp, %d\n", -accoffset);}
-fvars : fvar {localvarind++;}
+fvars: ARGS(fvars, fvar) {/*fprintf(yyout, "sub esp, %d\n", -accoffset);*/}
+fvars : ARGS(NIL, fvars) {/*fprintf(yyout, "sub esp, %d\n", -accoffset);*/}
+fvars : fvar {}
 fvar : NUMBER(ID, NIL) {locals[localvarind].id = p->SUB(0)->value.s;
                         accoffset-=4;
                         locals[localvarind].offset = accoffset;
-                        /*fprintf(yyout, "sub esp, 4\n");*/}
+                        fprintf(yyout, "sub esp, 4\n");
+                        localvarind++;}
 
 fvar : ARRAY(ID, INTS(INT, NIL)) { locals[localvarind].id = p->SUB(0)->value.s;
                                     accoffset-=(p->SUB(1)->SUB(0)->value.i)*4;
                                     locals[localvarind].offset = accoffset;
-                                    /*fprintf(yyout, "sub esp, %d\n",
-                                    (p->SUB(1)->SUB(0)->value.i)*4);*/}
+                                    fprintf(yyout, "sub esp, %d\n",
+                                    (p->SUB(1)->SUB(0)->value.i)*4);
+                                    localvarind++;}
 
 instr : NIL
 instr : STMT(NIL, instr)
@@ -150,18 +152,33 @@ instr : FI(THEN(instr, NIL), NIL) {/*Simple if*/}
 instr:	IF(cond,instr)	1 { fprintf(yyout, pfLABEL, mklbl(LEFT_CHILD(p)->place)); }
 cond:	expr		1 { p->place = ++lbl; fprintf(yyout, pfJZ, mklbl(p->place)); }
 
-print : PSTMT(ID) 1{
-                  switch(p->SUB(0)->info){
-                    case tINT:
-                      fprintf(yyout, pfADDRV pfCALL pfTRASH,
-                      p->SUB(0)->value.s, "_printi", 4);
-                    break;
-                    case tSTR:
-                      fprintf(yyout, pfADDR pfCALL pfTRASH,
-                      p->SUB(0)->value.s, "_prints", 4);
-                    break;
-                  }
-                  }
+print : PSTMT(ID) 1{ret = getOffset(p->SUB(0)->value.s);
+            if(ret){
+            switch(p->SUB(0)->info){
+              case tINT:
+                fprintf(yyout, pfIMM "push ebp\n"
+                pfADD pfPOP "push dword [eax]\n", ret);
+                fprintf(yyout, pfCALL pfTRASH,
+               "_printi", 4);
+              break;
+              case tSTR:
+                fprintf(yyout, "push dword [eax]\n" pfCALL pfTRASH,
+                 "_prints", 4);
+              break;
+            }
+            }
+            else{
+            switch(p->SUB(0)->info){
+              case tINT:
+                fprintf(yyout, pfADDRV pfCALL pfTRASH,
+                p->SUB(0)->value.s, "_printi", 4);
+              break;
+              case tSTR:
+                fprintf(yyout, pfADDR pfCALL pfTRASH,
+                p->SUB(0)->value.s, "_prints", 4);
+              break;
+            }
+              }}
 print : PSTMT(chars) {
                       char *l = mklbl(++lbl); tmpStr[tmpStrInd++] = '\0';
                       fprintf(yyout, pfRODATA pfALIGN pfLABEL, l);
@@ -181,7 +198,15 @@ chars : CHARS(chars, chars) {}
 
 expr:	CHARS(NIL, INT)	1 {fprintf(yyout, pfIMM, p->SUB(1)->value.i);}
 expr:	CHARS(NIL, CHAR)	1 {fprintf(yyout, pfIMM, p->SUB(1)->value.i); }
-expr: ID 1 { fprintf(yyout, pfADDRV, p->value.s); }
+expr: ID 1 {ret = getOffset(p->value.s);
+            if(ret){
+              fprintf(yyout, pfIMM "push ebp\n"
+              pfADD pfPOP "push dword [eax]\n", ret);
+            }
+            else{
+              fprintf(yyout, pfADDRV, p->value.s);
+              }}
+
 expr: READOP {fprintf(yyout, pfCALL pfPUSH, "_readi"); }
 
 expr: ADDR(ID) { fprintf(yyout, pfADDR, p->SUB(0)->value.s); }
@@ -226,8 +251,14 @@ expr: POW(expr, expr) 1 {lbl++; fprintf(yyout, ";POW\n"
                                                 mklbl(lbl+1), mklbl(lbl),
                                                 mklbl(lbl+1), mklbl(lbl));
                                                 lbl = lbl + 2;}
-expr: EQ(expr, ID) 1 { fprintf(yyout, pfADDRA, p->SUB(1)->value.s);
-                      }
+expr: EQ(expr, ID) 1 { ret = getOffset(p->SUB(1)->value.s);
+                        if(ret){
+                          fprintf(yyout, pfIMM "push ebp\n"
+                          pfADD pfPOP "pop dword [eax]\n", ret);
+                        }
+                        else{
+                          fprintf(yyout, pfADDRA, p->SUB(1)->value.s);}}
+
 expr: IND(expr, ID) 1 { ret = getOffset(p->SUB(1)->value.s);
                         if(ret){
                           fprintf(yyout, pfIMM pfMUL pfIMM "push ebp\n"
