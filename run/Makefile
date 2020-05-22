@@ -17,3 +17,4 @@ install:: $(RUNTIME)
 
 clean::
 	rm -f $(RUNTIME) *.o a.out core
+	rm -f libminor.a

@@ -65,7 +65,7 @@ static char *mkfunc(char *s) {
 	return buf;
 }
 %}
-%term STMT=';' PSTMT='!' READOP='?' AND='&' OR='|' IND='['
+%term STMT=';' PSTMT='!' READOP='?' AND='&' OR='|' IND='[' ALLOC='#'
 %term POW='^' ADD='+' SUB='-' MUL='*' DIV='/' MOD='%' NOT='~' LT='<' GT='>' ISEQ='='
 %include "y.tab.h"
 
@@ -98,7 +98,7 @@ decls : VAR(NUMBER(ID, INT)) {
                               p->SUB(0)->SUB(0)->value.s,
                               p->SUB(0)->SUB(1)->value.i);
                              }
-decls : VAR(NUMBER(ID, NIL)) {fprintf(yyout, pfDATA pfLABEL pfINTEGER, p->SUB(0)->SUB(0)->value.s, 0);}
+decls : VAR(NUMBER(ID, NIL)) {}
 decls : VAR(STRING(ID, chars)) {
                                 tmpStr[tmpStrInd++] = '\0'; toPrint = tmpStr;
                                 fprintf(yyout, pfRODATA pfALIGN pfLABEL
@@ -106,6 +106,7 @@ decls : VAR(STRING(ID, chars)) {
                                 outstr(toPrint);
                                 tmpStrInd = 0;
                                }
+decls : VAR(STRING(ID, NIL)) {fprintf(yyout, pfDATA pfLABEL pfINTEGER, p->SUB(0)->SUB(0)->value.s, 0);}
 decls : DECL(decls, decls) {fprintf(yyout, pfTEXT);}
 
 main : FUNCTION(END, instrs) {}
@@ -143,6 +144,9 @@ instr : STMT(instr, instr)
 instr : print
 instr : expr
 
+instr: ALLOC(alloc, ID) {fprintf(yyout, pfSTORE); }
+alloc:	expr		1 { fprintf(yyout, pfIMM pfMUL pfALLOC pfSP, 1); }
+
 instr:	FI(THEN(if, elif), instr)	1 { fprintf(yyout, pfLABEL,
                                       mklbl(LEFT_CHILD(p)->SUB(0)->place)); }
 elif : ELIF(elif, if) { p->place = ++lbl; fprintf(yyout, pfJMP pfLABEL,
@@ -167,7 +171,7 @@ print : PSTMT(ID) 1{ret = getOffset(p->SUB(0)->value.s);
                 pfADD pfPOP "push dword [eax]\n", ret);
                 fprintf(yyout, pfCALL pfTRASH,
                "_printi", 4);
-              
+
               break;
               case tSTR:
                 fprintf(yyout, pfIMM "push ebp\n"
@@ -299,7 +303,9 @@ expr: EQ(expr, IND(expr, ID)) { ret = getOffset(p->SUB(1)->SUB(1)->value.s);
                                 else{
                                   fprintf(yyout, pfIMM pfMUL pfADDR pfADD pfSTORE,
                                   4, p->SUB(1)->SUB(1)->value.s); }}
+instr: RETURN(expr) {fprintf(yyout, pfPOP pfLEAVE pfRET);}
 
+instr: FOR(UNTIL(expr, expr), STEP(instr, expr)) {}
 %%
 extern char **yynames;
 extern int trace, errors, debugNode;

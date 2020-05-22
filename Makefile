@@ -18,6 +18,7 @@ $(LANG): $(LANG).y $(LANG).l $(LANG).brg
 	$(LINK.c) -o $(LANG) $(ARCH) -I$(LIB) lex.yy.c y.tab.c yyselect.c -L$(LIB) -l$(UTIL)
 	make -C $(RUN)
 	-cp $(RUN)/librun.a $(LDLIBS)
+	-cp $(RUN)/librun.a $(RUN)/libminor.a
 
 out: out.asm $(LANG)
 	$(AS) out.asm -o out.o
