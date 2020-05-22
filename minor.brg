@@ -19,11 +19,21 @@
 #define TRACE
 static void yytrace(NODEPTR_TYPE p, int eruleno, int cost, int bestcost);
 
-int lbl;
+typedef struct localvar{
+  char *id;
+  int offset;
+}localvar_t;
+
+int getOffset(char *v);
+
+int lbl, ret;
 int tmpStrInd = 0, eqintsind = 0;
 char tmpStr[1024];
 int eqints[1024];
-int fvarspos=0;
+int localvarindstart = 0;
+int localvarind = 0;
+int accoffset=0;
+localvar_t locals[1024];
 char *toPrint = NULL;
 
 static char *extrns[100]; /* emit externs at the end only */
@@ -105,19 +115,19 @@ instrs : FARGS(NIL, instr) {}
 instr : START(fvars, instr) {}
 instr : START(NIL, instr) {}
 
-fvars : ARGS(NIL, fvars) {fvarspos = 0;}
-fvars : fvar {}
-fvar : NUMBER(ID, NIL) {fvarspos-=4;
-                        p->SUB(0)->value.i = fvarspos;
-                        p->SUB(0)->info = 0;
-                        fprintf(yyout, "sub esp, 4\n");}
+fvars: ARGS(fvars, fvar) {fprintf(yyout, "sub esp, %d\n", -accoffset);}
+fvars : ARGS(NIL, fvars) {fprintf(yyout, "sub esp, %d\n", -accoffset);}
+fvars : fvar {localvarind++;}
+fvar : NUMBER(ID, NIL) {locals[localvarind].id = p->SUB(0)->value.s;
+                        accoffset-=4;
+                        locals[localvarind].offset = accoffset;
+                        /*fprintf(yyout, "sub esp, 4\n");*/}
 
-fvar : ARRAY(ID, INTS(INT, NIL)) {fprintf(yyout, pfDATA pfLABEL,
-                                   p->SUB(0)->value.s);
-                                   for(i = 0; i<p->SUB(1)->SUB(0)->value.i; i++)
-                                    fprintf(yyout, pfINTEGER, 0);
-                                    fprintf(yyout, pfTEXT);
-                                  }
+fvar : ARRAY(ID, INTS(INT, NIL)) { locals[localvarind].id = p->SUB(0)->value.s;
+                                    accoffset-=(p->SUB(1)->SUB(0)->value.i)*4;
+                                    locals[localvarind].offset = accoffset;
+                                    /*fprintf(yyout, "sub esp, %d\n",
+                                    (p->SUB(1)->SUB(0)->value.i)*4);*/}
 
 instr : NIL
 instr : STMT(NIL, instr)
@@ -216,15 +226,38 @@ expr: POW(expr, expr) 1 {lbl++; fprintf(yyout, ";POW\n"
                                                 mklbl(lbl+1), mklbl(lbl),
                                                 mklbl(lbl+1), mklbl(lbl));
                                                 lbl = lbl + 2;}
-expr: EQ(expr, ID) 1 { fprintf(yyout, pfADDRA, p->SUB(1)->value.s); }
-expr: IND(expr, ID) 1 { fprintf(yyout, pfIMM pfMUL pfADDR pfADD pfLOAD,
-                        4, p->SUB(1)->value.s);  }
-expr: EQ(expr, IND(expr, ID)) { fprintf(yyout, pfIMM pfMUL pfADDR pfADD pfSTORE,
-                                4, p->SUB(1)->SUB(1)->value.s); }
+expr: EQ(expr, ID) 1 { fprintf(yyout, pfADDRA, p->SUB(1)->value.s);
+                      }
+expr: IND(expr, ID) 1 { ret = getOffset(p->SUB(1)->value.s);
+                        if(ret){
+                          fprintf(yyout, pfIMM pfMUL pfIMM "push ebp\n"
+                          pfADD pfADD pfPOP "push dword [eax]", 4, ret);
+                        }
+                        else{
+                          fprintf(yyout, pfIMM pfMUL pfADDR pfADD pfLOAD,
+                          4, p->SUB(1)->value.s); }}
+
+expr: EQ(expr, IND(expr, ID)) { ret = getOffset(p->SUB(1)->SUB(1)->value.s);
+                                if(ret){
+                                  fprintf(yyout, pfIMM pfMUL pfIMM "push ebp\n"
+                                  pfADD pfADD pfPOP "pop ecx\n" "mov [eax], ecx\n", 4, ret);
+                                }
+                                else{
+                                  fprintf(yyout, pfIMM pfMUL pfADDR pfADD pfSTORE,
+                                  4, p->SUB(1)->SUB(1)->value.s); }}
 
 %%
 extern char **yynames;
 extern int trace, errors, debugNode;
+
+int getOffset(char *v){
+  int i;
+
+  for(i = 0; i<localvarind; i++)
+    if(!strcmp(v, locals[i].id))
+      return locals[i].offset;
+  return 0;
+}
 
 void externs()
 {
@@ -243,9 +276,9 @@ static int data(int t, char *s, void *a, void *user) {
 void evaluate(Node *p) {
 	if (errors) return;
 	/* if (trace) */ printNode(p, stdout, yynames);
-  fprintf(yyout, pfTEXT pfALIGN pfGLOBL pfLABEL pfENTER, "_main", pfFUNC, "_main", 4);
+  fprintf(yyout, pfTEXT pfALIGN pfGLOBL pfLABEL pfENTER, "_main", pfFUNC, "_main", -accoffset);
 	if (!yyselect(p) && trace) printf("selection successful\n");
-  fprintf(yyout, pfIMM pfPOP pfLEAVE pfRET pfDATA, 0);
+  fprintf(yyout, "add esp, %d\n" pfIMM pfPOP pfLEAVE pfRET pfDATA, -accoffset, 0);
   /*IDevery(data,0);*/
   fprintf(yyout, pfEXTRN pfEXTRN pfEXTRN pfEXTRN,
   		"_prints", "_printi", "_println", "_readi");

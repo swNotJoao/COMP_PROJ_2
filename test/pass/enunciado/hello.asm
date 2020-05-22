@@ -9,33 +9,8 @@ $_main:
 ; ENTER
 	push	ebp
 	mov	ebp, esp
-	sub	esp, 4
-; DATA
-segment	.data
-; LABEL
-$x:
-; INTEGER
-	dd	0
-; INTEGER
-	dd	0
-; INTEGER
-	dd	0
-; INTEGER
-	dd	0
-; INTEGER
-	dd	0
-; INTEGER
-	dd	0
-; INTEGER
-	dd	0
-; INTEGER
-	dd	0
-; INTEGER
-	dd	0
-; INTEGER
-	dd	0
-; TEXT
-segment	.text
+	sub	esp, 0
+sub esp, 40
 ; IMM
 	push	dword 0
 ; IMM
@@ -46,15 +21,19 @@ segment	.text
 	pop	eax
 	imul	dword eax, [esp]
 	mov	[esp], eax
-; ADDR
-	push	dword $x
+; IMM
+	push	dword -40
+push ebp
 ; ADD
 	pop	eax
 	add	dword [esp], eax
-; STORE
-	pop	ecx
+; ADD
 	pop	eax
-	mov	[ecx], eax
+	add	dword [esp], eax
+; POP
+	pop	eax
+pop ecx
+mov [eax], ecx
 ; IMM
 	push	dword 1
 ; IMM
@@ -65,15 +44,19 @@ segment	.text
 	pop	eax
 	imul	dword eax, [esp]
 	mov	[esp], eax
-; ADDR
-	push	dword $x
+; IMM
+	push	dword -40
+push ebp
 ; ADD
 	pop	eax
 	add	dword [esp], eax
-; STORE
-	pop	ecx
+; ADD
 	pop	eax
-	mov	[ecx], eax
+	add	dword [esp], eax
+; POP
+	pop	eax
+pop ecx
+mov [eax], ecx
 ; IMM
 	push	dword 2
 ; IMM
@@ -84,15 +67,19 @@ segment	.text
 	pop	eax
 	imul	dword eax, [esp]
 	mov	[esp], eax
-; ADDR
-	push	dword $x
+; IMM
+	push	dword -40
+push ebp
 ; ADD
 	pop	eax
 	add	dword [esp], eax
-; STORE
-	pop	ecx
+; ADD
 	pop	eax
-	mov	[ecx], eax
+	add	dword [esp], eax
+; POP
+	pop	eax
+pop ecx
+mov [eax], ecx
 ; IMM
 	push	dword 3
 ; IMM
@@ -103,15 +90,19 @@ segment	.text
 	pop	eax
 	imul	dword eax, [esp]
 	mov	[esp], eax
-; ADDR
-	push	dword $x
+; IMM
+	push	dword -40
+push ebp
 ; ADD
 	pop	eax
 	add	dword [esp], eax
-; STORE
-	pop	ecx
+; ADD
 	pop	eax
-	mov	[ecx], eax
+	add	dword [esp], eax
+; POP
+	pop	eax
+pop ecx
+mov [eax], ecx
 ; IMM
 	push	dword 4
 ; IMM
@@ -122,15 +113,19 @@ segment	.text
 	pop	eax
 	imul	dword eax, [esp]
 	mov	[esp], eax
-; ADDR
-	push	dword $x
+; IMM
+	push	dword -40
+push ebp
 ; ADD
 	pop	eax
 	add	dword [esp], eax
-; STORE
-	pop	ecx
+; ADD
 	pop	eax
-	mov	[ecx], eax
+	add	dword [esp], eax
+; POP
+	pop	eax
+pop ecx
+mov [eax], ecx
 ; IMM
 	push	dword 5
 ; IMM
@@ -141,15 +136,19 @@ segment	.text
 	pop	eax
 	imul	dword eax, [esp]
 	mov	[esp], eax
-; ADDR
-	push	dword $x
+; IMM
+	push	dword -40
+push ebp
 ; ADD
 	pop	eax
 	add	dword [esp], eax
-; STORE
-	pop	ecx
+; ADD
 	pop	eax
-	mov	[ecx], eax
+	add	dword [esp], eax
+; POP
+	pop	eax
+pop ecx
+mov [eax], ecx
 ; IMM
 	push	dword 6
 ; IMM
@@ -160,15 +159,19 @@ segment	.text
 	pop	eax
 	imul	dword eax, [esp]
 	mov	[esp], eax
-; ADDR
-	push	dword $x
+; IMM
+	push	dword -40
+push ebp
 ; ADD
 	pop	eax
 	add	dword [esp], eax
-; STORE
-	pop	ecx
+; ADD
 	pop	eax
-	mov	[ecx], eax
+	add	dword [esp], eax
+; POP
+	pop	eax
+pop ecx
+mov [eax], ecx
 ; IMM
 	push	dword 7
 ; IMM
@@ -179,15 +182,19 @@ segment	.text
 	pop	eax
 	imul	dword eax, [esp]
 	mov	[esp], eax
-; ADDR
-	push	dword $x
+; IMM
+	push	dword -40
+push ebp
 ; ADD
 	pop	eax
 	add	dword [esp], eax
-; STORE
-	pop	ecx
+; ADD
 	pop	eax
-	mov	[ecx], eax
+	add	dword [esp], eax
+; POP
+	pop	eax
+pop ecx
+mov [eax], ecx
 ; IMM
 	push	dword 8
 ; IMM
@@ -198,15 +205,19 @@ segment	.text
 	pop	eax
 	imul	dword eax, [esp]
 	mov	[esp], eax
-; ADDR
-	push	dword $x
+; IMM
+	push	dword -40
+push ebp
 ; ADD
 	pop	eax
 	add	dword [esp], eax
-; STORE
-	pop	ecx
+; ADD
 	pop	eax
-	mov	[ecx], eax
+	add	dword [esp], eax
+; POP
+	pop	eax
+pop ecx
+mov [eax], ecx
 ; IMM
 	push	dword 9
 ; IMM
@@ -217,15 +228,19 @@ segment	.text
 	pop	eax
 	imul	dword eax, [esp]
 	mov	[esp], eax
-; ADDR
-	push	dword $x
+; IMM
+	push	dword -40
+push ebp
 ; ADD
 	pop	eax
 	add	dword [esp], eax
-; STORE
-	pop	ecx
+; ADD
 	pop	eax
-	mov	[ecx], eax
+	add	dword [esp], eax
+; POP
+	pop	eax
+pop ecx
+mov [eax], ecx
 ; IMM
 	push	dword 0
 ; IMM
@@ -234,15 +249,18 @@ segment	.text
 	pop	eax
 	imul	dword eax, [esp]
 	mov	[esp], eax
-; ADDR
-	push	dword $x
+; IMM
+	push	dword -40
+push ebp
 ; ADD
 	pop	eax
 	add	dword [esp], eax
-; LOAD
+; ADD
 	pop	eax
-	push	dword [eax]
-; TEXT
+	add	dword [esp], eax
+; POP
+	pop	eax
+push dword [eax]; TEXT
 segment	.text
 ; CALL
 	call	$_printi
@@ -274,15 +292,18 @@ segment	.text
 	pop	eax
 	imul	dword eax, [esp]
 	mov	[esp], eax
-; ADDR
-	push	dword $x
+; IMM
+	push	dword -40
+push ebp
 ; ADD
 	pop	eax
 	add	dword [esp], eax
-; LOAD
+; ADD
 	pop	eax
-	push	dword [eax]
-; TEXT
+	add	dword [esp], eax
+; POP
+	pop	eax
+push dword [eax]; TEXT
 segment	.text
 ; CALL
 	call	$_printi
@@ -314,15 +335,18 @@ segment	.text
 	pop	eax
 	imul	dword eax, [esp]
 	mov	[esp], eax
-; ADDR
-	push	dword $x
+; IMM
+	push	dword -40
+push ebp
 ; ADD
 	pop	eax
 	add	dword [esp], eax
-; LOAD
+; ADD
 	pop	eax
-	push	dword [eax]
-; TEXT
+	add	dword [esp], eax
+; POP
+	pop	eax
+push dword [eax]; TEXT
 segment	.text
 ; CALL
 	call	$_printi
@@ -354,15 +378,18 @@ segment	.text
 	pop	eax
 	imul	dword eax, [esp]
 	mov	[esp], eax
-; ADDR
-	push	dword $x
+; IMM
+	push	dword -40
+push ebp
 ; ADD
 	pop	eax
 	add	dword [esp], eax
-; LOAD
+; ADD
 	pop	eax
-	push	dword [eax]
-; TEXT
+	add	dword [esp], eax
+; POP
+	pop	eax
+push dword [eax]; TEXT
 segment	.text
 ; CALL
 	call	$_printi
@@ -394,15 +421,18 @@ segment	.text
 	pop	eax
 	imul	dword eax, [esp]
 	mov	[esp], eax
-; ADDR
-	push	dword $x
+; IMM
+	push	dword -40
+push ebp
 ; ADD
 	pop	eax
 	add	dword [esp], eax
-; LOAD
+; ADD
 	pop	eax
-	push	dword [eax]
-; TEXT
+	add	dword [esp], eax
+; POP
+	pop	eax
+push dword [eax]; TEXT
 segment	.text
 ; CALL
 	call	$_printi
@@ -434,15 +464,18 @@ segment	.text
 	pop	eax
 	imul	dword eax, [esp]
 	mov	[esp], eax
-; ADDR
-	push	dword $x
+; IMM
+	push	dword -40
+push ebp
 ; ADD
 	pop	eax
 	add	dword [esp], eax
-; LOAD
+; ADD
 	pop	eax
-	push	dword [eax]
-; TEXT
+	add	dword [esp], eax
+; POP
+	pop	eax
+push dword [eax]; TEXT
 segment	.text
 ; CALL
 	call	$_printi
@@ -474,15 +507,18 @@ segment	.text
 	pop	eax
 	imul	dword eax, [esp]
 	mov	[esp], eax
-; ADDR
-	push	dword $x
+; IMM
+	push	dword -40
+push ebp
 ; ADD
 	pop	eax
 	add	dword [esp], eax
-; LOAD
+; ADD
 	pop	eax
-	push	dword [eax]
-; TEXT
+	add	dword [esp], eax
+; POP
+	pop	eax
+push dword [eax]; TEXT
 segment	.text
 ; CALL
 	call	$_printi
@@ -514,15 +550,18 @@ segment	.text
 	pop	eax
 	imul	dword eax, [esp]
 	mov	[esp], eax
-; ADDR
-	push	dword $x
+; IMM
+	push	dword -40
+push ebp
 ; ADD
 	pop	eax
 	add	dword [esp], eax
-; LOAD
+; ADD
 	pop	eax
-	push	dword [eax]
-; TEXT
+	add	dword [esp], eax
+; POP
+	pop	eax
+push dword [eax]; TEXT
 segment	.text
 ; CALL
 	call	$_printi
@@ -554,15 +593,18 @@ segment	.text
 	pop	eax
 	imul	dword eax, [esp]
 	mov	[esp], eax
-; ADDR
-	push	dword $x
+; IMM
+	push	dword -40
+push ebp
 ; ADD
 	pop	eax
 	add	dword [esp], eax
-; LOAD
+; ADD
 	pop	eax
-	push	dword [eax]
-; TEXT
+	add	dword [esp], eax
+; POP
+	pop	eax
+push dword [eax]; TEXT
 segment	.text
 ; CALL
 	call	$_printi
@@ -594,15 +636,18 @@ segment	.text
 	pop	eax
 	imul	dword eax, [esp]
 	mov	[esp], eax
-; ADDR
-	push	dword $x
+; IMM
+	push	dword -40
+push ebp
 ; ADD
 	pop	eax
 	add	dword [esp], eax
-; LOAD
+; ADD
 	pop	eax
-	push	dword [eax]
-; TEXT
+	add	dword [esp], eax
+; POP
+	pop	eax
+push dword [eax]; TEXT
 segment	.text
 ; CALL
 	call	$_printi
@@ -626,6 +671,7 @@ segment	.text
 	call	$_prints
 ; TRASH
 	add	esp, 4
+add esp, 40
 ; IMM
 	push	dword 0
 ; POP
