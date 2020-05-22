@@ -162,10 +162,12 @@ print : PSTMT(ID) 1{ret = getOffset(p->SUB(0)->value.s);
             if(ret){
             switch(p->SUB(0)->info){
               case tINT:
+
                 fprintf(yyout, pfIMM "push ebp\n"
                 pfADD pfPOP "push dword [eax]\n", ret);
                 fprintf(yyout, pfCALL pfTRASH,
                "_printi", 4);
+              
               break;
               case tSTR:
                 fprintf(yyout, pfIMM "push ebp\n"
@@ -259,7 +261,7 @@ expr: POW(expr, expr) 1 {lbl++; fprintf(yyout, ";POW\n"
                                                 mklbl(lbl+1), mklbl(lbl),
                                                 mklbl(lbl+1), mklbl(lbl));
                                                 lbl = lbl + 2;}
-expr: EQ(chars, ID) {ret = getOffset(p->SUB(1)->value.s);
+expr: EQ(chars, ID) 2{ret = getOffset(p->SUB(1)->value.s);
                     if(ret){
                       tmpStr[tmpStrInd++] = '\0'; toPrint = tmpStr;
                       fprintf(yyout, pfRODATA pfALIGN pfLABEL
@@ -272,7 +274,7 @@ expr: EQ(chars, ID) {ret = getOffset(p->SUB(1)->value.s);
                     else{
                       /*GLOBAL string*/
                     }}
-expr: EQ(expr, ID) 1 { ret = getOffset(p->SUB(1)->value.s);
+expr: EQ(expr, ID) 1{ ret = getOffset(p->SUB(1)->value.s);
                         if(ret){
                           fprintf(yyout, pfIMM "push ebp\n"
                           pfADD pfPOP "pop dword [eax]\n", ret);
