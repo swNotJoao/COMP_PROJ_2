@@ -1,0 +1,14 @@
+program
+
+	number y := 0;
+  	number z := 0
+
+   function number funcao number n do
+
+   return n/3
+
+start
+  y := ?;
+  funcao(y)!
+
+end
